@@ -1,64 +1,82 @@
-# 📚 מדריכי DS23
+# DS23 Guides
 
-אוסף מדריכים אינטראקטיביים בעברית למדעי הנתונים, למידת מכונה ובינה מלאכותית.
-243 ערכים בשלושה תחומים, עם הסברים, אנלוגיות, ויזואליזציות, קוד ותרגילים.
+A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 243 entries across three domains, with explanations, analogies, visualizations, code samples, and exercises.
 
-## 🌐 גישה מהירה
+## Live site
 
-**גירסה אונליין:** **[https://orarr2.github.io/ds23-guides-/](https://orarr2.github.io/ds23-guides-/)**
+**[https://orarr2.github.io/ds23-guides-/](https://orarr2.github.io/ds23-guides-/)**
 
-מותאם מובייל. ניתן להוסיף למסך הבית באייפון דרך Safari → Share → Add to Home Screen.
+Mobile friendly. Works fully offline once loaded. The interface and all content are in Hebrew (RTL).
 
-## 📖 תוכן המדריכים
+## Install on iPhone / iPad (Home Screen)
 
-| מדריך | ערכים | תחומים מרכזיים |
-|------|-------|-----------------|
-| 🧮 [מתמטיקה ל-ML](math%20guide%20DS23.html) | 113 | אלגברה לינארית, חשבון דיפרנציאלי, אופטימיזציה, תורת הגרפים, תורת האינפורמציה |
-| 📊 [מילון מושגים סטטיסטי](stats%20guide%20DS23.html) | 59 | התפלגויות, מבחני השערות, רגרסיה, Bayesian Inference |
-| 🤖 [למידת מכונה ומודלי AI](ai%20ml%20guide%20DS23.html) | 71 | אלגוריתמי ML, רשתות עצביות, Deep Learning, NLP, Transformers |
+The site works as a standalone app once added to your iOS Home Screen.
 
-## 🎯 מבנה כל ערך
+1. Open the live URL in **Safari** on your iPhone or iPad. This must be Safari, not Chrome or another browser, because only Safari can install web apps to the iOS Home Screen.
+2. Tap the **Share** button (the square with an arrow pointing up) in the bottom toolbar.
+3. Scroll the share sheet and tap **Add to Home Screen**.
+4. Confirm the name (default: "DS23") and tap **Add**.
+5. You will now see a DS23 icon on your Home Screen. Tap it to launch the guides in full-screen mode, with no browser chrome.
 
-כל ערך במדריך כולל:
+A custom icon and theme color are bundled with the site, so the Home Screen tile looks like a native app rather than a screenshot.
 
-- **💡 בקצרה** — הגדרה תמציתית של המושג
-- **📊 המחשה ויזואלית** — דיאגרמה, גרף, או הדמיה
-- **🎯 אנלוגיה** — חיבור לעולם המוחשי
-- **🤖 ב-ML** — קונטקסט מעשי בלמידת מכונה
-- **✏️ תרגיל ופתרון** — בדיקה עצמית
+## What is inside
 
-## ✨ תכונות
+| Guide | Entries | Main topics |
+|------|---------|-------------|
+| Math for ML ([math guide DS23.html](math%20guide%20DS23.html)) | 113 | Linear algebra, calculus, optimization, graph theory, information theory |
+| Statistics glossary ([stats guide DS23.html](stats%20guide%20DS23.html)) | 59 | Distributions, hypothesis testing, regression, Bayesian inference |
+| Machine Learning and AI ([ai ml guide DS23.html](ai%20ml%20guide%20DS23.html)) | 71 | Classical ML, neural networks, Deep Learning, NLP, Transformers |
 
-- 🔍 חיפוש מובנה בכל הטקסט של המדריך
-- 📑 תפריט תוכן עניינים נשלף עם ניווט מהיר בין ערכים
-- 🏠 כפתור חזרה לדף הנחיתה הראשי
-- 👆 לחיצה ארוכה על מספור הפרק בתחתית → פופאפ עם רשימת כל הערכים בפרק לקפיצה מהירה
-- ⌨️ ניווט במקלדת (חיצים שמאל/ימין, Escape לסגירת חלוניות)
-- 📱 רספונסיבי, מותאם למובייל
-- 🌐 תמיכה מלאה ב-RTL
-- ⚡ קבצים סטטיים — עובד גם אחרי טעינה ראשונה
-- 🎨 עיצוב נקי, ללא תלויות חיצוניות
+## Entry structure
 
-## 💻 הפעלה מקומית
+Every entry contains:
 
-הורד את שלושת קבצי ה-HTML + `index.html` וצור תיקייה אחת:
+- **In short**: a tight definition of the concept
+- **Visualization**: a diagram, chart, or illustration
+- **Analogy**: an everyday mapping that helps build intuition
+- **In ML**: practical context inside machine learning
+- **Exercise and solution**: a self-check
+
+## Features
+
+- Built-in full-text search across every entry of a guide
+- Cross-guide search from the home page (search a term once, jump into any of the three guides with the query pre-filled)
+- Collapsible table of contents drawer with fast navigation between entries
+- Home button on every page
+- Long-press on the chapter number at the bottom of an entry to open a popup that lists every entry in that chapter
+- Keyboard navigation (left and right arrows; Escape to close panels)
+- Responsive design tuned for mobile
+- Full RTL support
+- Static files, no external dependencies, no build step
+- Works offline after the first load
+
+## Run locally
+
+Download all of these into a single folder:
 
 ```
 ds23-guides/
 ├── index.html
+├── icon.svg
+├── favicon.png
+├── favicon-32.png
+├── apple-touch-icon.png
 ├── math guide DS23.html
 ├── stats guide DS23.html
 └── ai ml guide DS23.html
 ```
 
-פתח את `index.html` בדפדפן. עובד 100% offline, אין צורך בשרת.
+You can also grab the bundled archive: [ds23-guides.zip](ds23-guides.zip). The zip is always kept in sync with the live site in this repository.
 
-ב-iOS מומלץ להשתמש ב-Documents by Readdle או דומיו כדי לפתוח HTML מקומי עם JavaScript מלא.
+Open `index.html` in any modern browser. No server needed.
 
-## 📜 רישיון
+On iOS, if you want to open the local HTML files (not the live site) with full JavaScript, use an app like Documents by Readdle. For day-to-day use, prefer the live URL above.
 
-לשימוש אישי ולימודי.
+## License
+
+Personal and educational use only.
 
 ---
 
-נבנה על ידי [@orarr2](https://github.com/orarr2) · עודכן יוני 2026
+Built by [@orarr2](https://github.com/orarr2). Updated June 2026.
