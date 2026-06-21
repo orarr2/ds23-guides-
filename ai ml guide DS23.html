@@ -288,16 +288,22 @@ mark.search-hit.current { background: #f97316; color: white; }
   .topbar .title { display: none; }
   .topbar .counter { font-size: 11px; padding-inline-start: 4px; white-space: nowrap; }
 
-  /* Search wrap: fluid width, larger input font (prevents iOS auto-zoom) */
-  .search-wrap { padding: 3px 6px; gap: 3px; flex: 1; min-width: 0; }
-  .search-wrap > span[aria-hidden] { font-size: 13px; }
+  /* Search wrap: clean layout, no transform hacks.
+     16px font on input prevents iOS auto-zoom on focus. */
+  .search-wrap { padding: 3px 8px; gap: 5px; flex: 1; min-width: 0; align-items: center; }
+  .search-wrap > span[aria-hidden] { font-size: 14px; flex-shrink: 0; }
   .search-wrap input {
-    width: 100%; min-width: 0; flex: 1; font-size: 16px;
-    transform: scale(0.85); transform-origin: right center;
-    width: 117%; margin-inline-start: -17%;
+    flex: 1; min-width: 0; width: 100%;
+    font-size: 16px;
+    padding: 4px 2px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
   }
-  .search-wrap button { padding: 4px 6px; font-size: 12px; min-width: 28px; min-height: 30px; }
-  .sc-count { font-size: 11px; white-space: nowrap; }
+  .search-wrap input::placeholder { color: rgba(255,255,255,0.65); font-size: 13px; }
+  .search-wrap button { padding: 4px 6px; font-size: 13px; min-width: 28px; min-height: 30px; flex-shrink: 0; }
+  .sc-count { font-size: 11px; white-space: nowrap; flex-shrink: 0; }
 
   /* --- Drawer: fullscreen overlay on phones --- */
   aside.drawer {
@@ -500,7 +506,7 @@ html.js-enabled footer.bottomnav { display: flex !important; }
 <div class="title">מדריך למידת מכונה ומודלי AI</div>
 <div class="search-wrap" role="search">
 <span aria-hidden="true">🔍</span>
-<input autocomplete="off" id="searchInput" placeholder="חפש במדריך..." spellcheck="false" type="search"/>
+<input autocomplete="off" id="searchInput" placeholder="חפש..." spellcheck="false" type="search"/>
 <span class="sc-count" id="searchCount"></span>
 <button disabled="" id="searchPrev" title="התאמה קודמת">▲</button>
 <button disabled="" id="searchNext" title="התאמה הבאה">▼</button>
