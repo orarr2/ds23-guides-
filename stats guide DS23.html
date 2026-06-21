@@ -498,11 +498,120 @@ html.js-enabled footer.bottomnav { display: flex !important; }
   html.js-enabled .slides-area { inset: 52px 0 60px !important; padding: 64px 12px 90px !important; }
 }
 
+
+/* V2 FEATURES: Home button + Chapter dot long-press popup */
+.topbar .home-btn {
+  background: rgba(255,255,255,0.18);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 38px;
+  min-height: 36px;
+  transition: background 0.15s ease;
+}
+.topbar .home-btn:hover, .topbar .home-btn:focus-visible {
+  background: rgba(255,255,255,0.32);
+  outline: none;
+}
+.topbar .home-btn:active { background: rgba(255,255,255,0.4); transform: scale(0.96); }
+.topbar .home-btn svg { display: block; }
+
+@media (max-width: 360px) {
+  .topbar .home-btn { padding: 4px 8px; min-width: 34px; }
+  .topbar .home-btn svg { width: 16px; height: 16px; }
+}
+
+.chapter-popup {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.06);
+  max-width: min(320px, calc(100vw - 24px));
+  max-height: 60vh;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  animation: popupIn 0.16s ease;
+  direction: rtl;
+}
+@keyframes popupIn {
+  from { opacity: 0; transform: scale(0.92) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.chapter-popup-header {
+  background: var(--accent);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  border-radius: 12px 12px 0 0;
+}
+.chapter-popup-header .count {
+  opacity: 0.75;
+  font-weight: 400;
+  font-size: 12px;
+  margin-inline-start: 4px;
+}
+.chapter-popup-list {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 12px 12px;
+}
+.chapter-popup-entry {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #F3F4F6;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.chapter-popup-entry:last-child { border-bottom: none; }
+.chapter-popup-entry:active,
+.chapter-popup-entry:hover { background: var(--accent-light); }
+.chapter-popup-entry.current { background: var(--accent-light); font-weight: 600; }
+.chapter-popup-arrow {
+  position: absolute;
+  width: 0; height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+}
+.chapter-popup-arrow.below {
+  bottom: -9px;
+  border-top: 9px solid white;
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.08));
+}
+.chapter-popup-arrow.above {
+  top: -9px;
+  border-bottom: 9px solid var(--accent);
+}
+.dot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+
 </style>
 </head>
 <body>
 <header class="topbar">
 <button aria-label="פתח תוכן עניינים" class="menu-btn" id="drawerBtn">☰</button>
+  <a id="homeBtn" class="menu-btn home-btn" href="./index.html" aria-label="חזרה לתפריט המדריכים" title="חזרה לתפריט המדריכים">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+</a>
 <div class="title">מילון מושגים סטטיסטי</div>
 <div class="search-wrap" role="search">
 <span aria-hidden="true">🔍</span>
@@ -2380,6 +2489,155 @@ Bias² = (32-28)² = 16. Var(ŷ) = 16. σ² = 9. MSE = Bias² + Var + σ² = 16 
       e.preventDefault(); input.focus(); input.select();
     }
   });
+})();
+
+
+
+// === V2: Chapter dot long-press popup ===
+(function() {
+  const dotsAll = Array.from(document.querySelectorAll('.dot'));
+  if (!dotsAll.length) return;
+  
+  // Helper: given a slide idx, find the matching <details> chapter in the drawer.
+  function getChapterForSlideIdx(slideIdx) {
+    const link = document.querySelector('aside.drawer a[data-idx="' + slideIdx + '"]');
+    if (!link) return null;
+    const details = link.closest('details');
+    if (!details) return null;
+    const summaryEl = details.querySelector('summary');
+    let summaryText = summaryEl ? summaryEl.textContent.trim().replace(/^[\u25b6\u25bc\u25c0\u25c2\u25b8\u25c4\s]+/, '') : '';
+    if (!summaryText) summaryText = 'פרק';
+    const entries = Array.from(details.querySelectorAll('a[data-idx]')).map(a => ({
+      idx: parseInt(a.dataset.idx),
+      title: a.textContent.trim().replace(/\s+/g, ' ')
+    }));
+    return { title: summaryText, entries };
+  }
+  
+  let activePopup = null;
+  let outsideHandler = null;
+  
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  
+  function closePopup() {
+    if (activePopup) { activePopup.remove(); activePopup = null; }
+    if (outsideHandler) {
+      document.removeEventListener('pointerdown', outsideHandler, true);
+      outsideHandler = null;
+    }
+  }
+  
+  function showPopup(dot) {
+    closePopup();
+    const targetIdx = parseInt(dot.dataset.target);
+    const data = getChapterForSlideIdx(targetIdx);
+    if (!data || !data.entries.length) return;
+    
+    const slides = Array.from(document.querySelectorAll('section.slide'));
+    const currentIdx = slides.findIndex(s => s.classList.contains('active'));
+    
+    const popup = document.createElement('div');
+    popup.className = 'chapter-popup';
+    popup.innerHTML = 
+      '<div class="chapter-popup-header">' + escapeHTML(data.title) + 
+      '<span class="count">(' + data.entries.length + ')</span></div>' +
+      '<div class="chapter-popup-list"></div>' +
+      '<div class="chapter-popup-arrow"></div>';
+    
+    const list = popup.querySelector('.chapter-popup-list');
+    data.entries.forEach(entry => {
+      const btn = document.createElement('button');
+      btn.className = 'chapter-popup-entry';
+      if (entry.idx === currentIdx) btn.classList.add('current');
+      btn.textContent = entry.title;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (typeof window.showSlide === 'function') window.showSlide(entry.idx);
+        closePopup();
+      });
+      list.appendChild(btn);
+    });
+    
+    document.body.appendChild(popup);
+    activePopup = popup;
+    
+    const dotRect = dot.getBoundingClientRect();
+    const popupRect = popup.getBoundingClientRect();
+    let left = dotRect.left + dotRect.width/2 - popupRect.width/2;
+    left = Math.max(8, Math.min(window.innerWidth - popupRect.width - 8, left));
+    let top = dotRect.top - popupRect.height - 14;
+    let arrowPos = 'below';
+    if (top < 8) {
+      top = dotRect.bottom + 14;
+      arrowPos = 'above';
+    }
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    
+    const arrow = popup.querySelector('.chapter-popup-arrow');
+    arrow.classList.add(arrowPos);
+    const arrowLeft = (dotRect.left + dotRect.width/2) - left - 9;
+    arrow.style.left = Math.max(10, Math.min(popupRect.width - 28, arrowLeft)) + 'px';
+    
+    outsideHandler = (e) => {
+      if (!popup.contains(e.target)) closePopup();
+    };
+    setTimeout(() => {
+      document.addEventListener('pointerdown', outsideHandler, true);
+    }, 10);
+  }
+  
+  const LONG_PRESS_MS = 500;
+  dotsAll.forEach(dot => {
+    let timer = null;
+    let longPressed = false;
+    let startX = 0, startY = 0;
+    
+    const start = (e) => {
+      longPressed = false;
+      const pt = e.touches ? e.touches[0] : e;
+      startX = pt.clientX; startY = pt.clientY;
+      timer = setTimeout(() => {
+        longPressed = true;
+        showPopup(dot);
+        if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e){} }
+      }, LONG_PRESS_MS);
+    };
+    const cancel = () => { if (timer) { clearTimeout(timer); timer = null; } };
+    const move = (e) => {
+      if (!timer) return;
+      const pt = e.touches ? e.touches[0] : e;
+      if (Math.abs(pt.clientX - startX) > 10 || Math.abs(pt.clientY - startY) > 10) cancel();
+    };
+    
+    dot.addEventListener('pointerdown', start);
+    dot.addEventListener('pointerup', cancel);
+    dot.addEventListener('pointercancel', cancel);
+    dot.addEventListener('pointermove', move);
+    dot.addEventListener('pointerleave', cancel);
+    
+    dot.addEventListener('click', (e) => {
+      if (longPressed) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        longPressed = false;
+      }
+    }, true);
+  });
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && activePopup) closePopup();
+  });
+  
+  if (typeof window.showSlide === 'function') {
+    const orig = window.showSlide;
+    window.showSlide = function(i) {
+      closePopup();
+      return orig.apply(this, arguments);
+    };
+  }
 })();
 
 </script>
