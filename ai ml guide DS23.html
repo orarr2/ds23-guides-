@@ -519,6 +519,8 @@ html.js-enabled .slide {
 html.js-enabled .slide.active {
   display: block !important;
   animation: fadeIn .2s ease;
+  animation-fill-mode: both;
+  opacity: 1;
 }
 html.js-enabled header.topbar { display: flex !important; }
 html.js-enabled footer.bottomnav { display: flex !important; }
@@ -2999,66 +3001,82 @@ print(importances.sort_values(ascending=False).head())</pre></div><div class="bo
 <section class="slide" data-idx="71" data-layer="0">
 <div class="layer-context"><span class="layer-name">מבוא ועקרונות</span> · ערך 1 מתוך 5</div>
 <div class="entry-head"><h2>מבוא ל-AI ותחומי הלימוד</h2><span class="en-name">Introduction to AI · Fields of Study</span></div>
-<div class="box brief"><div class="box-title">📝 בקצרה</div><div>בינה מלאכותית (<span dir="ltr">AI - Artificial Intelligence</span>) היא המטרייה הרחבה ביותר - היכולת של מכונה לחקות תהליכי חשיבה אנושיים. בתוכה יושב <span dir="ltr">Machine Learning</span> (למידת מכונה) - אלגוריתמים שלומדים פאטרנים מנתונים במקום לקבל כללים מקודדים מראש. בתוך ML יושב <span dir="ltr">Deep Learning</span> (למידה עמוקה) - רשתות נוירונים רב-שכבתיות שלומדות ייצוגים היררכיים. בצדדים יש תחומי-יעד כמו <span dir="ltr">NLP</span> (עיבוד שפה טבעית), <span dir="ltr">Computer Vision</span> (ראייה ממוחשבת), <span dir="ltr">Reinforcement Learning</span> (למידת חיזוק), ו-<span dir="ltr">Generative AI</span> (AI יוצר) - כולם נסמכים על אלגוריתמי ML/DL ומיישמים אותם על דאטה ספציפי.</div></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div><b>בינה מלאכותית (AI)</b> היא כל מאמץ של מכונה לחקות תהליכי חשיבה ופעולה אנושיים - מהפתרון של בעיות לוגיות, דרך זיהוי תמונות וטקסט, ועד יצירה של תוכן חדש. ה-<span dir="ltr">AI</span> הוא המעטפת הרחבה ביותר, אך בתוכו יש <b>תת-תחומים</b> שמתמחים בגישות שונות.<br><br>
+<b>Machine Learning (ML - למידת מכונה)</b> הוא תת-תחום של AI שבו המכונה <b>לומדת מנתונים</b> במקום לקבל חוקים מקודדים. במקום שמתכנת יכתוב "אם x &gt; 100 אז ספאם", המודל לומד את הגבול הזה לבד מאלפי דוגמאות. כל אלגוריתמי ה-<span dir="ltr">ML</span> הקלאסיים (רגרסיה, עצי החלטה, <span dir="ltr">SVM</span>, <span dir="ltr">KNN</span>, <span dir="ltr">K-Means</span>) שייכים לכאן.<br><br>
+<b>Deep Learning (DL - למידה עמוקה)</b> הוא תת-תחום של ML שבו המודל הוא <b>רשת נוירונים עמוקה</b> - שכבות רבות של חישובים מקושרים בלי הנדסת פיצ’רים ידנית. <span dir="ltr">DL</span> פרץ ב-2012 (<span dir="ltr">AlexNet</span>) והוא מאחורי כל ההצלחות המודרניות: <span dir="ltr">ChatGPT</span>, <span dir="ltr">Midjourney</span>, רכבי <span dir="ltr">Tesla</span>, <span dir="ltr">AlphaGo</span>.<br><br>
+<b>תחומי יישום (Applied Domains)</b> יושבים על גבי <span dir="ltr">ML</span>/<span dir="ltr">DL</span> ופותרים בעיות ספציפיות: <b>NLP</b> (שפה - <span dir="ltr">BERT</span>, <span dir="ltr">GPT</span>), <b>Computer Vision</b> (תמונות - <span dir="ltr">ResNet</span>, <span dir="ltr">YOLO</span>), <b>Reinforcement Learning</b> (סוכנים), <b>Generative AI</b> (יצירת תוכן - <span dir="ltr">LLMs</span>, <span dir="ltr">Stable Diffusion</span>). כל אחד מהם משתמש באלגוריתמי <span dir="ltr">ML</span>/<span dir="ltr">DL</span> כקרביים.</div></div>
 <div class="box viz"><div class="box-title">📊 המחשה ויזואלית</div><div class="viz-svg"><svg style="max-width:480px;height:auto;background:white;border-radius:6px;" viewbox="0 0 400 240" width="100%" xmlns="http://www.w3.org/2000/svg">
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" x="200" y="22">מפת תחומי ה-AI</text>
-<ellipse cx="200" cy="135" fill="#fef9c3" fill-opacity="0.4" rx="180" ry="90" stroke="#ca8a04" stroke-width="2"></ellipse>
-<text direction="rtl" fill="#ca8a04" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="55">AI - בינה מלאכותית</text>
-<ellipse cx="200" cy="145" fill="#dbeafe" fill-opacity="0.6" rx="140" ry="70" stroke="#1d4ed8" stroke-width="2"></ellipse>
-<text direction="rtl" fill="#1d4ed8" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="85">Machine Learning</text>
-<ellipse cx="200" cy="155" fill="#fce7f3" fill-opacity="0.6" rx="80" ry="40" stroke="#be185d" stroke-width="2"></ellipse>
-<text direction="rtl" fill="#be185d" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="155">Deep Learning</text>
-<text direction="rtl" fill="#0f766e" font-family="Arial" font-size="9" text-anchor="middle" x="60" y="195">NLP</text>
-<text direction="rtl" fill="#0f766e" font-family="Arial" font-size="9" text-anchor="middle" x="105" y="205">CV</text>
-<text direction="rtl" fill="#0f766e" font-family="Arial" font-size="9" text-anchor="middle" x="295" y="205">RL</text>
-<text direction="rtl" fill="#0f766e" font-family="Arial" font-size="9" text-anchor="middle" x="340" y="195">GenAI</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" x="200" y="20">מפת תחומי ה-AI - שכבות מקוננות</text>
+<ellipse cx="200" cy="140" fill="#fef9c3" fill-opacity="0.4" rx="180" ry="90" stroke="#ca8a04" stroke-width="2"></ellipse>
+<text direction="rtl" fill="#ca8a04" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="60">AI - בינה מלאכותית</text>
+<ellipse cx="200" cy="150" fill="#dbeafe" fill-opacity="0.6" rx="140" ry="70" stroke="#1d4ed8" stroke-width="2"></ellipse>
+<text direction="ltr" fill="#1d4ed8" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="90">Machine Learning</text>
+<ellipse cx="200" cy="160" fill="#fce7f3" fill-opacity="0.6" rx="80" ry="40" stroke="#be185d" stroke-width="2"></ellipse>
+<text direction="ltr" fill="#be185d" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="200" y="160">Deep Learning</text>
+<text direction="ltr" fill="#0f766e" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" x="55" y="200">NLP</text>
+<text direction="ltr" fill="#0f766e" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" x="100" y="212">CV</text>
+<text direction="ltr" fill="#0f766e" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" x="300" y="212">RL</text>
+<text direction="ltr" fill="#0f766e" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" x="345" y="200">GenAI</text>
 </svg></div></div>
-<div class="box brief"><div class="box-title">🧭 תחומי AI - מבט מהיר</div><ul><li><b>Machine Learning</b> - אלגוריתמים סטטיסטיים שמזהים פאטרנים בנתונים (רגרסיה, עצי החלטה, SVM, KNN, K-Means). הבסיס לכל השאר.</li><li><b>Deep Learning</b> - רשתות נוירונים עמוקות (MLP, CNN, RNN, Transformer). מתאים לדאטה לא מובנה - תמונות, אודיו, טקסט גולמי.</li><li><b>NLP - Natural Language Processing</b> - הבנת שפה אנושית. מודלי <span dir="ltr">Word2Vec</span>, <span dir="ltr">BERT</span>, <span dir="ltr">T5</span> והדור החדש של <span dir="ltr">LLMs</span> (GPT, Claude, Gemini).</li><li><b>Computer Vision</b> - הבנת תמונות וסרטונים. מודלי <span dir="ltr">ResNet</span>, <span dir="ltr">YOLO</span>, <span dir="ltr">ViT</span>, <span dir="ltr">CLIP</span>, <span dir="ltr">SAM</span>.</li><li><b>Reinforcement Learning</b> - סוכן שלומד מקבלת תגמולים בסביבה אינטראקטיבית (Q-Learning, DQN, PPO).</li><li><b>Generative AI</b> - יצירת תוכן חדש: טקסט, תמונות, קוד, וידאו. מודלים גנרטיביים מבוססי DL שמשמשים ב-LLMs ובמודלי תמונה (Stable Diffusion, DALL-E).</li><li><b>MLOps & Data Engineering</b> - השכבה התומכת: ניהול דאטה, אימון בקנה מידה, פריסה ותחזוקה של מודלים בייצור.</li></ul></div>
-<div class="box brief"><div class="box-title">💡 איך לקרוא את המדריך</div><div>המדריך הזה מאורגן לפי <b>שיטות הלמידה</b> (סוגי ה-Learning) ולא לפי תחומי היישום. בעמודים הבאים תכירו את ההבחנה בין <b>Supervised / Unsupervised / Reinforcement</b>, ולאחר מכן כל קטגוריה תוביל אתכם לרשימת המודלים שלה. כל מודל מקבל עמוד פירוט מלא עם נוסחה, ויזואליזציה, קוד, שימושים אמיתיים, יתרונות, חסרונות וההמלצות מתי להשתמש בו.</div></div>
+<div class="box brief"><div class="box-title">🧭 תחומי AI - הפירוט המלא</div><ul><li><b>Machine Learning (ML)</b> - הגישה הסטטיסטית הקלאסית. אלגוריתמים שמזהים פאטרנים בנתונים טבלאיים: רגרסיה לינארית, רגרסיה לוגיסטית, <span dir="ltr">KNN</span>, <span dir="ltr">Naive Bayes</span>, <span dir="ltr">SVM</span>, עצי החלטה, יערות אקראיים, <span dir="ltr">XGBoost</span>. דורש פחות דאטה (אלפים-עשרות אלפי דוגמאות) ופחות כוח חישוב. <b>מתאים לבעיות עסקיות עם דאטה טבלאי</b>.</li><li><b>Deep Learning (DL)</b> - רשתות נוירונים עמוקות עם מיליוני-מיליארדי פרמטרים. <span dir="ltr">MLP</span>, <span dir="ltr">CNN</span>, <span dir="ltr">RNN</span>, <span dir="ltr">LSTM</span>, <span dir="ltr">Transformer</span>. דורש <span dir="ltr">GPU</span>, הרבה דאטה (מאות אלפים-מיליונים) ולעיתים שבועות של אימון. <b>מתאים לדאטה לא מובנה</b>: תמונות, אודיו, וידאו, טקסט גולמי.</li><li><b>Natural Language Processing (NLP)</b> - הבנה וייצור של שפה אנושית. כולל <span dir="ltr">tokenization</span>, <span dir="ltr">embeddings</span> (<span dir="ltr">Word2Vec</span>, <span dir="ltr">GloVe</span>), <span dir="ltr">encoders</span> (<span dir="ltr">BERT</span>, <span dir="ltr">T5</span>), ועכשיו <span dir="ltr">Large Language Models</span> (<span dir="ltr">GPT</span>, <span dir="ltr">Claude</span>, <span dir="ltr">Gemini</span>). יישומים: תרגום, סיכום, ניתוח סנטימנט, צ’אטבוטים, חיפוש סמנטי.</li><li><b>Computer Vision (CV)</b> - ניתוח תמונות וסרטונים. סיווג (<span dir="ltr">ResNet</span>, <span dir="ltr">EfficientNet</span>), זיהוי אובייקטים (<span dir="ltr">YOLO</span>, <span dir="ltr">Faster R-CNN</span>), סגמנטציה (<span dir="ltr">SAM</span>, <span dir="ltr">U-Net</span>), מודלים מולטי-מודאליים (<span dir="ltr">CLIP</span>, <span dir="ltr">DINO</span>). יישומים: רכבים אוטונומיים, רפואה, אבטחה, רטייל.</li><li><b>Reinforcement Learning (RL)</b> - סוכן שלומד דרך תגמולים בסביבה אינטראקטיבית. מודלים: <span dir="ltr">Q-Learning</span>, <span dir="ltr">DQN</span>, <span dir="ltr">Policy Gradient</span>, <span dir="ltr">PPO</span>, <span dir="ltr">DDPG</span>. יישומים: משחקים (<span dir="ltr">AlphaGo</span>, <span dir="ltr">OpenAI Five</span>), רובוטיקה, תיק השקעות, <span dir="ltr">RLHF</span> שמכוון <span dir="ltr">LLMs</span> כמו <span dir="ltr">ChatGPT</span>.</li><li><b>Generative AI (GenAI)</b> - יצירת תוכן חדש: טקסט, תמונות, קוד, וידאו, אודיו. מבוסס על מודלים גנרטיביים מתקדמים: <span dir="ltr">LLMs</span> (GPT-5, Claude 4, Gemini 3), <span dir="ltr">diffusion models</span> (Stable Diffusion, DALL-E, Midjourney), <span dir="ltr">audio models</span> (Whisper, ElevenLabs). שוק שעבר טרנספורמציה מאז 2022.</li><li><b>MLOps & Data Engineering</b> - השכבה התומכת: ניהול דאטה, פיצ’ר-סטור, אימון בקנה מידה, פריסה (deployment), ניטור בייצור (monitoring), <span dir="ltr">A/B testing</span>, ועדכון מודלים. בלי שכבה זו, מודל אקדמי לעולם לא יגיע ללקוחות אמיתיים.</li><li><b>Classical AI / Symbolic AI</b> - הגישה הישנה: מערכות מומחה, חיפוש לוגי, <span dir="ltr">expert systems</span> (כמו <span dir="ltr">MYCIN</span> ברפואה). פחות פופולרית היום, אך עדיין רלוונטית למשימות כמו תכנון, היגיון פורמלי, ומשפטים מתמטיים.</li></ul></div>
+<div class="box brief"><div class="box-title">📜 ציר זמן קצר</div><ul><li><b>1956</b> - <span dir="ltr">Dartmouth Conference</span> - המונח "Artificial Intelligence" נטבע ע"י <span dir="ltr">John McCarthy</span></li><li><b>1957-1969</b> - <span dir="ltr">Perceptron</span> (Rosenblatt), השלמת <span dir="ltr">ELIZA</span>, החורף הראשון של ה-AI</li><li><b>1980s</b> - מערכות מומחה (<span dir="ltr">MYCIN</span>, <span dir="ltr">XCON</span>), חידוש <span dir="ltr">backpropagation</span></li><li><b>1997</b> - <span dir="ltr">Deep Blue</span> מנצח את <span dir="ltr">Kasparov</span> בשחמט</li><li><b>2006</b> - <span dir="ltr">Geoffrey Hinton</span> פרץ <span dir="ltr">deep learning</span> עם <span dir="ltr">RBMs</span></li><li><b>2012</b> - <span dir="ltr">AlexNet</span> מנצח את <span dir="ltr">ImageNet</span> - תחילת מהפכת <span dir="ltr">DL</span></li><li><b>2016</b> - <span dir="ltr">AlphaGo</span> מנצח את <span dir="ltr">Lee Sedol</span> ב-Go</li><li><b>2017</b> - מאמר "<span dir="ltr">Attention is All You Need</span>" - הולדת ה-<span dir="ltr">Transformer</span></li><li><b>2020</b> - <span dir="ltr">GPT-3</span> של OpenAI - הוכחת היכולת של <span dir="ltr">LLMs</span> בקנה מידה</li><li><b>2022</b> - <span dir="ltr">ChatGPT</span> משוחרר לציבור - <span dir="ltr">GenAI</span> הופך לזרם המרכזי</li><li><b>2023-2026</b> - מירוץ <span dir="ltr">Claude</span>, <span dir="ltr">GPT-4/5</span>, <span dir="ltr">Gemini</span>, <span dir="ltr">Llama</span>, <span dir="ltr">DeepSeek</span> - תור הזהב של ה-<span dir="ltr">AI</span></li></ul></div>
+<div class="box brief"><div class="box-title">💡 איך לקרוא את המדריך</div><div>המדריך מאורגן לפי <b>שיטות הלמידה</b> ולא לפי תחומי היישום. בעמוד הבא תכירו את ההבחנה בין <b>Supervised / Unsupervised / Reinforcement / Self-supervised</b>. אחר כך תקבלו דפי-עוגן לכל סוג למידה עם רשימת המודלים הקלקיבים. כל מודל מקבל עמוד פירוט מלא: בקצרה, נוסחה, ויזואליזציה, קוד פייתון, שימושים אמיתיים, יתרונות, חסרונות וההמלצות מתי להשתמש. הניווט: <b>לחיצה על שם מודל</b> בכל מקום במדריך מובילה ישירות לעמוד הפירוט שלו. <b>חיצי המקלדת</b> מנווטים קדימה ואחורה. <b>כפתור התפריט</b> (☰) פותח את תוכן העניינים המלא.</div></div>
+<div class="box brief"><div class="box-title">🤔 למה לפי שיטת למידה ולא לפי תחום?</div><div>אותו אלגוריתם (למשל <span dir="ltr">XGBoost</span>) יכול לפתור בעיות מתחומים שונים: סיווג רפואי, חיזוי מחירים, זיהוי הונאות, ועוד. ההבחנה הבסיסית האמיתית היא <b>"איזה דאטה יש לי?"</b>: יש לי תוויות (Supervised), אין לי תוויות (Unsupervised), או שאני בסביבה אינטראקטיבית (Reinforcement). אחרי שיודעים את זה, בוחרים את המודל המתאים. גישה זו דומה לזו של ספרי הלימוד הקלאסיים של <span dir="ltr">Hastie</span>, <span dir="ltr">Bishop</span>, ו-<span dir="ltr">Goodfellow</span>.</div></div>
 </section>
 
 <section class="slide" data-idx="72" data-layer="0">
 <div class="layer-context"><span class="layer-name">מבוא ועקרונות</span> · ערך 2 מתוך 5</div>
 <div class="entry-head"><h2>סוגי הלמידה - השוואה</h2><span class="en-name">Learning Paradigms · Supervised vs Unsupervised vs Reinforcement</span></div>
-<div class="box brief"><div class="box-title">📝 בקצרה</div><div>שלושת סוגי הלמידה המרכזיים נבדלים בעיקר ב<b>צורת הדאטה</b> וב<b>מטרת המודל</b>. ב-<span dir="ltr">Supervised Learning</span> יש לנו זוגות <span dir="ltr">(X, Y)</span> והמטרה היא ללמוד פונקציה <span dir="ltr">X→Y</span> שתחזה את <span dir="ltr">Y</span> על נתונים חדשים. ב-<span dir="ltr">Unsupervised Learning</span> יש רק <span dir="ltr">X</span> ללא תוויות, והמטרה היא לגלות מבנה נסתר - קבוצות (clustering) או דחיסת מימד (dimensionality reduction). ב-<span dir="ltr">Reinforcement Learning</span> יש סוכן שפועל בסביבה ולומד מנקודות חיזוק (תגמולים). שלומית הציגה את הדוגמה: אותם מיילים יכולים לשמש את שתי הגישות - <span dir="ltr">classification</span> של ספאם (מונחה) או <span dir="ltr">clustering</span> של נושאים (בלתי מונחה).</div></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>שלושת סוגי הלמידה המרכזיים נבדלים בעיקר ב<b>צורת הדאטה</b> וב<b>מטרת המודל</b>. ההבחנה היא הראשונה והחשובה ביותר שמדריך סטודנט ב-<span dir="ltr">DS</span>: לפני שבוחרים אלגוריתם, חייבים להבין באיזה משטר אנחנו.<br><br>
+<b>Supervised Learning (למידה מונחית)</b> - לדאטה האימון יש <b>תוויות נכונות</b>. דוגמה: 10,000 מיילים, לכל אחד תווית ספאם או לגיטימי. המודל לומד את הקשר <span dir="ltr">X → Y</span> ואז על מייל חדש מנבא <span dir="ltr">Ŷ</span>. שני סוגי בעיות מרכזיים: <span dir="ltr">classification</span> (Y קטגוריאלי) ו-<span dir="ltr">regression</span> (Y רציף). זו השיטה הפופולרית ביותר בתעשייה - כ-70% מהבעיות.<br><br>
+<b>Unsupervised Learning (למידה בלתי מונחית)</b> - <b>אין תוויות</b>, רק נתוני קלט <span dir="ltr">X</span>. המטרה לחשוף מבנה נסתר: לחלק את הדאטה לקבוצות (<span dir="ltr">clustering</span>), לדחוס ייצוג (<span dir="ltr">dimensionality reduction</span>), או לזהות חריגים (<span dir="ltr">anomaly detection</span>). כאן ה-Data Scientist נדרש לתת <b>פרשנות עסקית</b> לחלוקה שהאלגוריתם מציע - האלגוריתם נותן קבוצות 0/1/2, השאלה איך לקרוא להן.<br><br>
+<b>Reinforcement Learning (למידת חיזוק)</b> - אין דאטהסט קבוע. במקום זה יש <b>סוכן</b> שפועל ב<b>סביבה</b> אינטראקטיבית: רואה מצב, בוחר פעולה, מקבל <b>תגמול</b> (חיובי או שלילי). המטרה: ללמוד מדיניות <span dir="ltr">π(a|s)</span> שמקסמת את התגמול הצבור על פני זמן. תופס פחות מ-5% מבעיות הייצור אבל מאחורי ההצלחות הכי מרשימות: <span dir="ltr">AlphaGo</span>, רכבים אוטונומיים, <span dir="ltr">RLHF</span> ב-<span dir="ltr">ChatGPT</span>.<br><br>
+שלומית הראתה שאותו דאטה (למשל מיילים) יכול לשמש את שתי הגישות: סיווג ספאם (מונחה) או קלסטרינג של נושאים (בלתי מונחה). <b>הבחירה תלויה בשאלה</b>, לא בדאטה.</div></div>
 <div class="box viz"><div class="box-title">📊 המחשה ויזואלית</div><div class="viz-svg"><svg style="max-width:480px;height:auto;background:white;border-radius:6px;" viewbox="0 0 400 240" width="100%" xmlns="http://www.w3.org/2000/svg">
 <text direction="rtl" fill="#111827" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" x="200" y="20">שלושת סוגי הלמידה במכונה</text>
 <g transform="translate(15, 40)">
-<rect fill="#dbeafe" height="170" rx="8" stroke="#1d4ed8" stroke-width="2" width="115" x="0" y="0"></rect>
-<text direction="rtl" fill="#1d4ed8" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Supervised</text>
+<rect fill="#dbeafe" height="180" rx="8" stroke="#1d4ed8" stroke-width="2" width="115" x="0" y="0"></rect>
+<text direction="ltr" fill="#1d4ed8" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Supervised</text>
 <text direction="rtl" fill="#1d4ed8" font-family="Arial" font-size="10" text-anchor="middle" x="58" y="38">למידה מונחית</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">דאטה עם תוויות</text>
-<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="75">X → Y</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="95">סיווג ורגרסיה</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="120">דוגמה: ספאם/לא</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="135">מחיר דירה</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="155">ביקורת חיובית/שלילית</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">Has labels: X, Y</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="74">Learn: X &rarr; Y</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="92">סיווג ורגרסיה</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="115">דוגמה: ספאם/לא</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="130">מחיר דירה</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="145">ביקורת חיובית/שלילית</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="168">~70% מהבעיות בייצור</text>
 </g>
 <g transform="translate(140, 40)">
-<rect fill="#d1fae5" height="170" rx="8" stroke="#059669" stroke-width="2" width="115" x="0" y="0"></rect>
-<text direction="rtl" fill="#059669" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Unsupervised</text>
+<rect fill="#d1fae5" height="180" rx="8" stroke="#059669" stroke-width="2" width="115" x="0" y="0"></rect>
+<text direction="ltr" fill="#059669" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Unsupervised</text>
 <text direction="rtl" fill="#059669" font-family="Arial" font-size="10" text-anchor="middle" x="58" y="38">למידה בלתי מונחית</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">דאטה ללא תוויות</text>
-<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="75">רק X</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="95">קבוצות והפחתת ממדים</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="120">דוגמה: סגמנטציית לקוחות</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="135">PCA לדאטה רחב</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="155">זיהוי אנומליות</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">No labels: only X</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="74">Discover structure</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="92">קלסטרינג והפחתת ממדים</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="115">דוגמה: סגמנטציה</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="130">זיהוי אנומליות</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="145">חיפוש סמנטי</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="168">~15% מהבעיות בייצור</text>
 </g>
 <g transform="translate(265, 40)">
-<rect fill="#fce7f3" height="170" rx="8" stroke="#be185d" stroke-width="2" width="115" x="0" y="0"></rect>
-<text direction="rtl" fill="#be185d" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Reinforcement</text>
+<rect fill="#fce7f3" height="180" rx="8" stroke="#be185d" stroke-width="2" width="115" x="0" y="0"></rect>
+<text direction="ltr" fill="#be185d" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" x="58" y="22">Reinforcement</text>
 <text direction="rtl" fill="#be185d" font-family="Arial" font-size="10" text-anchor="middle" x="58" y="38">למידת חיזוק</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">סוכן בסביבה</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="75">פעולה → תגמול</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="95">אופטימיזציית מדיניות</text>
-<text direction="ltr" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="120">דוגמה: AlphaGo</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="135">רכב אוטונומי</text>
-<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="155">המלצות בזמן אמת</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="60">Agent + Environment</text>
+<text direction="ltr" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="74">Action &rarr; Reward</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="58" y="92">אופטימיזציית מדיניות</text>
+<text direction="ltr" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="115">דוגמה: AlphaGo</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="130">רכב אוטונומי</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="145">המלצות אדפטיביות</text>
+<text direction="rtl" fill="#0f172a" font-family="Arial" font-size="8" text-anchor="middle" x="58" y="168">~5% מהבעיות בייצור</text>
 </g>
 </svg></div></div>
-<div class="box brief"><div class="box-title">📊 מתי כל אחד</div><ul><li><b>Supervised</b> - יש לנו תוויות והשאלה ידועה ("האם הלקוח יעזוב?"). שימושים: סיווג, חיזוי, ניבוי. רוב מערכות ה-AI בייצור.</li><li><b>Unsupervised</b> - אין תוויות, רק רוצים להבין את הדאטה. שימושים: סגמנטציה, גילוי טרנדים, זיהוי אנומליות, הפחתת ממדים לפני אימון.</li><li><b>Reinforcement</b> - הסביבה אינטראקטיבית, פעולה היום משפיעה על מצב מחר. שימושים: משחקים, רובוטיקה, רכבים אוטונומיים, ניהול תיק השקעות, מערכות המלצה אדפטיביות.</li><li><b>Self-Supervised</b> (גישה היברידית מתפתחת) - יוצרים תוויות "מלאכותיות" מהדאטה עצמו (למשל "מלא את המילה החסרה" ב-BERT). מאחורי כל ה-<span dir="ltr">LLMs</span> המודרניים.</li></ul></div>
-<div class="box brief"><div class="box-title">🎯 לכל סוג למידה - דף עוגן</div><div>בעמודים הבאים תמצאו דף עוגן לכל סוג למידה, עם רשימה לחיצה של כל המודלים השייכים אליו: <a data-idx="73" href="#s73"><b>למידה מונחית</b></a> · <a data-idx="74" href="#s74"><b>למידה בלתי מונחית</b></a> · <a data-idx="75" href="#s75"><b>למידת חיזוק</b></a>. לחיצה על שם של מודל תקפיץ אתכם ישר לעמוד הפירוט שלו.</div></div>
+<div class="box brief"><div class="box-title">🔍 השוואה מפורטת</div><table style="width:100%;border-collapse:collapse;font-size:13px;direction:rtl;"><thead><tr style="background:#f1f5f9;font-weight:bold;"><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">קריטריון</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">Supervised</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">Unsupervised</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">Reinforcement</th></tr></thead><tbody><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">צורת דאטה</td><td style="padding:6px;border:1px solid #e2e8f0;">זוגות (X, Y)</td><td style="padding:6px;border:1px solid #e2e8f0;">רק X</td><td style="padding:6px;border:1px solid #e2e8f0;">מצבים, פעולות, תגמולים</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">מה לומדים?</td><td style="padding:6px;border:1px solid #e2e8f0;">פונקציה X→Y</td><td style="padding:6px;border:1px solid #e2e8f0;">מבנה / קבוצות</td><td style="padding:6px;border:1px solid #e2e8f0;">מדיניות π(a|s)</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">מטריקות הצלחה</td><td style="padding:6px;border:1px solid #e2e8f0;"><span dir="ltr">Accuracy, F1, MAE</span></td><td style="padding:6px;border:1px solid #e2e8f0;"><span dir="ltr">Silhouette, DB, יציבות</span></td><td style="padding:6px;border:1px solid #e2e8f0;">תגמול צבור</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">דרישה לתוויות</td><td style="padding:6px;border:1px solid #e2e8f0;">חובה - יקרות!</td><td style="padding:6px;border:1px solid #e2e8f0;">לא נדרשות</td><td style="padding:6px;border:1px solid #e2e8f0;">תגמול מהסביבה</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">דוגמאות מודלים</td><td style="padding:6px;border:1px solid #e2e8f0;"><span dir="ltr">Linear Reg, SVM, XGBoost, KNN</span></td><td style="padding:6px;border:1px solid #e2e8f0;"><span dir="ltr">K-Means, DBSCAN, PCA, t-SNE</span></td><td style="padding:6px;border:1px solid #e2e8f0;"><span dir="ltr">Q-Learning, DQN, PPO</span></td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">קושי לאסוף דאטה</td><td style="padding:6px;border:1px solid #e2e8f0;">גבוה (תיוג ידני)</td><td style="padding:6px;border:1px solid #e2e8f0;">נמוך (כל דאטה)</td><td style="padding:6px;border:1px solid #e2e8f0;">דורש סביבה אינטראקטיבית</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;">% בייצור בתעשייה</td><td style="padding:6px;border:1px solid #e2e8f0;">~70%</td><td style="padding:6px;border:1px solid #e2e8f0;">~15%</td><td style="padding:6px;border:1px solid #e2e8f0;">~5%</td></tr></tbody></table></div>
+<div class="box brief"><div class="box-title">📘 למידה מונחית - היכרות מעמיקה</div><div><b>Supervised Learning</b> דורש דאטה מתויג: זוגות <span dir="ltr">(x_i, y_i)</span> כאשר <span dir="ltr">x_i</span> וקטור פיצ’רים ו-<span dir="ltr">y_i</span> התווית. שני סוגי בעיות:<br><b>1. סיווג (Classification)</b> - <span dir="ltr">y</span> קטגוריאלי. בינארי: ספאם/לא, חולה/בריא. רב-קלאסי: סיווג חיות (כלב/חתול/דג), סיווג ספרות (0-9). מודלים: <span dir="ltr">Logistic Regression</span>, <span dir="ltr">KNN</span>, <span dir="ltr">SVM</span>, <span dir="ltr">Random Forest</span>, <span dir="ltr">XGBoost</span>, <span dir="ltr">Neural Networks</span>.<br><b>2. רגרסיה (Regression)</b> - <span dir="ltr">y</span> רציף. חיזוי מחיר דירה, חיזוי הכנסה, חיזוי טמפרטורה. מודלים: <span dir="ltr">Linear Regression</span>, <span dir="ltr">Ridge/Lasso</span>, <span dir="ltr">Gradient Boosting</span>, <span dir="ltr">Neural Nets</span>.<br><b>אתגרים מרכזיים</b>: דאטה לא מאוזן (<span dir="ltr">imbalanced data</span>), דליפת מידע (<span dir="ltr">data leakage</span>), בחירת מטריקה (<span dir="ltr">Accuracy</span> מטעה!), <span dir="ltr">overfitting</span>/<span dir="ltr">underfitting</span>.<br><b>עוגן ל-Olist</b>: בקורס בנינו מסווג שמנבא ביקורת שלילית (12.6% מהדאטה - <span dir="ltr">imbalanced</span>!). דורש <span dir="ltr">class_weight=balanced</span> ומדדים מתקדמים.</div></div>
+<div class="box brief"><div class="box-title">📗 למידה בלתי מונחית - היכרות מעמיקה</div><div><b>Unsupervised Learning</b> פועלת על דאטה ללא תוויות. שלוש משימות עיקריות:<br><b>1. Clustering (חלוקה לקבוצות)</b> - לחלק את הדאטה לקבוצות "טבעיות". מודלים: <span dir="ltr">K-Means</span> (centroids), <span dir="ltr">DBSCAN</span> (density), <span dir="ltr">Hierarchical</span> (dendrogram), <span dir="ltr">GMM</span> (soft assignments), <span dir="ltr">Spectral</span>. דוגמה: סגמנטציית לקוחות.<br><b>2. Dimensionality Reduction (הפחתת ממדים)</b> - לכווץ ייצוג גבוה-מימדי למימד נמוך תוך שמירה על המידע. מודלים: <span dir="ltr">PCA</span> (לינארי), <span dir="ltr">t-SNE</span>/<span dir="ltr">UMAP</span> (לא-לינארי, לויזואליזציה), <span dir="ltr">Autoencoders</span> (רשתות).<br><b>3. Anomaly Detection (זיהוי חריגים)</b> - לזהות נקודות שונות מהרוב. מודלים: <span dir="ltr">Isolation Forest</span>, <span dir="ltr">One-Class SVM</span>, <span dir="ltr">DBSCAN</span> (noise points). שימושים: גילוי הונאות, ניטור תעשייתי, בריאות הרשת.<br><b>הקושי הגדול</b>: אין "תשובה נכונה" אחת. שני אלגוריתמים יכולים לתת חלוקות שונות, ושתיהן "נכונות" - השאלה איזה מועיל יותר עסקית. שלומית: <b>"האלגוריתם נותן חלוקה, ה-Data Scientist נותן את הפרשנות"</b>.</div></div>
+<div class="box brief"><div class="box-title">📙 למידת חיזוק - היכרות מעמיקה</div><div><b>Reinforcement Learning</b> מבוסס על המודל המתמטי של <span dir="ltr">Markov Decision Process (MDP)</span>: <span dir="ltr">(S, A, P, R, γ)</span> - מצבים, פעולות, מעברים, תגמולים, וגורם הנחה.<br><b>חמשת המושגים המרכזיים</b>:<br>• <span dir="ltr">State (s)</span> - המצב הנוכחי של הסביבה<br>• <span dir="ltr">Action (a)</span> - פעולה שהסוכן יכול לבחור<br>• <span dir="ltr">Reward (r)</span> - תגמול מהסביבה אחרי הפעולה<br>• <span dir="ltr">Policy π(a|s)</span> - האסטרטגיה של הסוכן<br>• <span dir="ltr">Value V(s)</span> / <span dir="ltr">Q(s,a)</span> - כמה "שווה" להיות במצב מסוים<br><br><b>שתי משפחות אלגוריתמים</b>:<br><b>Value-based</b> - לומדים <span dir="ltr">Q(s,a)</span>, בוחרים את הפעולה עם <span dir="ltr">Q</span> מקסימלי. <span dir="ltr">Q-Learning</span>, <span dir="ltr">DQN</span>.<br><b>Policy-based</b> - לומדים ישירות מדיניות. <span dir="ltr">Policy Gradient</span>, <span dir="ltr">A3C</span>, <span dir="ltr">PPO</span>, <span dir="ltr">DDPG</span>.<br><br><b>הצלחות מפורסמות</b>: <span dir="ltr">AlphaGo</span> (2016) - ניצח את אלוף העולם ב-Go. <span dir="ltr">AlphaZero</span> (2017) - לומד שחמט/Go/Shogi מאפס. <span dir="ltr">OpenAI Five</span> (2019) - מנצח אלופי <span dir="ltr">Dota 2</span>. <span dir="ltr">RLHF</span> (2022+) - מכוון <span dir="ltr">LLMs</span> כמו <span dir="ltr">ChatGPT</span>, <span dir="ltr">Claude</span>, <span dir="ltr">Gemini</span> לפעולה לפי העדפות אנושיות.</div></div>
+<div class="box brief"><div class="box-title">🆕 Self-Supervised Learning - הפרדיגמה המתפתחת</div><div>גישה היברידית שעלתה ב-2018 ומאחורי כל ה-<span dir="ltr">LLMs</span> המודרניים. <b>הרעיון</b>: יוצרים תוויות "מלאכותיות" מהדאטה עצמו, בלי צורך בתיוג ידני יקר. דוגמאות:<br>• <span dir="ltr">BERT</span> - "מלא את המילה החסרה" (<span dir="ltr">Masked Language Modeling</span>). מקבלים משפט עם 15% מהמילים מוסתרות, המודל לומד לחזות אותן.<br>• <span dir="ltr">GPT</span> - "נחש את המילה הבאה" (<span dir="ltr">Causal LM</span>). המודל לומד לחזות מילה מהקודמות.<br>• <span dir="ltr">SimCLR</span> / <span dir="ltr">MoCo</span> בתמונות - שתי גרסאות של אותה תמונה (crop+flip) - לומדים שייצוגיהן צריכים להיות דומים.<br>• <span dir="ltr">CLIP</span> - כותרת תמונה היא התווית הטבעית של התמונה.<br><br><b>למה זה מהפכני</b>: דאטה לא מתויג הוא <b>אינסופי</b> (האינטרנט), בעוד דאטה מתויג <b>יקר</b> (תיוג ידני עולה דולרים-עשרות דולרים לדוגמה). <span dir="ltr">Self-supervised</span> אפשר אימון של מודלים על טריליוני מילים בלי תיוג ידני.</div></div>
+<div class="box brief"><div class="box-title">🎯 דפי עוגן בקטגוריה</div><div>בעמודים הבאים יש דף עוגן לכל סוג למידה עם רשימת המודלים בקטגוריה - לחיצה על כל מודל תוביל לעמוד הפירוט שלו:<br>• <a data-idx="73" href="#s73"><b>למידה מונחית</b></a> - 24 מודלים<br>• <a data-idx="74" href="#s74"><b>למידה בלתי מונחית</b></a> - 11 מודלים<br>• <a data-idx="75" href="#s75"><b>למידת חיזוק</b></a> - 6 מודלים<br></div></div>
 </section>
 
 <section class="slide" data-idx="73" data-layer="0">
@@ -3229,28 +3247,35 @@ print(f"R²   = {r2:.3f}")        # אחוז השונות המוסברת
 <div class="box brief"><div class="box-title">📝 בקצרה</div><div><b>Accuracy</b> הוא המדד הראשון שכולם לומדים: אחוז הניבויים הנכונים. הנוסחה פשוטה <span dir="ltr">(TP+TN)/N</span>. הבעיה: <b>על דאטה לא מאוזן הוא משקר בגדול</b>. שלומית הדגימה: 10% חולים ו-90% בריאים - מודל עצלן שעונה "תמיד בריא" מקבל <span dir="ltr">Accuracy</span> 90% מרהיב, אך <span dir="ltr">Recall = 0</span> - לא זיהה אף חולה! בדמו <span dir="ltr">Olist</span>: ביקורות שליליות הן 12.6%, ה-<span dir="ltr">baseline</span> "תמיד חיובי" משיג <span dir="ltr">Accuracy</span> 0.874, אך מסווג לוגיסטי שמשיג רק 0.751 מצליח לתפוס את הביקורות השליליות (Recall=0.594). <b>Accuracy מהימן רק כשהדאטה מאוזן (קרוב ל-50/50).</b> במצב לא מאוזן עוברים ל-<a data-idx="61" href="#s61">Precision/Recall/F1</a> ולשימוש ב-<span dir="ltr">class_weight=balanced</span> ו-<span dir="ltr">stratify</span>.</div></div>
 <div class="box brief"><div class="box-title">📐 נוסחה</div><div class="formula">Accuracy = (TP + TN) / N   ·   הטיה: על 90/10, מנבא הרוב = 90% Accuracy אבל 0% Recall</div></div>
 <div class="box viz"><div class="box-title">📊 המחשה ויזואלית</div><div class="viz-svg"><svg style="max-width:480px;height:auto;background:white;border-radius:6px;" viewbox="0 0 400 240" width="100%" xmlns="http://www.w3.org/2000/svg">
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" x="200" y="20">מלכודת הדיוק על דאטה לא מאוזן</text>
-<g transform="translate(40, 40)">
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="80" y="14">90% בריאים, 10% חולים</text>
-<rect fill="#86efac" height="40" rx="3" width="144" x="0" y="25"></rect>
-<rect fill="#fca5a5" height="40" rx="3" width="16" x="144" y="25"></rect>
-<text fill="#111827" font-family="Arial" font-size="11" text-anchor="middle" x="72" y="49">90% בריאים</text>
-<text fill="#111827" font-family="Arial" font-size="9" text-anchor="middle" x="152" y="49">10%</text>
-<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="11" font-weight="bold" x="0" y="100">מודל עצלן: "כולם בריאים"</text>
-<text direction="rtl" fill="#0d4d7a" font-family="Arial" font-size="11" x="0" y="120">דיוק 90% - מרהיב!</text>
-<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="11" font-weight="bold" x="0" y="142">אך Recall = 0 - לא תפס</text>
-<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="11" font-weight="bold" x="0" y="156">אף חולה!</text>
-</g>
-<g transform="translate(220, 40)">
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="80" y="14">דאטה חי - Olist</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="10" x="0" y="38">Baseline עצלן:</text>
-<text direction="ltr" fill="#0d4d7a" font-family="Arial" font-size="10" x="0" y="54">  Accuracy = 0.874</text>
-<text direction="ltr" fill="#dc2626" font-family="Arial" font-size="10" x="0" y="68">  Recall = 0</text>
-<text direction="rtl" fill="#111827" font-family="Arial" font-size="10" x="0" y="90">Logistic Regression:</text>
-<text direction="ltr" fill="#0d4d7a" font-family="Arial" font-size="10" x="0" y="106">  Accuracy = 0.751</text>
-<text direction="ltr" fill="#16a34a" font-family="Arial" font-size="10" x="0" y="120">  Recall = 0.594</text>
-<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="10" font-weight="bold" x="0" y="156">"דיוק לבדו = עיוורון"</text>
-</g>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" x="200" y="18">מלכודת הדיוק על דאטה לא מאוזן</text>
+<text direction="rtl" fill="#0d4d7a" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="100" y="42">דאטה: 90% בריאים, 10% חולים</text>
+<rect fill="#86efac" height="22" stroke="#16a34a" stroke-width="1.5" width="135" x="32" y="50"></rect>
+<rect fill="#fca5a5" height="22" stroke="#dc2626" stroke-width="1.5" width="15" x="167" y="50"></rect>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" x="100" y="66">90% בריאים</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="8" text-anchor="middle" x="174" y="66">10%</text>
+<line stroke="#94a3b8" x1="32" x2="32" y1="78" y2="90"></line>
+<line stroke="#94a3b8" x1="100" x2="100" y1="78" y2="90"></line>
+<line stroke="#94a3b8" x1="182" x2="182" y1="78" y2="90"></line>
+<text direction="ltr" fill="#dc2626" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="100" y="115">"לעצלן" baseline</text>
+<text direction="rtl" fill="#0d4d7a" font-family="Arial" font-size="10" text-anchor="middle" x="100" y="132">מנבא תמיד "בריא"</text>
+<text direction="ltr" fill="#0d4d7a" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="100" y="155">Accuracy = 90%</text>
+<text direction="ltr" fill="#dc2626" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="100" y="172">Recall = 0%</text>
+<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="9" text-anchor="middle" x="100" y="190">לא תפס אף חולה!</text>
+
+<line stroke="#cbd5e1" stroke-dasharray="4,3" x1="210" x2="210" y1="35" y2="220"></line>
+
+<text direction="rtl" fill="#0d4d7a" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="305" y="42">דאטה חי - Olist</text>
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="10" text-anchor="middle" x="305" y="62">12.6% ביקורות שליליות</text>
+
+<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="10" font-weight="bold" text-anchor="end" x="380" y="92">Baseline עצלן:</text>
+<text direction="ltr" fill="#0d4d7a" font-family="Arial" font-size="10" text-anchor="end" x="380" y="106">Accuracy = 0.874</text>
+<text direction="ltr" fill="#dc2626" font-family="Arial" font-size="10" text-anchor="end" x="380" y="120">Recall = 0</text>
+
+<text direction="rtl" fill="#16a34a" font-family="Arial" font-size="10" font-weight="bold" text-anchor="end" x="380" y="148">Logistic Regression:</text>
+<text direction="ltr" fill="#0d4d7a" font-family="Arial" font-size="10" text-anchor="end" x="380" y="162">Accuracy = 0.751</text>
+<text direction="ltr" fill="#16a34a" font-family="Arial" font-size="10" text-anchor="end" x="380" y="176">Recall = 0.594</text>
+
+<text direction="rtl" fill="#dc2626" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" x="305" y="208">"דיוק לבדו = עיוורון"</text>
 </svg></div></div>
 <div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, recall_score
@@ -3888,7 +3913,7 @@ print(f"Stability ARI: {np.mean(aris):.3f}")  # > 0.7 = יציב</pre></div>
   const drawerBtn = document.getElementById('drawerBtn');
   const drawer = document.getElementById('drawer');
   const drawerBackdrop = document.getElementById('drawerBackdrop');
-  const drawerLinks = Array.from(document.querySelectorAll('aside.drawer a[data-idx]'));
+  const drawerLinks = Array.from(document.querySelectorAll('a[data-idx]'));
   const slidesArea = document.getElementById('slidesArea');
 
   let currentIdx = 0;
@@ -3975,7 +4000,7 @@ print(f"Stability ARI: {np.mean(aris):.3f}")  # > 0.7 = יציב</pre></div>
   try { window.showSlide = showSlide; } catch(e){}
 
   // Initial: parse hash (might throw on some restricted file:// contexts)
-  let initIdx = 0;
+  let initIdx = 71;
   try {
     if (location && location.hash && location.hash.indexOf('#s') === 0) {
       const n = parseInt(location.hash.slice(2));

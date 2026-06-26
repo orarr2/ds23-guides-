@@ -519,6 +519,8 @@ html.js-enabled .slide {
 html.js-enabled .slide.active {
   display: block !important;
   animation: fadeIn .2s ease;
+  animation-fill-mode: both;
+  opacity: 1;
 }
 html.js-enabled header.topbar { display: flex !important; }
 html.js-enabled footer.bottomnav { display: flex !important; }
@@ -2262,7 +2264,7 @@ Bias² = (32-28)² = 16. Var(ŷ) = 16. σ² = 9. MSE = Bias² + Var + σ² = 16 
   const drawerBtn = document.getElementById('drawerBtn');
   const drawer = document.getElementById('drawer');
   const drawerBackdrop = document.getElementById('drawerBackdrop');
-  const drawerLinks = Array.from(document.querySelectorAll('aside.drawer a[data-idx]'));
+  const drawerLinks = Array.from(document.querySelectorAll('a[data-idx]'));
   const slidesArea = document.getElementById('slidesArea');
 
   let currentIdx = 0;
