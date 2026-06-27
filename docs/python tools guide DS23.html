@@ -1,0 +1,2728 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="theme-color" content="#0D4D7A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Python Tools">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>מדריך פייתון וכלים מעשיים · DS23</title>
+<style>
+:root {
+  --bg: #FAFAFA; --fg: #111827; --muted: #6B7280;
+  --accent: #0D4D7A; --accent-light: #DBEAFE; --green: #1B5E20;
+  --brief-bg: #F5F5F5; --ana1-bg: #FEF9C3; --ana2-bg: #DBEAFE;
+  --ml-bg: #DCFCE7; --ex-bg: #FED7AA;
+  --code-bg: #1E293B; --code-fg: #F1F5F9; --code-comment: #94A3B8;
+  --border: #E5E7EB;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; height: 100vh;
+  font-family: "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+  background: var(--bg); color: var(--fg);
+  direction: rtl; line-height: 1.55;
+  overflow: hidden;
+}
+
+/* ==== Top bar ==== */
+header.topbar {
+  position: fixed; top: 0; right: 0; left: 0; height: 56px;
+  background: linear-gradient(to left, var(--accent), #1565C0);
+  color: white; display: flex; align-items: center; padding: 0 18px;
+  z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.topbar .menu-btn {
+  background: rgba(255,255,255,0.15); color: white; border: none;
+  font-size: 22px; padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  transition: background .15s;
+}
+.topbar .menu-btn:hover { background: rgba(255,255,255,0.3); }
+.topbar .title { font-size: 17px; font-weight: 700; margin-right: 16px; flex: 1; }
+.topbar .counter { font-size: 14px; opacity: 0.9; direction: ltr; }
+
+/* ==== Drawer TOC ==== */
+.drawer-backdrop {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4); z-index: 20; display: none;
+}
+.drawer-backdrop.open { display: block; }
+aside.drawer {
+  position: fixed; top: 0; right: -380px; width: 360px; height: 100vh;
+  background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+  z-index: 30; transition: right .25s ease;
+  display: flex; flex-direction: column;
+}
+aside.drawer.open { right: 0; }
+aside.drawer .drawer-head {
+  padding: 14px 18px; background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: space-between;
+}
+aside.drawer .drawer-head h2 { font-size: 16px; margin: 0; }
+aside.drawer .drawer-head .close-btn {
+  background: none; color: white; border: none; font-size: 22px; cursor: pointer; padding: 4px 10px;
+}
+aside.drawer .drawer-body { flex: 1; overflow-y: auto; padding: 12px 16px; }
+aside.drawer details { margin-bottom: 6px; }
+aside.drawer summary {
+  cursor: pointer; padding: 6px 4px; font-weight: 600; color: var(--accent);
+  font-size: 14px; border-radius: 4px;
+}
+aside.drawer summary:hover { background: var(--brief-bg); }
+aside.drawer ul { list-style: none; padding: 0; margin: 0; }
+aside.drawer ul ul { padding-inline-start: 14px; margin-top: 4px; }
+aside.drawer ul ul li { margin: 3px 0; }
+aside.drawer a {
+  display: block; padding: 5px 8px; font-size: 13px; color: var(--fg);
+  text-decoration: none; border-radius: 4px;
+}
+aside.drawer a:hover { background: var(--ana2-bg); color: var(--accent); }
+aside.drawer a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* ==== Slides area ==== */
+.slides-area {
+  position: fixed; top: 56px; bottom: 76px; right: 0; left: 0;
+  overflow-y: auto; padding: 28px 40px; background: var(--bg);
+}
+@media (max-width: 720px) {
+  .slides-area { padding: 18px 14px; }
+}
+.slide { display: none; max-width: 1000px; margin: 0 auto; }
+.slide.active { display: block; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.slide .layer-context {
+  font-size: 13px; color: var(--muted); margin-bottom: 6px; text-align: center;
+}
+.slide .layer-context .layer-name { color: var(--accent); font-weight: 600; }
+
+.entry-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.entry-head h2 { font-size: 28px; color: var(--accent); margin: 0; }
+.entry-head .en-name { font-size: 18px; color: var(--muted); font-style: italic; }
+
+.formula-group { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.formula {
+  padding: 12px 18px; background: white; border-inline-start: 4px solid var(--accent);
+  font-family: "Cambria Math", "Segoe UI", serif; font-weight: 700; color: var(--accent);
+  font-size: 19px; margin: 0; direction: ltr; text-align: start; unicode-bidi: isolate;
+}
+
+.box { padding: 14px 18px; border-radius: 8px; margin: 14px 0; }
+.box .box-title { font-weight: 700; color: var(--accent); margin-bottom: 8px; font-size: 15px; }
+.box.brief { background: var(--brief-bg); }
+.box.ana1 { background: var(--ana1-bg); }
+.box.ana2 { background: var(--ana2-bg); }
+.box.ml { background: var(--ml-bg); }
+.box.ex { background: var(--ex-bg); }
+.box.viz { background: #F8FAFC; border: 1px solid var(--border); text-align: center; padding: 14px; }
+.box.viz .viz-svg { display: block; margin: 8px auto 0; }
+.box.viz svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.box.viz svg text {
+  font-family: "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+  font-weight: 600;
+  paint-order: stroke fill;
+  stroke: #ffffff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.box.viz svg text[font-size="7"],
+.box.viz svg text[font-size="8"],
+.box.viz svg text[font-size="9"],
+.box.viz svg text[font-size="10"] { font-size: 12px; }
+.box.viz svg text[font-size="11"] { font-size: 12.5px; }
+.box.viz svg text[font-size="12"] { font-size: 13px; }
+@media (max-width: 600px) {
+  .box.viz svg text[font-size="7"],
+  .box.viz svg text[font-size="8"],
+  .box.viz svg text[font-size="9"],
+  .box.viz svg text[font-size="10"],
+  .box.viz svg text[font-size="11"],
+  .box.viz svg text[font-size="12"] { font-size: 13.5px; }
+  .box.viz svg text[font-size="13"] { font-size: 14px; }
+}
+.domain-chip {
+  display: inline-block; padding: 2px 8px; border-radius: 10px;
+  background: var(--accent-light); color: var(--accent); font-size: 12px; font-weight: 600;
+  margin-bottom: 8px;
+}
+.analogy-title { font-weight: 700; color: var(--green); margin: 4px 0 8px; font-size: 16px; }
+.mapping { margin: 8px 0; }
+.mapping ul { margin: 4px 0; padding-inline-start: 18px; }
+.mapping li { margin: 4px 0; font-size: 15px; }
+.mapping-title { font-weight: 700; color: var(--accent); margin-top: 8px; font-size: 14px; }
+
+pre.code {
+  background: var(--code-bg); color: var(--code-fg);
+  padding: 14px 18px; border-radius: 6px; overflow-x: auto;
+  direction: ltr; text-align: start;
+  font-family: Consolas, "Cascadia Code", monospace; font-size: 13.5px;
+  line-height: 1.5; margin: 8px 0; white-space: pre;
+}
+pre.code .cmt { color: var(--code-comment); }
+
+.exercise-q { font-weight: 700; margin-bottom: 6px; }
+.exercise-s { color: #4B5563; white-space: pre-line; }
+.exercise-expand { margin-top: 8px; }
+.exercise-expand > summary {
+  cursor: pointer; padding: 4px 10px; background: var(--accent-light); color: var(--accent);
+  border-radius: 6px; font-size: 12px; font-weight: 700;
+  display: inline-block; list-style: none;
+}
+.exercise-expand > summary::-webkit-details-marker { display: none; }
+.exercise-expand[open] > summary { background: var(--accent); color: white; }
+.exercise-expand .full {
+  margin-top: 8px; padding: 10px 14px; background: white;
+  border-inline-start: 3px solid var(--accent); white-space: pre-line; font-size: 14px;
+}
+
+/* ==== Bottom nav ==== */
+footer.bottomnav {
+  position: fixed; bottom: 0; right: 0; left: 0; height: 76px;
+  background: white; border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 18px;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.04); z-index: 10;
+  gap: 14px;
+}
+.nav-arrow {
+  background: var(--accent); color: white; border: none;
+  padding: 9px 18px; border-radius: 6px; cursor: pointer;
+  font-size: 14px; font-weight: 600;
+  transition: background .15s, opacity .15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.nav-arrow:hover { background: #0a3a5e; }
+.nav-arrow:disabled { background: var(--border); color: var(--muted); cursor: default; }
+.nav-arrow svg { width: 14px; height: 14px; }
+.dots {
+  flex: 1; display: flex; gap: 8px; justify-content: center; align-items: center;
+  flex-wrap: wrap; max-height: 60px; overflow-y: auto;
+}
+.dot {
+  background: var(--border); color: var(--muted); border: none;
+  width: auto; min-width: 28px; height: 26px;
+  padding: 0 8px;
+  border-radius: 13px; cursor: pointer;
+  font-size: 11px; font-weight: 600;
+  transition: all .15s;
+}
+.dot:hover { background: var(--ana2-bg); color: var(--accent); }
+.dot.current { background: var(--accent); color: white; }
+.dot.passed { background: var(--accent-light); color: var(--accent); }
+
+/* AI guide entries */
+.meta-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.meta-table tr td { padding: 7px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.meta-table tr td.k { background: #EFF6FF; color: var(--muted); font-weight: 600; width: 32%; }
+
+@media (max-width: 720px) {
+  .topbar .title { font-size: 14px; }
+  .topbar .counter { font-size: 12px; }
+  aside.drawer { width: 90%; right: -90%; }
+  aside.drawer.open { right: 0; }
+  .nav-arrow { padding: 8px 12px; font-size: 13px; }
+  .entry-head h2 { font-size: 22px; }
+}
+
+/* === Drawer rewrite: persistent side-panel toggled by hamburger === */
+aside.drawer {
+  position: fixed; top: 56px; right: -380px;
+  width: 360px; height: calc(100vh - 56px);
+  background: white; border-inline-start: 1px solid var(--border);
+  box-shadow: -2px 0 8px rgba(0,0,0,0.06);
+  z-index: 8; transition: right .25s ease;
+  display: flex; flex-direction: column;
+}
+aside.drawer.open { right: 0; }
+aside.drawer .drawer-head {
+  padding: 14px 18px; background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: flex-start;
+}
+aside.drawer .drawer-head h2 { font-size: 16px; margin: 0; }
+aside.drawer .drawer-head .close-btn { display: none !important; }
+aside.drawer .drawer-body { flex: 1; overflow-y: auto; padding: 12px 16px; }
+aside.drawer details { margin-bottom: 6px; }
+aside.drawer summary { cursor: pointer; padding: 6px 4px; font-weight: 600; color: var(--accent); font-size: 14px; border-radius: 4px; }
+aside.drawer summary:hover { background: var(--brief-bg); }
+aside.drawer ul { list-style: none; padding: 0; margin: 0; }
+aside.drawer ul ul { padding-inline-start: 14px; margin-top: 4px; }
+aside.drawer ul ul li { margin: 3px 0; }
+aside.drawer a { display: block; padding: 5px 8px; font-size: 13px; color: var(--fg); text-decoration: none; border-radius: 4px; }
+aside.drawer a:hover { background: var(--ana2-bg); color: var(--accent); }
+aside.drawer a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* Hide backdrop completely */
+.drawer-backdrop { display: none !important; }
+
+/* Main shifts when drawer is open */
+.slides-area { transition: margin-inline-end .25s ease; }
+body.drawer-open .slides-area { margin-inline-end: 360px; }
+
+/* Toggle button highlight when drawer open */
+.topbar .menu-btn.active { background: rgba(255,255,255,0.4); }
+
+@media (max-width: 900px) {
+  aside.drawer { width: 92%; right: -100%; }
+  aside.drawer.open { right: 0; }
+  body.drawer-open .slides-area { margin-inline-end: 0; }
+}
+
+
+/* === Search bar in topbar === */
+.topbar { gap: 12px; }
+.topbar .title { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.search-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.18); border-radius: 6px;
+  padding: 4px 8px; transition: background .15s;
+}
+.search-wrap:focus-within { background: rgba(255,255,255,0.32); }
+.search-wrap input {
+  background: transparent; border: none; outline: none; color: white;
+  width: 180px; font-size: 14px; font-family: inherit;
+}
+.search-wrap input::placeholder { color: rgba(255,255,255,0.7); }
+.search-wrap .sc-count {
+  font-size: 12px; color: rgba(255,255,255,0.85);
+  min-width: 38px; text-align: center; white-space: nowrap;
+}
+.search-wrap button {
+  background: transparent; color: white; border: none;
+  font-size: 14px; cursor: pointer; padding: 2px 6px; border-radius: 3px;
+}
+.search-wrap button:hover { background: rgba(255,255,255,0.18); }
+.search-wrap button:disabled { opacity: 0.35; cursor: default; }
+.search-wrap .sc-clear { font-size: 16px; line-height: 1; }
+mark.search-hit { background: #fde047; color: #111827; padding: 0 1px; border-radius: 2px; }
+mark.search-hit.current { background: #f97316; color: white; }
+@media (max-width: 720px) {
+  .topbar .title { display: none; }
+  .search-wrap input { width: 110px; }
+}
+
+/* MOBILE_PACK_v1 */
+
+/* ============================================================
+   Mobile optimizations — Phone (≤640px), small phone (≤360px),
+   landscape phone (height ≤500px)
+   Added: comprehensive responsive treatment for one-hand use.
+   ============================================================ */
+@media (max-width: 640px) {
+  /* --- Topbar: compact, no title, search takes remaining space --- */
+  .topbar { padding: 0 8px; gap: 6px; height: 52px; }
+  .topbar .menu-btn { padding: 4px 10px; font-size: 20px; min-width: 38px; min-height: 36px; }
+  .topbar .title { display: none; }
+  .topbar .counter { font-size: 11px; padding-inline-start: 4px; white-space: nowrap; }
+
+  /* Search wrap: clean layout, no transform hacks.
+     16px font on input prevents iOS auto-zoom on focus. */
+  .search-wrap { padding: 3px 8px; gap: 5px; flex: 1; min-width: 0; align-items: center; }
+  .search-wrap > span[aria-hidden] { font-size: 14px; flex-shrink: 0; }
+  .search-wrap input {
+    flex: 1; min-width: 0; width: 100%;
+    font-size: 16px;
+    padding: 4px 2px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+  }
+  .search-wrap input::placeholder { color: rgba(255,255,255,0.65); font-size: 13px; }
+  .search-wrap button { padding: 4px 6px; font-size: 13px; min-width: 28px; min-height: 30px; flex-shrink: 0; }
+  .sc-count { font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+  /* --- Drawer: fullscreen overlay on phones --- */
+  aside.drawer {
+    width: 100%; right: -100%;
+    top: 52px; height: calc(100vh - 52px);
+    box-shadow: none; border-inline-start: none;
+  }
+  body.drawer-open .slides-area { margin-inline-end: 0; }
+  .drawer-head { padding: 10px 14px; }
+  .drawer-head h2 { font-size: 15px; }
+  .drawer-body { padding: 6px 8px; font-size: 14px; }
+  aside.drawer a { padding: 8px 10px; min-height: 38px; font-size: 14px; }
+  aside.drawer details > summary { padding: 8px 6px; font-size: 14px; min-height: 38px; }
+
+  /* --- Slides area: tighter padding, more vertical breathing room --- */
+  .slides-area {
+    padding: 64px 12px 90px;
+    height: 100vh;
+  }
+  .slide { padding: 0; }
+
+  /* --- Entry head: smaller heading --- */
+  .entry-head { gap: 8px; margin-bottom: 8px; }
+  .entry-head h2 { font-size: 20px; line-height: 1.2; }
+  .entry-head .en-name { font-size: 14px; }
+  .slide .layer-context { font-size: 11px; margin-bottom: 4px; line-height: 1.3; }
+
+  /* --- Boxes: tighter padding, smaller titles --- */
+  .box { padding: 10px 12px; margin: 8px 0; border-radius: 8px; }
+  .box-title { font-size: 13px; margin-bottom: 6px; }
+  .mapping { padding: 8px 10px; margin-top: 8px; }
+  .mapping-title { font-size: 12px; }
+  .analogy-title { font-size: 14px; }
+
+  /* --- Code: smaller font, horizontal scroll for long lines --- */
+  pre.code, .code {
+    font-size: 11px; padding: 8px 10px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    line-height: 1.45;
+  }
+  .cmt { font-size: 11px; }
+
+  /* --- Formulas: scroll horizontally if too wide --- */
+  .formula { font-size: 14px; padding: 8px 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .formula-group { gap: 6px; margin: 10px 0; }
+
+  /* --- Exercise expand: bigger summary tap target --- */
+  .exercise-expand summary { padding: 10px 12px; font-size: 13px; min-height: 40px; }
+  .exercise-q, .exercise-s { font-size: 13px; }
+
+  /* --- SVG viz boxes --- */
+  .box.viz .viz-svg { max-width: 100%; height: auto; }
+  .box.viz svg { max-width: 100%; height: auto; }
+
+  /* --- Tables --- */
+  .meta-table { font-size: 12px; }
+  .meta-table tr td { padding: 6px 8px; }
+  .meta-table tr td.k { width: 38%; font-size: 11px; }
+
+  /* --- Bottom navigation: bigger tap targets, slightly shorter footer --- */
+  footer.bottomnav { height: 60px; padding: 0 8px; gap: 6px; }
+  .nav-arrow {
+    padding: 10px 14px; font-size: 13px;
+    min-height: 40px; min-width: 64px;
+  }
+
+  /* --- Dots: horizontal scrollable strip instead of wrapping --- */
+  .dots {
+    flex-wrap: nowrap; gap: 5px;
+    overflow-x: auto; overflow-y: hidden;
+    max-height: none; padding: 4px 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .dots::-webkit-scrollbar { display: none; }
+  .dot {
+    min-width: 34px; height: 34px; padding: 0 10px;
+    flex-shrink: 0; scroll-snap-align: center;
+    font-size: 12px; line-height: 34px;
+  }
+}
+
+/* ============================================================
+   Extra-small phones (≤360px) — iPhone SE 1st gen, small Android
+   ============================================================ */
+@media (max-width: 360px) {
+  .topbar { padding: 0 5px; gap: 4px; }
+  .topbar .menu-btn { padding: 4px 8px; font-size: 18px; min-width: 34px; }
+  .topbar .counter { font-size: 10px; }
+  .search-wrap { padding: 2px 4px; gap: 2px; }
+  .search-wrap button { padding: 2px 4px; min-width: 24px; }
+  .sc-count { font-size: 10px; }
+  .entry-head h2 { font-size: 18px; }
+  .entry-head .en-name { font-size: 13px; }
+  .box { padding: 8px 10px; }
+  .box-title { font-size: 12px; }
+  .nav-arrow { padding: 8px 10px; font-size: 12px; min-width: 56px; }
+  .dot { min-width: 30px; height: 30px; padding: 0 8px; font-size: 11px; line-height: 30px; }
+}
+
+/* ============================================================
+   Landscape phone (low height) — keep topbar/footer slimmer
+   ============================================================ */
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
+  .topbar { height: 44px; }
+  aside.drawer { top: 44px; height: calc(100vh - 44px); }
+  .slides-area { padding-top: 52px; padding-bottom: 70px; }
+  footer.bottomnav { height: 50px; }
+  .nav-arrow { padding: 6px 12px; font-size: 12px; min-height: 36px; }
+  .dot { height: 30px; line-height: 30px; }
+}
+
+/* ============================================================
+   Touch-friendly tweaks (any pointer:coarse device)
+   ============================================================ */
+@media (pointer: coarse) {
+  /* Allow text selection still, but make tap on buttons feel snappy */
+  button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .dot:active { transform: scale(0.92); }
+  .nav-arrow:active { transform: scale(0.97); }
+}
+
+/* NO_JS_FALLBACK_v3 */
+
+/* ============================================================
+   NO-JS FALLBACK (v3)
+   When JS doesn't run (iOS Quick Look, AirDrop preview, email
+   preview, restricted viewers): show all slides stacked as a
+   long scrollable document. When JS runs, .js-enabled is
+   added to <html> and the original slideshow behavior wins.
+   ============================================================ */
+
+/* Default state = no-JS: flow normally, all slides visible */
+html, body {
+  overflow: auto !important;
+  height: auto !important;
+  min-height: 100vh;
+}
+.slides-area {
+  position: static !important;
+  inset: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding: 20px 18px !important;
+}
+.slide {
+  display: block !important;
+  padding-bottom: 32px;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 32px;
+}
+.slide:last-of-type { border-bottom: none; }
+
+/* Hide inert UI shell when no JS — topbar (counter/search/drawerBtn are
+   inside it, so all children are hidden too) and footer (prev/next/dots).
+   Leave drawer + backdrop alone; their default `display:none` / off-screen
+   positioning already keeps them invisible without JS. */
+header.topbar,
+footer.bottomnav { display: none !important; }
+
+/* When JS runs, .js-enabled on <html> restores slideshow */
+html.js-enabled, html.js-enabled body {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+html.js-enabled .slides-area {
+  position: fixed !important;
+  inset: 56px 0 76px !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 28px 40px !important;
+}
+html.js-enabled .slide {
+  display: none !important;
+  padding-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+html.js-enabled .slide.active {
+  display: block !important;
+  animation: fadeIn .2s ease;
+  animation-fill-mode: both;
+  opacity: 1;
+}
+html.js-enabled header.topbar { display: flex !important; }
+html.js-enabled footer.bottomnav { display: flex !important; }
+
+/* Mobile no-JS: tighter padding on phone viewports */
+@media (max-width: 640px) {
+  .slides-area { padding: 14px 12px !important; }
+  .slide { padding-bottom: 24px; margin-bottom: 24px; }
+  html.js-enabled .slides-area { inset: 52px 0 60px !important; padding: 64px 12px 90px !important; }
+}
+
+
+/* V2 FEATURES: Home button + Chapter dot long-press popup */
+.topbar .home-btn {
+  background: rgba(255,255,255,0.18);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 38px;
+  min-height: 36px;
+  transition: background 0.15s ease;
+}
+.topbar .home-btn:hover, .topbar .home-btn:focus-visible {
+  background: rgba(255,255,255,0.32);
+  outline: none;
+}
+.topbar .home-btn:active { background: rgba(255,255,255,0.4); transform: scale(0.96); }
+.topbar .home-btn svg { display: block; }
+
+@media (max-width: 360px) {
+  .topbar .home-btn { padding: 4px 8px; min-width: 34px; }
+  .topbar .home-btn svg { width: 16px; height: 16px; }
+}
+
+.chapter-popup {
+  position: fixed;
+  z-index: 1000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.06);
+  max-width: min(320px, calc(100vw - 24px));
+  max-height: 60vh;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  animation: popupIn 0.16s ease;
+  direction: rtl;
+}
+@keyframes popupIn {
+  from { opacity: 0; transform: scale(0.92) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.chapter-popup-header {
+  background: var(--accent);
+  color: white;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  border-radius: 12px 12px 0 0;
+}
+.chapter-popup-header .count {
+  opacity: 0.75;
+  font-weight: 400;
+  font-size: 12px;
+  margin-inline-start: 4px;
+}
+.chapter-popup-list {
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 12px 12px;
+}
+.chapter-popup-entry {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #F3F4F6;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.chapter-popup-entry:last-child { border-bottom: none; }
+.chapter-popup-entry:active,
+.chapter-popup-entry:hover { background: var(--accent-light); }
+.chapter-popup-entry.current { background: var(--accent-light); font-weight: 600; }
+.chapter-popup-arrow {
+  position: absolute;
+  width: 0; height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+}
+.chapter-popup-arrow.below {
+  bottom: -9px;
+  border-top: 9px solid white;
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.08));
+}
+.chapter-popup-arrow.above {
+  top: -9px;
+  border-bottom: 9px solid var(--accent);
+}
+.dot { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+
+</style>
+</head>
+<body>
+<header class="topbar">
+<button aria-label="פתח תוכן עניינים" class="menu-btn" id="drawerBtn">☰</button>
+  <a id="homeBtn" class="menu-btn home-btn" href="./index.html" aria-label="חזרה לתפריט המדריכים" title="חזרה לתפריט המדריכים">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+</a>
+<div class="title">מדריך פייתון וכלים מעשיים</div>
+<div class="search-wrap" role="search">
+<span aria-hidden="true">🔍</span>
+<input autocomplete="off" id="searchInput" placeholder="חפש..." spellcheck="false" type="search"/>
+<span class="sc-count" id="searchCount"></span>
+<button disabled="" id="searchPrev" title="התאמה קודמת">▲</button>
+<button disabled="" id="searchNext" title="התאמה הבאה">▼</button>
+<button class="sc-clear" disabled="" id="searchClear" title="נקה">×</button>
+</div>
+<div class="counter" id="counter">1 / 1</div>
+</header>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="drawer">
+<div class="drawer-head">
+<h2>📚 תוכן עניינים</h2>
+</div>
+<div class="drawer-body"><ul><li><details open=""><summary>מבוא ועקרונות</summary><ul><li><a data-idx="0" href="#s0">מחזור החיים של פרויקט Data Science <span style="color:#9CA3AF;font-size:11px">The Data Science Lifecycle</span></a></li></ul></details></li><li><details open=""><summary>יסודות פייתון</summary><ul><li><a data-idx="1" href="#s1">רשימות - מבנה הנתונים הבסיסי <span style="color:#9CA3AF;font-size:11px">Lists - Indexing & Slicing</span></a></li><li><a data-idx="2" href="#s2">מילונים - מבנה key-value <span style="color:#9CA3AF;font-size:11px">Dictionaries</span></a></li><li><a data-idx="3" href="#s3">NumPy arrays - חישוב וקטורי <span style="color:#9CA3AF;font-size:11px">NumPy Arrays</span></a></li><li><a data-idx="4" href="#s4">פעולות על מחרוזות לעיבוד טקסט <span style="color:#9CA3AF;font-size:11px">String Manipulation</span></a></li><li><a data-idx="5" href="#s5">ייבוא חבילות ותיקיית עבודה <span style="color:#9CA3AF;font-size:11px">Imports & Working Directory</span></a></li></ul></details></li><li><details open=""><summary>Pandas - ניהול דאטה</summary><ul><li><a data-idx="6" href="#s6">בחירת שורות ועמודות - loc, iloc, query <span style="color:#9CA3AF;font-size:11px">Selecting Rows & Columns</span></a></li><li><a data-idx="7" href="#s7">GroupBy וצבירה - חישובים לפי קבוצה <span style="color:#9CA3AF;font-size:11px">GroupBy & Aggregation</span></a></li><li><a data-idx="8" href="#s8">טיפול בערכים חסרים - dropna, fillna <span style="color:#9CA3AF;font-size:11px">Handling Missing Data</span></a></li><li><a data-idx="9" href="#s9">מיזוג DataFrames - merge ו-join <span style="color:#9CA3AF;font-size:11px">Joining DataFrames</span></a></li><li><a data-idx="10" href="#s10">המרת טיפוסים ועיבוד תאריכים <span style="color:#9CA3AF;font-size:11px">Type Conversion & DateTime</span></a></li></ul></details></li><li><details open=""><summary>Reshaping - Long ↔ Wide</summary><ul><li><a data-idx="11" href="#s11">Wide → Long עם melt <span style="color:#9CA3AF;font-size:11px">Melting (Wide to Long)</span></a></li><li><a data-idx="12" href="#s12">Long → Wide עם pivot ו-pivot_table <span style="color:#9CA3AF;font-size:11px">Pivoting (Long to Wide)</span></a></li><li><a data-idx="13" href="#s13">Stack ו-Unstack - ניוד אינדקסים <span style="color:#9CA3AF;font-size:11px">Stacking & Unstacking</span></a></li><li><a data-idx="14" href="#s14">פיצול ושילוב עמודות - split ו-cat <span style="color:#9CA3AF;font-size:11px">Splitting & Joining Columns</span></a></li><li><a data-idx="15" href="#s15">Explode ו-json_normalize - שטיחת מבנים מקוננים <span style="color:#9CA3AF;font-size:11px">Exploding & Normalizing Nested Data</span></a></li></ul></details></li><li><details open=""><summary>SQL לדאטה סיינטיסטים</summary><ul><li><a data-idx="16" href="#s16">סוגי JOIN בסיסיים <span style="color:#9CA3AF;font-size:11px">INNER, LEFT, RIGHT, FULL JOIN</span></a></li><li><a data-idx="17" href="#s17">SELF JOIN וטיפול בהיררכיות <span style="color:#9CA3AF;font-size:11px">Self Join for hierarchical data</span></a></li><li><a data-idx="18" href="#s18">אופרטורי קבוצות: UNION, INTERSECT, EXCEPT <span style="color:#9CA3AF;font-size:11px">Set theory operators</span></a></li><li><a data-idx="19" href="#s19">Semi Join ו-Anti Join עם תתי-שאילתות <span style="color:#9CA3AF;font-size:11px">Semi & Anti joins via subqueries</span></a></li><li><a data-idx="20" href="#s20">CROSS JOIN וקרטזית מבוקרת <span style="color:#9CA3AF;font-size:11px">Cross Join for combinations</span></a></li><li><a data-idx="21" href="#s21">טיפים לביצועים ב-JOINs <span style="color:#9CA3AF;font-size:11px">Performance tips for joins</span></a></li></ul></details></li><li><details open=""><summary>Scikit-learn - קוד מעשי</summary><ul><li><a data-idx="22" href="#s22">ה-workflow הבסיסי של scikit-learn <span style="color:#9CA3AF;font-size:11px">Basic supervised learning workflow</span></a></li><li><a data-idx="23" href="#s23">עיבוד מקדים: סקיילינג, נרמול וקידוד <span style="color:#9CA3AF;font-size:11px">Preprocessing: scaling, normalization, encoding</span></a></li><li><a data-idx="24" href="#s24">Pipeline ו-ColumnTransformer <span style="color:#9CA3AF;font-size:11px">Pipeline + ColumnTransformer</span></a></li><li><a data-idx="25" href="#s25">GridSearchCV ו-RandomizedSearchCV <span style="color:#9CA3AF;font-size:11px">Hyperparameter tuning</span></a></li><li><a data-idx="26" href="#s26">הערכת מודלים ו-Cross-Validation <span style="color:#9CA3AF;font-size:11px">Model evaluation metrics</span></a></li><li><a data-idx="27" href="#s27">שמירת והעמסת מודל (joblib) <span style="color:#9CA3AF;font-size:11px">Model persistence with joblib</span></a></li></ul></details></li><li><details open=""><summary>Plotly ו-Matplotlib</summary><ul><li><a data-idx="28" href="#s28">Plotly Express - יסודות <span style="color:#9CA3AF;font-size:11px">Plotly Express Fundamentals</span></a></li><li><a data-idx="29" href="#s29">סוגי גרפים נפוצים ב-Plotly <span style="color:#9CA3AF;font-size:11px">Scatter, Line, Bar, Histogram & Heatmap</span></a></li><li><a data-idx="30" href="#s30">התאמה וסגנון של גרפים <span style="color:#9CA3AF;font-size:11px">Customizing Markers, Lines & Bars</span></a></li><li><a data-idx="31" href="#s31">אינטראקטיביות ופאנלים מרובים <span style="color:#9CA3AF;font-size:11px">Interactivity, Facets & Hover</span></a></li><li><a data-idx="32" href="#s32">Plotly מול Matplotlib <span style="color:#9CA3AF;font-size:11px">Plotly vs Matplotlib</span></a></li></ul></details></li><li><details open=""><summary>בחירת ויזואליזציה</summary><ul><li><a data-idx="33" href="#s33">חלק מתוך שלם <span style="color:#9CA3AF;font-size:11px">Part-to-Whole Charts</span></a></li><li><a data-idx="34" href="#s34">השוואות בין קטגוריות <span style="color:#9CA3AF;font-size:11px">Comparison Charts</span></a></li><li><a data-idx="35" href="#s35">התפלגויות <span style="color:#9CA3AF;font-size:11px">Distribution Charts</span></a></li><li><a data-idx="36" href="#s36">קשרים וקורלציות <span style="color:#9CA3AF;font-size:11px">Relationships & Correlations</span></a></li><li><a data-idx="37" href="#s37">סדרות זמן ומגמות <span style="color:#9CA3AF;font-size:11px">Time Series & Trends</span></a></li></ul></details></li><li><details open=""><summary>Data Storytelling</summary><ul><li><a data-idx="38" href="#s38">שלושת מרכיבי ה-Data Storytelling <span style="color:#9CA3AF;font-size:11px">Data, Visuals & Narrative</span></a></li><li><a data-idx="39" href="#s39">בחירת הגרף הנכון לסיפור <span style="color:#9CA3AF;font-size:11px">Choosing the Right Visualization</span></a></li><li><a data-idx="40" href="#s40">פישוט והפחתת רעש <span style="color:#9CA3AF;font-size:11px">Decluttering & Simplifying</span></a></li><li><a data-idx="41" href="#s41">מלכודות נפוצות והטעיה <span style="color:#9CA3AF;font-size:11px">Common Pitfalls & Misleading Visuals</span></a></li></ul></details></li><li><details open=""><summary>PyTorch - Deep Learning</summary><ul><li><a data-idx="42" href="#s42">טנזורים ויסודות PyTorch <span style="color:#9CA3AF;font-size:11px">Tensors and PyTorch Basics</span></a></li><li><a data-idx="43" href="#s43">שכבות nn.Module ו-Sequential <span style="color:#9CA3AF;font-size:11px">nn.Module, Linear Layers and Sequential</span></a></li><li><a data-idx="44" href="#s44">פונקציות אקטיבציה <span style="color:#9CA3AF;font-size:11px">Activation Functions</span></a></li><li><a data-idx="45" href="#s45">לולאת אימון, loss ואופטימייזרים <span style="color:#9CA3AF;font-size:11px">Training Loop, Loss and Optimizers</span></a></li><li><a data-idx="46" href="#s46">Dataset ו-DataLoader <span style="color:#9CA3AF;font-size:11px">Datasets and DataLoaders</span></a></li><li><a data-idx="47" href="#s47">מצב הערכה ומדדים <span style="color:#9CA3AF;font-size:11px">Evaluation Mode and Metrics</span></a></li></ul></details></li><li><details open=""><summary>Keras / TensorFlow</summary><ul><li><a data-idx="48" href="#s48">Sequential API של Keras <span style="color:#9CA3AF;font-size:11px">Keras Sequential Model</span></a></li><li><a data-idx="49" href="#s49">שכבות, אקטיבציות ורגולריזציה <span style="color:#9CA3AF;font-size:11px">Layers, Activations and Regularization</span></a></li><li><a data-idx="50" href="#s50">Compile ו-Fit <span style="color:#9CA3AF;font-size:11px">Compile and Fit</span></a></li><li><a data-idx="51" href="#s51">Callbacks ושמירת מודלים <span style="color:#9CA3AF;font-size:11px">Callbacks and Model Save/Load</span></a></li><li><a data-idx="52" href="#s52">עיבוד מוקדם של נתונים ל-Keras <span style="color:#9CA3AF;font-size:11px">Preprocessing for Keras</span></a></li></ul></details></li><li><details open=""><summary>Hugging Face</summary><ul><li><a data-idx="53" href="#s53">סקירה כללית של Hugging Face Hub <span style="color:#9CA3AF;font-size:11px">Hugging Face Hub Overview</span></a></li><li><a data-idx="54" href="#s54">פייפליינים של transformers להסקה מהירה <span style="color:#9CA3AF;font-size:11px">Transformers Pipelines for Quick Inference</span></a></li><li><a data-idx="55" href="#s55">טוקנייזרים והרצה ידנית של מודלים <span style="color:#9CA3AF;font-size:11px">Tokenizers and Manual Model Inference</span></a></li><li><a data-idx="56" href="#s56">ספריית datasets לטעינה ועיבוד <span style="color:#9CA3AF;font-size:11px">Datasets Library for Loading and Preprocessing</span></a></li><li><a data-idx="57" href="#s57">שמירה, טעינה והעלאת מודלים ל-Hub <span style="color:#9CA3AF;font-size:11px">Saving, Loading, and Pushing Models to the Hub</span></a></li></ul></details></li><li><details open=""><summary>AI Agents</summary><ul><li><a data-idx="58" href="#s58">מהו סוכן AI <span style="color:#9CA3AF;font-size:11px">What Is an AI Agent</span></a></li><li><a data-idx="59" href="#s59">מודל שפה וכלים בסוכן AI <span style="color:#9CA3AF;font-size:11px">Language Model and Tools Pattern</span></a></li><li><a data-idx="60" href="#s60">שכבת תזמור עם CoT ו-ReAct <span style="color:#9CA3AF;font-size:11px">Orchestration with CoT and ReAct</span></a></li><li><a data-idx="61" href="#s61">מערכות multi-agent ופרוטוקולים <span style="color:#9CA3AF;font-size:11px">Multi-Agent Systems and Protocols</span></a></li><li><a data-idx="62" href="#s62">RAG מול סוכני AI <span style="color:#9CA3AF;font-size:11px">RAG vs AI Agents</span></a></li><li><a data-idx="63" href="#s63">frameworks לבניית סוכנים <span style="color:#9CA3AF;font-size:11px">Agent Building Frameworks</span></a></li></ul></details></li></ul></div>
+</aside>
+<main class="slides-area" id="slidesArea">
+<section class="slide" data-idx="0" data-layer="0">
+<div class="layer-context"><span class="layer-name">מבוא ועקרונות</span> · ערך 1 מתוך 1</div>
+<div class="entry-head"><h2>מחזור החיים של פרויקט Data Science</h2><span class="en-name">The Data Science Lifecycle</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>פרויקט Data Science מורכב משמונה שלבים עיקריים, מאורגנים במחזור איטרטיבי שלא נגמר. ההבדל בין פרויקט מצליח לפרויקט שמת בייצור הוא לרוב לא טכניקת המודל - אלא ההבנה שהתהליך הוא לולאה ולא קו ישר. החל מהגדרת הבעיה, דרך איסוף והכנת דאטה, אימון והערכת מודל, פריסה לייצור, ולבסוף ניטור וכיוונון מחדש על בסיס מציאות משתנה. עיקרון מנחה: <b>"Business First"</b> - מתחילים מהבעיה העסקית, לא מהמודל. כ-<b>80% מהזמן</b> מושקעים בעבודת דאטה (שלבים 1-3), ו-20% בלבד באימון והגשת המודל. המדריך הזה מאורגן לפי הכלים והקוד שמשרתים את השלבים האלה: Python, Pandas, SQL, ויזואליזציה, scikit-learn, PyTorch/Keras, Hugging Face, AI Agents ותקשורת תוצאות (Storytelling).</div></div>
+<div class="box viz"><div class="box-title">📊 המחשה ויזואלית</div><div class="viz-svg"><svg style="max-width:560px;height:auto;background:white;border-radius:6px;" viewbox="0 0 600 400" width="100%" xmlns="http://www.w3.org/2000/svg">
+<text direction="rtl" fill="#111827" font-family="Arial" font-size="15" font-weight="bold" text-anchor="middle" x="300" y="24">מחזור החיים האיטרטיבי של פרויקט Data Science</text>
+
+<!-- 8 phases arranged in a circle, center at (300, 220), r=120 -->
+<!-- Phase 1: Problem Definition - top -->
+<g transform="translate(300, 100)">
+<circle r="36" fill="#0d9488" stroke="#0f766e" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Problem</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">Definition</text>
+<circle cx="0" cy="-32" r="9" fill="white" stroke="#0f766e" stroke-width="1.5"/>
+<text fill="#0f766e" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="0" y="-29">1</text>
+</g>
+
+<!-- Phase 2: Data Collection - upper right -->
+<g transform="translate(385, 132)">
+<circle r="36" fill="#15803d" stroke="#166534" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Data</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">Collection</text>
+<circle cx="22" cy="-22" r="9" fill="white" stroke="#166534" stroke-width="1.5"/>
+<text fill="#166534" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="22" y="-19">2</text>
+</g>
+
+<!-- Phase 3: Data Preparation - right -->
+<g transform="translate(420, 220)">
+<circle r="36" fill="#15803d" stroke="#166534" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Data</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">Preparation</text>
+<circle cx="32" cy="0" r="9" fill="white" stroke="#166534" stroke-width="1.5"/>
+<text fill="#166534" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="32" y="3">3</text>
+</g>
+
+<!-- Phase 4: Model Development - lower right -->
+<g transform="translate(385, 308)">
+<circle r="36" fill="#0891b2" stroke="#0e7490" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Model</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">Development</text>
+<circle cx="22" cy="22" r="9" fill="white" stroke="#0e7490" stroke-width="1.5"/>
+<text fill="#0e7490" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="22" y="25">4</text>
+</g>
+
+<!-- Phase 5: Evaluation - bottom -->
+<g transform="translate(300, 340)">
+<circle r="36" fill="#0891b2" stroke="#0e7490" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" y="4">Evaluation</text>
+<circle cx="0" cy="32" r="9" fill="white" stroke="#0e7490" stroke-width="1.5"/>
+<text fill="#0e7490" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="0" y="35">5</text>
+</g>
+
+<!-- Phase 6: Deployment - lower left -->
+<g transform="translate(215, 308)">
+<circle r="36" fill="#0e7490" stroke="#155e75" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Deployment</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">CI / CD</text>
+<circle cx="-22" cy="22" r="9" fill="white" stroke="#155e75" stroke-width="1.5"/>
+<text fill="#155e75" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="-22" y="25">6</text>
+</g>
+
+<!-- Phase 7: Monitoring - left -->
+<g transform="translate(180, 220)">
+<circle r="36" fill="#0e7490" stroke="#155e75" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" y="4">Monitoring</text>
+<circle cx="-32" cy="0" r="9" fill="white" stroke="#155e75" stroke-width="1.5"/>
+<text fill="#155e75" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="-32" y="3">7</text>
+</g>
+
+<!-- Phase 8: Re-train - upper left -->
+<g transform="translate(215, 132)">
+<circle r="36" fill="#0e7490" stroke="#155e75" stroke-width="2"/>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="-4">Re-train /</text>
+<text direction="ltr" fill="white" font-family="Arial" font-size="9" font-weight="bold" text-anchor="middle" y="7">Fine-tune</text>
+<circle cx="-22" cy="-22" r="9" fill="white" stroke="#155e75" stroke-width="1.5"/>
+<text fill="#155e75" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle" x="-22" y="-19">8</text>
+</g>
+
+<!-- Curved arrows showing iteration (dashed) -->
+<path d="M 332 116 Q 380 110 405 144" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 416 168 Q 432 196 432 218" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 416 272 Q 415 295 405 296" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 360 326 Q 345 340 332 340" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 268 340 Q 254 340 240 326" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 195 296 Q 184 295 184 272" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 168 218 Q 168 196 184 168" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 240 144 Q 254 110 268 116" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="2" marker-end="url(#arrow)"/>
+
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/>
+</marker>
+</defs>
+
+<!-- Center label -->
+<g transform="translate(300, 220)">
+<circle r="55" fill="white" stroke="#0d9488" stroke-width="1.5" opacity="0.95"/>
+<text direction="ltr" fill="#0d9488" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" y="-8">Iterative</text>
+<text direction="ltr" fill="#0d9488" font-family="Arial" font-size="11" text-anchor="middle" y="6">Lifecycle</text>
+<text direction="rtl" fill="#0f766e" font-family="Arial" font-size="9" text-anchor="middle" y="22">מחזורי · לא נגמר</text>
+</g>
+</svg></div></div>
+<div class="box brief"><div class="box-title">🔢 שמונת השלבים בפירוט</div><ul><li><b>1. Problem Definition</b> - הגדרת הבעיה העסקית: מה השאלה? מי הלקוח? מה המדד להצלחה? <i>שלב Understanding</i>.</li><li><b>2. Data Collection</b> - איסוף נתונים ממקורות שונים (DBs, APIs, scraping, sensors). <i>שלב Understanding</i>.</li><li><b>3. Data Preparation</b> - ניקוי, טיפול בערכים חסרים, feature engineering, חלוקה ל-train/test. הצינור הכי יקר זמן. <i>שלב Preparation</i>.</li><li><b>4. Model Development</b> - בחירת אלגוריתם, אימון, כיוונון היפר-פרמטרים. <i>שלב Modeling</i>.</li><li><b>5. Evaluation</b> - מטריקות, cross-validation, A/B test, השוואה ל-baseline. <i>שלב Modeling</i>.</li><li><b>6. Deployment · CI/CD</b> - פריסה לסביבת production עם מנגנוני בקרת גרסה. <i>שלב Deployment & MLOps</i>.</li><li><b>7. Monitoring</b> - מעקב אחר ביצועים, drift detection, latency, עלות. <i>שלב Deployment & MLOps</i>.</li><li><b>8. Re-train / Fine-tune</b> - כאשר drift או ירידה בביצועים מתגלים, חוזרים לשלב 1 או 3 או 4. <i>שלב Deployment & MLOps</i>.</li></ul></div>
+<div class="box brief"><div class="box-title">🎯 ארבע פאזות-על</div><div><table style="width:100%;border-collapse:collapse;font-size:13px;direction:rtl;"><thead><tr style="background:#f1f5f9;font-weight:bold;"><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">פאזה</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">שלבים</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">מטרה עיקרית</th><th style="padding:8px;border:1px solid #cbd5e1;text-align:right;">כלים מרכזיים</th></tr></thead><tbody><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;background:#ccfbf1;">Understanding</td><td style="padding:6px;border:1px solid #e2e8f0;">1-2</td><td style="padding:6px;border:1px solid #e2e8f0;">להבין את הבעיה ואת מקורות הדאטה</td><td style="padding:6px;border:1px solid #e2e8f0;">SQL, Python, APIs</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;background:#dcfce7;">Preparation</td><td style="padding:6px;border:1px solid #e2e8f0;">3</td><td style="padding:6px;border:1px solid #e2e8f0;">להפוך דאטה גולמי לדאטה מודלינגי</td><td style="padding:6px;border:1px solid #e2e8f0;">Pandas, Reshaping, EDA</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;background:#cffafe;">Modeling</td><td style="padding:6px;border:1px solid #e2e8f0;">4-5</td><td style="padding:6px;border:1px solid #e2e8f0;">לאמן ולהעריך מודל שפותר את הבעיה</td><td style="padding:6px;border:1px solid #e2e8f0;">scikit-learn, PyTorch, Keras</td></tr><tr><td style="padding:6px;border:1px solid #e2e8f0;font-weight:600;background:#cffafe;">Deployment &amp; MLOps</td><td style="padding:6px;border:1px solid #e2e8f0;">6-8</td><td style="padding:6px;border:1px solid #e2e8f0;">להגיש לייצור ולשמור על ביצועים</td><td style="padding:6px;border:1px solid #e2e8f0;">CI/CD, Monitoring, MLflow</td></tr></tbody></table></div></div>
+<div class="box ana1"><div class="box-title">💡 שלושה עקרונות מנחים</div><ul><li><b>80% מהזמן מוקדש לעבודת דאטה</b> (שלבים 1-3) - איסוף, ניקוי, הכנה. רק 20% להגדרת המודל. כל מי שמדלג על העבודה הזו משלם על כך פי שלוש בייצור.</li><li><b>Business First</b> - מתחילים מהבעיה העסקית, לא מהמודל. <i>"מה נשתפר אם המודל יעבוד מושלם? במה זה יתורגם לכסף, ללקוחות, להחלטות?"</i> לפני שמסתכלים על דאטה - מגדירים את ה-success metric.</li><li><b>Never Ends (הלולאה)</b> - Monitor → זיהוי Drift → Re-train/Fine-tune → חזרה למעגל. בעולם האמיתי הדאטה משתנה כל יום, ההתפלגות שעליה אימנו אינה ההתפלגות שעליה אנחנו מנבאים מחר. מודלים שלא מנוטרים מתים בשקט.</li></ul></div>
+<div class="box ml"><div class="box-title">✓ למה המחזור חשוב לך</div><ul><li>מאפשר להבין באיזה שלב נמצאים בכל רגע - מקשר בין עבודה יומית למפת התהליך הכוללת</li><li>מבהיר איזה כלי מתאים לכל שלב - <span dir="ltr">SQL</span> לאיסוף, <span dir="ltr">Pandas</span> להכנה, <span dir="ltr">sklearn</span> למודל, <span dir="ltr">Plotly/Storytelling</span> להגשה</li><li>נותן שפה משותפת לעבודה בצוות - PM, Data Engineer, Data Scientist ו-ML Engineer יודעים לאיזה שלב כל אחד אחראי</li><li>מעודד התייחסות ל-MLOps כחלק אינטגרלי, לא כאחרי-מחשבה</li><li>מקל על תיעוד הפרויקט - כל שלב מקבל מסמך, מטריקה ובדיקת איכות</li></ul></div>
+<div class="box ana2"><div class="box-title">🗺 איך לקרוא את המדריך</div><div>המדריך מאורגן ב-<b>12 קטגוריות פרקטיות</b> שמשרתות את שמונת השלבים. אם אתם בעולם של <span dir="ltr">EDA</span> ו-<span dir="ltr">preprocessing</span> - תקפצו ישר ל-Pandas, Reshaping ו-SQL. אם אתם באימון - <span dir="ltr">scikit-learn</span>, <span dir="ltr">PyTorch</span> ו-<span dir="ltr">Keras</span>. אם בהגשת ממצאים - Plotly, בחירת ויזואליזציה ו-Storytelling. אם אתם בעולם המודרני של <span dir="ltr">LLMs</span> - <span dir="ltr">Hugging Face</span> ו-<span dir="ltr">AI Agents</span>. בכל ערך תקבלו: הסבר קצר, קוד פייתון מעשי, שימושים אמיתיים, ומלכודות נפוצות.</div></div>
+</section>
+<section class="slide" data-idx="1" data-layer="0">
+<div class="layer-context"><span class="layer-name">יסודות פייתון</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>רשימות - מבנה הנתונים הבסיסי</h2><span class="en-name">Lists - Indexing & Slicing</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>רשימה (list) היא רצף מסודר וניתן לשינוי של אלמנטים מסוגים שונים. אינדוקס מתחיל מ-0, ופריסה (slicing) מאפשרת לקבל תת-רשימה. בסיס הכרחי לכל עיבוד נתונים לפני מעבר ל-NumPy ו-Pandas.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># יצירת רשימה
+x = ['a', 'b', 'c', 'd', 'e']
+
+# בחירת איברים
+x[0]      # האיבר הראשון: 'a'
+x[-1]     # האיבר האחרון: 'e'
+x[1:3]    # מאינדקס 1 (כולל) עד 3 (לא כולל)
+x[:3]     # מההתחלה עד אינדקס 3
+x[2:]     # מאינדקס 2 עד הסוף
+
+# מתודות שימושיות
+x.sort()              # מיון במקום
+x.count('a')          # ספירת מופעים
+len(x)                # אורך הרשימה
+[1, 2] + [3, 4]       # שרשור: [1, 2, 3, 4]</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אחסון רשימת שמות עמודות לבחירה דינמית ב-DataFrame</li><li>צבירת תוצאות בלולאת אימון מודל (loss per epoch)</li><li>פירוק שורת CSV לפני המרה ל-Series</li><li>בניית רשימת קבצים לקריאה ב-batch</li><li>החזקת hyperparameters לחיפוש Grid Search</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>אינדקס מתחיל מ-0 ולא מ-1, בניגוד ל-R ו-SQL - שגיאות off-by-one נפוצות</li><li>פריסה x[1:3] כוללת את 1 אך לא את 3 - חשוב לזכור את ה-exclusive end</li><li>הפעלת x.sort() משנה את הרשימה במקום ומחזירה None - אל תכתבו y = x.sort()</li></ul></div>
+</section>
+<section class="slide" data-idx="2" data-layer="0">
+<div class="layer-context"><span class="layer-name">יסודות פייתון</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>מילונים - מבנה key-value</h2><span class="en-name">Dictionaries</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>מילון (dict) שומר נתונים בזוגות מפתח-ערך, כאשר המפתחות חייבים להיות ייחודיים. מבנה זה הוא הבסיס ליצירת DataFrame ולעבודה עם תגובות JSON מ-API. ניגשים לערך לפי המפתח ולא לפי מיקום.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># יצירת מילון
+x = {'a': 1, 'b': 2, 'c': 3}
+
+# גישה לערכים
+x['a']        # 1
+x.keys()      # dict_keys(['a', 'b', 'c'])
+x.values()    # dict_values([1, 2, 3])
+
+# שימוש קלאסי - בניית DataFrame
+import pandas as pd
+df = pd.DataFrame({
+    'a': [1, 2, 3],
+    'b': [4, 5, 6],
+    'c': ['x', 'x', 'y']
+})</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>המרת תגובת JSON מ-API ל-DataFrame</li><li>מיפוי קטגוריות לערכים מספריים לפני אימון מודל</li><li>החזקת קונפיגורציה של ניסוי (learning_rate, batch_size וכו’)</li><li>ספירת תדירויות (counter pattern) לפני value_counts</li><li>החלפת ערכים ב-Series עם df[’col’].map(mapping_dict)</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>מפתחות כפולים יידרסו בשקט - הערך האחרון מנצח</li><li>ניסיון גישה למפתח שלא קיים זורק KeyError - השתמשו ב-dict.get(key, default)</li><li>ב-Python 3.7+ הסדר נשמר, אך אל תסתמכו על סדר כשמדובר בנתונים סמנטיים</li></ul></div>
+</section>
+<section class="slide" data-idx="3" data-layer="0">
+<div class="layer-context"><span class="layer-name">יסודות פייתון</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>NumPy arrays - חישוב וקטורי</h2><span class="en-name">NumPy Arrays</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>NumPy מספק מערכים רב-מימדיים עם חישוב וקטורי מהיר בהרבה מלולאות פייתון. זהו המנוע מתחת ל-Pandas ול-scikit-learn. כל פעולה אריתמטית מתבצעת element-wise על כל המערך.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import numpy as np
+
+# יצירת מערך
+np.array([1, 2, 3])           # מרשימה
+np.arange(1, 5)               # [1, 2, 3, 4]
+np.arange(1, 10, 2)           # [1, 3, 5, 7, 9] - עם צעד
+np.repeat([1, 3], 3)          # [1, 1, 1, 3, 3, 3]
+np.tile([1, 3], 3)            # [1, 3, 1, 3, 1, 3]
+
+# פונקציות סטטיסטיות
+np.mean(x), np.std(x), np.var(x)
+np.min(x), np.max(x), np.sum(x)
+np.quantile(x, 0.5)           # חציון
+np.log(x), np.exp(x)          # חישובים אלמנט-בי-אלמנט</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>יצירת רעש (np.random) לסימולציות וצריכת מודל</li><li>חישוב מטריצות מאפיינים עבור מודל ML</li><li>חישוב מהיר של אינדיקטורים טכניים על סדרת מחירים</li><li>נירמול מערך תמונה לפני העברה לרשת נוירונים</li><li>יצירת bins לבדיקות סטטיסטיות (histograms)</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>השמה a = b לא מעתיקה - שינוי ב-a ישפיע על b. השתמשו ב-b.copy()</li><li>broadcasting יכול להפיק תוצאות לא צפויות כששתי צורות תואמות בטעות</li><li>פעולות In-place (a += 1) משנות dtype - הקפידו על dtype מראש</li></ul></div>
+</section>
+<section class="slide" data-idx="4" data-layer="0">
+<div class="layer-context"><span class="layer-name">יסודות פייתון</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>פעולות על מחרוזות לעיבוד טקסט</h2><span class="en-name">String Manipulation</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>טקסט הוא חלק עצום מהנתונים בעולם האמיתי - לוגים, שמות, כתובות, תיאורי מוצר. שליטה בפעולות מחרוזת בסיסיות חוסכת זמן בניקוי נתונים לפני המעבר ל-Pandas .str accessor.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">s = "Jack and Jill"
+
+# שינוי רישיות
+s.upper()         # 'JACK AND JILL'
+s.lower()         # 'jack and jill'
+s.title()         # 'Jack And Jill'
+
+# החלפה ופיצול
+s.replace("J", "P")        # 'Pack and Pill'
+"a,b,c,d".split(",")        # ['a', 'b', 'c', 'd']
+
+# חיתוך מחרוזת
+s[0:4]            # 'Jack' - בדומה לרשימה
+
+# שרשור וכפל
+"Data" + "Camp"   # 'DataCamp'
+3 * "ab "         # 'ab ab ab '</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>סטנדרטיזציה של שמות לקוחות לפני join (lower + strip)</li><li>ניקוי כתובות אימייל לאימות תקינות</li><li>פיצול שדה שם מלא לשם פרטי ומשפחה</li><li>חילוץ קוד מדינה מקידומת טלפון</li><li>ניקוי תיאורי מוצר מ-HTML ורווחים מיותרים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>מחרוזות הן immutable - s.replace() מחזיר חדשה ולא משנה את המקור</li><li>split ללא ארגומנט מפצל לפי whitespace, עם "" זורק שגיאה</li><li>שכחת לטפל ב-case sensitivity לפני השוואה (Use vs use)</li></ul></div>
+</section>
+<section class="slide" data-idx="5" data-layer="0">
+<div class="layer-context"><span class="layer-name">יסודות פייתון</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>ייבוא חבילות ותיקיית עבודה</h2><span class="en-name">Imports & Working Directory</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>כל פרויקט Data Science מתחיל בייבוא חבילות וניהול נתיבי קבצים. הכרת ה-aliases המקובלים (pd, np) חיונית, וניהול תיקיית עבודה מונע שגיאות פתיחת קובץ נפוצות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># ייבוא חבילות עם aliases מקובלים
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ייבוא אובייקט ספציפי
+from pandas import DataFrame
+from sklearn.model_selection import train_test_split
+
+# ניהול תיקיית עבודה
+import os
+os.getcwd()                          # תיקייה נוכחית
+os.chdir("new/working/directory")    # שינוי תיקייה
+
+# קבלת עזרה
+help(pd.read_csv)
+type(df)                             # סוג האובייקט</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>התחלת כל notebook ב-Jupyter / Colab</li><li>ארגון פרויקט עם מבנה תיקיות data/, models/, notebooks/</li><li>טעינת מודלים שאומנו מסביבת production</li><li>בדיקת גרסת חבילה (pd.__version__) לתאימות</li><li>ייבוא מודולים מותאמים אישית מתיקיית src</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>import * מציף את ה-namespace ומקשה על קריאות - הימנעו</li><li>נתיבים יחסיים שוברים כשמריצים מספריה אחרת - העדיפו pathlib ונתיבים מוחלטים</li><li>התקנה ב-pip לא תמיד מסתנכרנת עם הסביבה של Jupyter - בדקו sys.executable</li></ul></div>
+</section>
+<section class="slide" data-idx="6" data-layer="0">
+<div class="layer-context"><span class="layer-name">Pandas - ניהול דאטה</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>בחירת שורות ועמודות - loc, iloc, query</h2><span class="en-name">Selecting Rows & Columns</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>בחירת תת-מערך מ-DataFrame היא הפעולה הנפוצה ביותר ב-Pandas. .loc משתמש בתוויות (labels), .iloc במיקום מספרי, ו-.query מאפשר תנאי בוליאני בסגנון SQL. שליטה בשלושתם מקצרת את הקוד משמעותית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># בחירת עמודה בודדת
+df['width']                    # מחזיר Series
+df[['width', 'length']]        # מחזיר DataFrame
+
+# בחירה לפי מיקום עם iloc
+df.iloc[10:20]                 # שורות 10-19
+df.iloc[:, [1, 2, 5]]          # עמודות במיקומים 1,2,5
+df.iloc[3, 2]                  # תא בודד
+
+# בחירה לפי תוויות עם loc
+df.loc[:, 'x2':'x4']           # עמודות x2 עד x4 (כולל)
+df.loc[df['a'] > 10, ['a', 'c']]   # סינון + בחירת עמודות
+
+# שאילתות עם query
+df.query('Length > 7 and Width < 8')
+df.query('Name.str.startswith("abc")', engine='python')</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>חילוץ קבוצת בקרה וקבוצת ניסוי לפי תנאי</li><li>סינון משתמשים פעילים בחודש האחרון לדוח KPI</li><li>בחירת features רלוונטיים לפני אימון מודל</li><li>חילוץ outliers לבדיקה ידנית (df.query('value > threshold'))</li><li>בחירת שורות עם NaN בעמודה ספציפית לאיפיון בעיה</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>df[a:b] על שורות עובד אך מבלבל - העדיפו .iloc[a:b] לבהירות</li><li>השוואות שרשוריות כמו df[df.a > 5 and df.b < 3] לא יעבדו - השתמשו ב-& וסוגריים</li><li>Chained indexing (df[df.a>5][’b’] = 1) מתריע SettingWithCopyWarning - השתמשו ב-.loc</li></ul></div>
+</section>
+<section class="slide" data-idx="7" data-layer="0">
+<div class="layer-context"><span class="layer-name">Pandas - ניהול דאטה</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>GroupBy וצבירה - חישובים לפי קבוצה</h2><span class="en-name">GroupBy & Aggregation</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>GroupBy הוא הכלי המרכזי ב-Pandas לחישוב מטריקות לפי קטגוריה - הבסיס לכל דוח. הוא מיישם את עיקרון split-apply-combine: מפצל את הנתונים לקבוצות, מפעיל פונקציה על כל קבוצה ומאחד את התוצאות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># קיבוץ בסיסי
+df.groupby(by='category').size()
+df.groupby('category')['sales'].mean()
+
+# צבירות מרובות לעמודה
+df.groupby('region').agg({
+    'sales': ['sum', 'mean'],
+    'profit': 'max',
+    'orders': 'count'
+})
+
+# צבירה לאחר סינון
+df.query('year == 2024') \
+  .groupby(['region', 'category'])['revenue'] \
+  .sum() \
+  .reset_index()
+
+# פונקציות נפוצות לאחר groupby
+.size()         # מס’ שורות בקבוצה
+.value_counts() # ספירת ערכים ייחודיים
+.describe()     # סטטיסטיקה תיאורית מלאה</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>חישוב ממוצע הכנסה לפי מדינה ושנה לדאשבורד</li><li>ספירת אירועי קליק לכל user_id לפיצ’רים במודל המלצה</li><li>מציאת הלקוח עם מירב הרכישות בכל קטגוריה</li><li>צבירת מדדים יומיים לדוח שבועי / חודשי</li><li>חישוב conversion rate לפי ערוץ שיווק (A/B test)</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>תוצאת groupby עם מספר עמודות מחזירה MultiIndex - לרוב תרצו .reset_index()</li><li>ערכי NaN במפתח הקיבוץ ייעלמו כברירת מחדל - הוסיפו dropna=False אם רלוונטי</li><li>agg עם מילון של רשימות מחזיר עמודות MultiIndex שקשה לעבוד איתן - שטחו עם list comprehension</li></ul></div>
+</section>
+<section class="slide" data-idx="8" data-layer="0">
+<div class="layer-context"><span class="layer-name">Pandas - ניהול דאטה</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>טיפול בערכים חסרים - dropna, fillna</h2><span class="en-name">Handling Missing Data</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>ערכים חסרים (NaN) הם מציאות בכל פרויקט נתונים. ההחלטה אם להסיר, למלא בערך ברירת מחדל או לבצע imputation מתוחכמת משפיעה ישירות על איכות המודל. Pandas מספק כלים גמישים לכל גישה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># זיהוי ערכים חסרים
+df.isnull().sum()              # ספירה לפי עמודה
+df.info()                      # מציג ערכים לא-null
+
+# הסרת שורות עם NaN
+df.dropna()                                # כל שורה עם NaN
+df.dropna(subset=['weight_kg'])            # רק לפי עמודות מסוימות
+df.dropna(how='all')                       # רק שורות ריקות לחלוטין
+
+# מילוי ערכים חסרים
+df.fillna(0)                               # אפס לכל
+df.fillna({'weight_kg': 100,               # ערך שונה לכל עמודה
+           'height_cm': df['height_cm'].mean()})
+df.fillna(method='ffill')                  # forward fill (לסדרות זמן)
+
+# בדיקה בוליאנית
+pd.isnull(df['col'])
+pd.notnull(df['col'])</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>מילוי ערכי טמפרטורה חסרים בחיישנים IoT עם הערך הקודם</li><li>הסרת רשומות לקוח ללא אימייל לפני שליחת ניוזלטר</li><li>מילוי הכנסה חסרה בחציון של אותה קבוצה דמוגרפית</li><li>החלפת NaN ב-’Unknown’ לעמודות קטגוריאליות לפני one-hot</li><li>הסרת עמודות עם יותר מ-50% NaN לפני אימון מודל</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>NaN לא שווה ל-NaN - השוואה כמו x == np.nan תמיד False. השתמשו ב-isnull</li><li>ffill על קבוצות שונות יכול לדלוף ערך מקבוצה אחת לשנייה - השתמשו ב-groupby תחילה</li><li>fillna(0) משנה את הממוצע והשונות באופן דרמטי - שקלו imputation מתוחכמת יותר</li></ul></div>
+</section>
+<section class="slide" data-idx="9" data-layer="0">
+<div class="layer-context"><span class="layer-name">Pandas - ניהול דאטה</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>מיזוג DataFrames - merge ו-join</h2><span class="en-name">Joining DataFrames</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>מיזוג טבלאות הוא צעד חיוני לאיחוד נתונים ממקורות שונים. .merge() משחזר את כל סוגי ה-JOIN של SQL: inner, left, right, outer. הבנת ההבדל ביניהם והבחירה הנכונה משפיעה על מספר השורות בתוצאה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># מיזוג בסיסי - inner join על עמודה משותפת
+pd.merge(adf, bdf, on='x1')
+
+# סוגי JOIN שונים
+pd.merge(adf, bdf, how='left', on='x1')    # שומר את כל adf
+pd.merge(adf, bdf, how='right', on='x1')   # שומר את כל bdf
+pd.merge(adf, bdf, how='inner', on='x1')   # רק התאמות
+pd.merge(adf, bdf, how='outer', on='x1')   # איחוד מלא
+
+# מיזוג עם indicator לבדיקה
+pd.merge(adf, bdf, how='outer', indicator=True)
+# עמודת _merge מציינת: left_only / right_only / both
+
+# שרשור שורות (UNION ALL)
+pd.concat([df1, df2])                      # אנכי
+pd.concat([df1, df2], axis='columns')      # אופקי</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>חיבור טבלת לקוחות לטבלת הזמנות לחישוב LTV</li><li>העשרת לוג אירועים עם נתונים דמוגרפיים של משתמש</li><li>איחוד נתוני מכירות מ-12 קבצי חודש לקובץ שנתי</li><li>מיזוג תוצאות מודלים שונים להשוואת ביצועים</li><li>join של גאו-נתונים על קוד מיקוד לניתוח אזורי</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Inner join (ברירת מחדל) עלול לאבד שורות בלי הודעה - בדקו תמיד shape לפני ואחרי</li><li>מפתחות כפולים בשני הצדדים יוצרים מכפלה קרטזית שמתפוצצת בגודל - בדקו עם duplicated()</li><li>סוגי dtype לא תואמים (int מול str) מונעים התאמה בשקט - אחדו dtypes לפני merge</li></ul></div>
+</section>
+<section class="slide" data-idx="10" data-layer="0">
+<div class="layer-context"><span class="layer-name">Pandas - ניהול דאטה</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>המרת טיפוסים ועיבוד תאריכים</h2><span class="en-name">Type Conversion & DateTime</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>תאריכים שמאוחסנים כמחרוזות הם בעיה נפוצה שמונעת חישובים נכונים של מגמות. המרה ל-datetime פותחת גישה לחילוץ שנה, חודש, רבעון וביצוע פעולות זמן. הקפדה על dtypes נכונים חוסכת זיכרון ובאגים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># המרת טיפוסים
+pd.to_numeric(df['col'])           # למספרי
+pd.to_datetime(df['date_col'])     # ל-datetime
+pd.to_timedelta(df['duration'])    # להפרשי זמן
+df['col'].astype('category')       # לחיסכון בזיכרון
+
+# חילוץ רכיבי תאריך
+s = pd.to_datetime(df['order_date'])
+s.dt.year                          # שנה
+s.dt.month                         # חודש
+s.dt.quarter                       # רבעון
+s.dt.dayofweek                     # יום בשבוע (0=שני)
+s.dt.hour                          # שעה
+
+# פעולות וקטוריות על מחרוזות
+df['email'].str.lower()
+df['name'].str.contains('Smith')
+df['phone'].str.replace('-', '')</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>חישוב מספר ימים בין הזמנה לאספקה</li><li>פילוח מכירות לפי רבעון לדוח רבעוני</li><li>זיהוי דפוסי שימוש לפי שעה ביום ב-web analytics</li><li>המרת עמודה קטגוריאלית ל-category לחיסכון של 90% זיכרון</li><li>אקסטרקציה של דומיין מעמודת אימייל</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>to_datetime יפול על פורמטים לא מוכרים - העבירו format=’%Y-%m-%d’ במפורש</li><li>אזורי זמן (timezones) הם מקור נפוץ לבאגים - היו עקביים: או הכל UTC או הכל מקומי</li><li>השוואת string מול datetime מחזירה False בשקט - ודאו שדה אחד מומר</li></ul></div>
+</section>
+<section class="slide" data-idx="11" data-layer="0">
+<div class="layer-context"><span class="layer-name">Reshaping - Long ↔ Wide</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>Wide → Long עם melt</h2><span class="en-name">Melting (Wide to Long)</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>הפיכת טבלה רחבה (עמודה לכל ניסוי / חודש) לטבלה ארוכה (עמודת trial + עמודת value) היא הצעד הראשון לקראת tidy data. זהו פורמט שמתאים לאיורי ggplot/seaborn ולמודלים סטטיסטיים שמצפים לעמודה אחת ערכית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># מבנה wide: brand, trial_1, trial_2, ..., trial_6
+popcorn.melt(
+    id_vars='brand',          # עמודה לשמור כפי שהיא
+    var_name='trial',          # שם העמודה החדשה למזהים
+    value_name='n_unpopped'    # שם העמודה החדשה לערכים
+)
+# תוצאה: brand, trial, n_unpopped (עמודה לכל זוג)
+
+# גרסה משופרת עם wide_to_long
+# מנקה גם את ה-prefix אוטומטית
+pd.wide_to_long(
+    popcorn,
+    stubnames='trial',         # ה-prefix של עמודות המקור
+    i='brand',                 # מזהה (יהיה האינדקס)
+    j='trial_no',              # שם עמודת הסיומת
+    sep='_'                    # מפריד בין prefix לסיומת
+)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>המרת נתוני סקר עם עמודה לכל שאלה לפורמט שאלה-תשובה</li><li>הכנת נתוני מכירות חודשיים לגרף עם x=חודש y=מכירות</li><li>המרת תוצאות ניסוי A/B עם variant_a/variant_b לעמודת variant</li><li>הכנת DataFrame של מטריקות מודל לפי epoch לוויזואליזציה</li><li>הכנת נתונים עבור seaborn שצריך עמודה לכל ציר</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>אם שוכחים id_vars - העמודה המזהה הופכת לערך והקשר אובד</li><li>האינדקס המקורי נזרק כברירת מחדל - הוסיפו ignore_index=False לשמר אותו</li><li>wide_to_long דורש מבנה שמות עמודות עקבי - חוסר אחידות יגרום לשורות חסרות</li></ul></div>
+</section>
+<section class="slide" data-idx="12" data-layer="0">
+<div class="layer-context"><span class="layer-name">Reshaping - Long ↔ Wide</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>Long → Wide עם pivot ו-pivot_table</h2><span class="en-name">Pivoting (Long to Wide)</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>הפעולה ההפוכה ל-melt - הופכת ערכים בעמודה לעמודות נפרדות. .pivot() דורש שילובי index+columns ייחודיים, ו-.pivot_table() מטפל בכפילויות באמצעות פונקציית צבירה. שימושי ליצירת דוחות לטבלת Excel.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># pivot בסיסי - אין כפילויות
+popcorn_long.pivot(
+    values='n_unpopped',
+    index='brand',
+    columns='trial'
+).reset_index()
+
+# pivot_table - מטפל בכפילויות עם aggfunc
+sales_long.pivot_table(
+    values='revenue',
+    index='region',
+    columns='quarter',
+    aggfunc='sum',          # ברירת מחדל: mean
+    fill_value=0,           # מילוי NaN בתאים ריקים
+    margins=True            # שורת/עמודת Total
+)
+
+# שווה ערך עם groupby
+df.groupby(['region', 'quarter'])['revenue'].sum() \
+  .reset_index() \
+  .pivot(index='region', columns='quarter', values='revenue')</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>יצירת crosstab של מכירות לפי מוצר ואזור לטבלת Excel</li><li>המרת לוג אירועים לטבלת user × event_type עם ספירות</li><li>הכנת מטריצת features עבור מודל מטעני transactions</li><li>הצגת תוצאות ניסוי A/B עם metric בעמודות variant</li><li>המרת long-format של מדדי KPI לדאשבורד עם עמודה לחודש</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>pivot זורק שגיאה על שילובי index+columns כפולים - השתמשו ב-pivot_table</li><li>pivot_table משתמש ב-mean כברירת מחדל - העבירו aggfunc=’sum’ או רשימה לפי הצורך</li><li>NaN מופיע בכל תא ללא ערך - שקלו fill_value להצגה נקייה בדוח</li></ul></div>
+</section>
+<section class="slide" data-idx="13" data-layer="0">
+<div class="layer-context"><span class="layer-name">Reshaping - Long ↔ Wide</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>Stack ו-Unstack - ניוד אינדקסים</h2><span class="en-name">Stacking & Unstacking</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Stack ו-Unstack מנייעים רמות בין אינדקס שורות לאינדקס עמודות, במיוחד בעבודה עם MultiIndex. שימושי כאשר העמודות עצמן הן היררכיה (קטגוריה ראשית + תת-קטגוריה) שצריך להפוך לשורות לחישובים נוספים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># pig_feed: עמודות עם MultiIndex (Antibiotic, B12)
+
+# stack - העברת רמת עמודות לרמת שורות
+pig_feed_stacked = pig_feed.stack(level=0)
+# level=0 - הרמה החיצונית
+
+# unstack - הפעולה ההפוכה
+pig_feed_stacked.unstack(level=1)
+
+# שילוב נפוץ: groupby ואז unstack
+df.groupby(['year', 'category'])['sales'].sum() \
+  .unstack(level='category')         # category הופך לעמודות
+# תוצאה: שורה לכל שנה, עמודה לכל קטגוריה
+
+# שטוח MultiIndex לאחר groupby
+result.columns = ['_'.join(col).strip()
+                  for col in result.columns]</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>הצגת תוצאות groupby רב-מימדי בצורה רחבה לקריאה</li><li>ניוד עמודות מטריקה (revenue, cost) לשורות לפני plot</li><li>עיבוד תוצאות time series עם MultiIndex של (ticker, date)</li><li>יצירת heatmap מטבלה ארוכה של correlations</li><li>שטיחת MultiIndex לאחר agg עם מספר פונקציות</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>stack מסיר NaN כברירת מחדל - העבירו dropna=False אם NaN משמעותי</li><li>level יכול להיות מספרי או שמי - תיעוד שמות הרמות מונע באגים</li><li>MultiIndex תוצאתי מקשה על המשך עבודה - לרוב תרצו .reset_index() אחרי</li></ul></div>
+</section>
+<section class="slide" data-idx="14" data-layer="0">
+<div class="layer-context"><span class="layer-name">Reshaping - Long ↔ Wide</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>פיצול ושילוב עמודות - split ו-cat</h2><span class="en-name">Splitting & Joining Columns</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>עמודה אחת שמכילה מספר משתנים (כמו ’2024-01-15’) מפרה את עיקרון tidy data. .str.split(expand=True) מפצל לעמודות נפרדות, ו-.str.cat() מאחד עמודות לטקסט אחד. פעולות הכרחיות לפני ניתוח רציני.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># פיצול עמודה לפי מפריד
+movies['directors'].str.split(',', expand=True)
+# תוצאה: עמודה לכל במאי
+
+# הקצאת התוצאה למספר עמודות
+movies[['director_1', 'director_2']] = \
+    movies['directors'].str.split(',', expand=True, n=1)
+
+# שילוב עמודות למחרוזת אחת
+movies['release_year'].astype(str).str.cat(
+    movies[['release_month', 'release_day']].astype(str),
+    sep='-'
+)
+# תוצאה: '2009-12-18'
+
+# הפיכת מספר עמודות לעמודת רשימה
+movies['release_list'] = movies[
+    ['release_year', 'release_month', 'release_day']
+].values.tolist()
+
+# פירוק חזרה מעמודת רשימה לעמודות נפרדות
+movies[['y', 'm', 'd']] = movies['release_list'].to_list()</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>פיצול שדה ’שם מלא’ ל-שם פרטי + משפחה לפני join</li><li>חילוץ קוד מטבע מתוך מחרוזת ’100 USD’</li><li>פירוק קואורדינטה ’32.07,34.78’ ללוויטוד וקו רוחב</li><li>איחוד עמודות year+month+day לעמודת date אחת</li><li>פיצול שדה user agent ל-OS + browser + version</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>str.split(expand=True) מחזיר NaN בשורות עם פחות חלקים - שקלו n=מקסימום</li><li>str.cat דורש שכל העמודות יהיו string - המירו במפורש עם astype(str)</li><li>אם המפריד לא קיים בכלל - יוצאת עמודה אחת זהה למקור, לא שגיאה</li></ul></div>
+</section>
+<section class="slide" data-idx="15" data-layer="0">
+<div class="layer-context"><span class="layer-name">Reshaping - Long ↔ Wide</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>Explode ו-json_normalize - שטיחת מבנים מקוננים</h2><span class="en-name">Exploding & Normalizing Nested Data</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>תגובות API מודרניות מגיעות לרוב עם רשימות ומילונים מקוננים. .explode() נותן שורה לכל איבר ברשימה, ו-pd.json_normalize() שוטח מילון לעמודות נפרדות. שילוב השניים פותח כל מבנה JSON ל-DataFrame שטוח לניתוח.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># explode - שורה לכל איבר ברשימה
+music.explode('singles')
+# לפני: artist=[Bad Bunny], singles=[song1, song2]
+# אחרי: שתי שורות נפרדות, אחת לכל שיר
+
+# json_normalize - מילון לעמודות
+pd.json_normalize(music_exploded['singles'])
+# כל מפתח top-level הופך לעמודה
+
+# צינור מלא: API → DataFrame שטוח
+import pandas as pd
+response = api_call()
+df = pd.json_normalize(
+    response,
+    record_path=['items'],         # רשימה לפרוק
+    meta=['user_id', 'timestamp']  # מטא-דאטה מהרמה החיצונית
+)
+
+# המרה ל/מ-JSON string
+import json
+json_str = json.dumps(df['nested'].to_list())
+df['parsed'] = json.loads(json_str)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>פירוק תגובת Twitter API עם רשימת tweets לכל user</li><li>שטיחת תגובת Stripe API עם פרטי לקוח ופרטי תשלום מקוננים</li><li>פירוק מערך תגיות מוצר לשורה לכל תג לחישוב תדירות</li><li>המרת לוג אירועים JSON של אפליקציה ל-DataFrame לניתוח</li><li>פירוק רשימת items בכל הזמנה לטבלת order_items</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>explode על רשימה ריקה ייצור שורה עם NaN - שקלו לסנן לפני</li><li>json_normalize שטוח רק רמה אחת כברירת מחדל - השתמשו ב-sep ו-max_level לקינון עמוק</li><li>אורכי רשימות שונים בעמודות מקבילות יגרמו לחוסר התאמה - explode בנפרד ואז merge</li></ul></div>
+</section>
+<section class="slide" data-idx="16" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 1 מתוך 6</div>
+<div class="entry-head"><h2>סוגי JOIN בסיסיים</h2><span class="en-name">INNER, LEFT, RIGHT, FULL JOIN</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>JOIN משלב שורות משתי טבלאות לפי שדה מקשר משותף. INNER מחזיר רק שורות עם התאמה בשתי הטבלאות, LEFT שומר את כל השורות מהטבלה השמאלית, RIGHT שומר את כל השורות מהטבלה הימנית ו-FULL OUTER שומר את כולן. בחירת סוג ה-JOIN משפיעה ישירות על כמות הנתונים שתקבלו ועל הטיפול ב-NULL.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- INNER JOIN: רק התאמות בשתי הטבלאות
+SELECT *
+FROM artist AS art
+INNER JOIN album AS alb
+  ON art.artist_id = alb.artist_id;
+
+-- LEFT JOIN: כל האמנים, גם בלי אלבום
+SELECT *
+FROM artist AS art
+LEFT JOIN album AS alb
+  ON art.artist_id = alb.artist_id;
+
+-- FULL OUTER JOIN: כל השורות משתי הטבלאות
+SELECT *
+FROM artist AS art
+FULL OUTER JOIN album AS alb
+  ON art.artist_id = alb.artist_id;</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>צירוף טבלת לקוחות לטבלת הזמנות לדוחות מכירות</li><li>איתור משתמשים רשומים שלא ביצעו רכישה (LEFT JOIN + WHERE NULL)</li><li>איחוד טבלת מוצרים עם טבלת קטגוריות לדשבורד</li><li>בניית data mart שמשלב מקורות שונים לפי מפתח עסקי</li><li>השלמת נתוני עובדים עם פרטי מחלקה למודל ML</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>INNER JOIN משמיט בשקט שורות ללא התאמה — בדקו את ה-row count לפני ואחרי</li><li>מפתח כפול בצד אחד יוצר כפילויות (cartesian explosion) שמטות אגרגציות</li><li>RIGHT JOIN ניתן תמיד לכתוב מחדש כ-LEFT JOIN — עדיף לעקביות בקוד</li></ul></div>
+</section>
+<section class="slide" data-idx="17" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 2 מתוך 6</div>
+<div class="entry-head"><h2>SELF JOIN וטיפול בהיררכיות</h2><span class="en-name">Self Join for hierarchical data</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>SELF JOIN מצרף טבלה לעצמה כדי להשוות שורות באותה טבלה. שימושי במיוחד לטיפול במבנים היררכיים כמו עץ עובדים-מנהלים, או למציאת זוגות שורות הקשורות זו לזו. חשוב להשתמש בשמות alias שונים לשני העותקים ולסנן את ההתאמה של שורה לעצמה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- מציאת זוגות אלבומים שונים של אותו אמן
+SELECT
+  alb1.artist_id,
+  alb1.title AS alb1_title,
+  alb2.title AS alb2_title
+FROM album AS alb1
+INNER JOIN album AS alb2
+  ON alb1.artist_id = alb2.artist_id
+WHERE alb1.album_id <> alb2.album_id;
+
+-- היררכיית עובד-מנהל
+SELECT e.name AS employee, m.name AS manager
+FROM employees AS e
+LEFT JOIN employees AS m
+  ON e.manager_id = m.employee_id;</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>מיפוי היררכיית ניהול בארגון לניתוח רשתות</li><li>מציאת לקוחות באותה עיר לצורכי המלצות</li><li>השוואת רכישות עוקבות של אותו משתמש לאיתור דפוסים</li><li>זיהוי מוצרים דומים באותה קטגוריה</li><li>ניתוח קשרים חברתיים בין משתמשים בפלטפורמה</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>שכחה של WHERE alb1.id <> alb2.id מחזירה כל שורה מצורפת לעצמה</li><li>התוצאה כוללת כל זוג פעמיים (A,B ו-B,A) — הוסיפו alb1.id < alb2.id במידת הצורך</li><li>על טבלאות גדולות SELF JOIN יקר בביצועים — שקלו אינדקס על שדה הקישור</li></ul></div>
+</section>
+<section class="slide" data-idx="18" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 3 מתוך 6</div>
+<div class="entry-head"><h2>אופרטורי קבוצות: UNION, INTERSECT, EXCEPT</h2><span class="en-name">Set theory operators</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>אופרטורי קבוצות משלבים תוצאות של שני שאילתות SELECT במאונך. UNION מחזיר ערכים ייחודיים, UNION ALL כולל כפילויות ומהיר יותר, INTERSECT מחזיר רק שורות שמופיעות בשתי השאילתות ו-EXCEPT מחזיר שורות שיש בראשונה אך לא בשנייה. דורש שמספר העמודות וסוגי הנתונים יהיו זהים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- איחוד מזהים מ-2 טבלאות בלי כפילויות
+SELECT artist_id FROM artist
+UNION
+SELECT artist_id FROM album;
+
+-- שמירת כפילויות — מהיר יותר
+SELECT artist_id FROM artist
+UNION ALL
+SELECT artist_id FROM album;
+
+-- מזהים שמופיעים בשתי הטבלאות
+SELECT artist_id FROM artist
+INTERSECT
+SELECT artist_id FROM album;
+
+-- אמנים ללא אלבום (הפרש קבוצות)
+SELECT artist_id FROM artist
+EXCEPT
+SELECT artist_id FROM album;</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>איחוד לוגים מטבלאות חודשיות לדוח רבעוני</li><li>מציאת לקוחות פעילים גם באתר וגם באפליקציה (INTERSECT)</li><li>זיהוי משתמשים שננטשו: היו בעבר אך לא היום (EXCEPT)</li><li>איחוד נתוני מכירות ממספר חנויות לפני בניית מודל</li><li>השוואת רשימות תכונות בין גרסאות סכמה שונות</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>UNION (ללא ALL) מבצע DISTINCT ויקר — אל תשתמשו בו אם אתם יודעים שאין כפילויות</li><li>מספר וסדר העמודות חייבים להיות זהים בכל ה-SELECTs — אחרת שגיאה</li><li>סוגי הנתונים חייבים להתאים — INT ו-VARCHAR לא יתאחדו בצורה אוטומטית בכל מנוע</li></ul></div>
+</section>
+<section class="slide" data-idx="19" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 4 מתוך 6</div>
+<div class="entry-head"><h2>Semi Join ו-Anti Join עם תתי-שאילתות</h2><span class="en-name">Semi & Anti joins via subqueries</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Semi Join בוחר שורות מהטבלה הראשונה רק כאשר תנאי מתקיים בטבלה השנייה, באמצעות WHERE … IN (subquery). Anti Join עושה את ההפך עם NOT IN — מחזיר רק שורות ללא התאמה. שתי הטכניקות יעילות לסינון על בסיס קיום בטבלה אחרת בלי לגרום לכפילויות כמו ב-JOIN רגיל.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- Semi Join: אלבומים של אמנים שקיימים בטבלת artist
+SELECT *
+FROM album
+WHERE artist_id IN (
+  SELECT artist_id FROM artist
+);
+
+-- Anti Join: אלבומים שאין להם אמן בטבלת artist
+SELECT *
+FROM album
+WHERE artist_id NOT IN (
+  SELECT artist_id
+  FROM artist
+  WHERE artist_id IS NOT NULL
+);
+
+-- חלופה מומלצת ב-Anti Join: NOT EXISTS
+SELECT *
+FROM album a
+WHERE NOT EXISTS (
+  SELECT 1 FROM artist ar
+  WHERE ar.artist_id = a.artist_id
+);</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>מציאת מוצרים שנמכרו לפחות פעם אחת (Semi Join)</li><li>איתור משתמשים שמעולם לא הזמינו (Anti Join)</li><li>סינון לידים שכבר הומרו ללקוחות לפני קמפיין שיווקי</li><li>זיהוי שורות יתומות לפני ניקוי dataset לאימון מודל</li><li>בידוד פיצ’רים שלא נכללים ברשימת black-list</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>NOT IN עם NULL בתת-שאילתה מחזיר תמיד 0 שורות — תמיד הוסיפו IS NOT NULL</li><li>Semi/Anti Join דרך IN לא מכפיל שורות, בניגוד ל-INNER JOIN על מפתח לא ייחודי</li><li>NOT EXISTS לרוב מהיר יותר מ-NOT IN ובטוח יותר מול NULL</li></ul></div>
+</section>
+<section class="slide" data-idx="20" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 5 מתוך 6</div>
+<div class="entry-head"><h2>CROSS JOIN וקרטזית מבוקרת</h2><span class="en-name">Cross Join for combinations</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>CROSS JOIN יוצר את כל הצירופים האפשריים בין שתי טבלאות — מכפלה קרטזית. אין צורך בתנאי ON. שימושי ליצירת קומבינציות, כמו לוח שנה מלא או מטריצת משתמשים מול תאריכים. יש להיזהר מהתפוצצות בגודל התוצאה: שתי טבלאות של מיליון שורות יניבו טריליון שורות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- כל הצירופים אמן x אלבום
+SELECT name, title
+FROM artist
+CROSS JOIN album;
+
+-- מילוי חוסרי תאריכים: כל משתמש x כל יום בחודש
+SELECT u.user_id, d.date
+FROM users AS u
+CROSS JOIN calendar AS d
+WHERE d.date BETWEEN '2026-01-01' AND '2026-01-31'
+ORDER BY u.user_id, d.date;</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>יצירת מטריצת משתמש-תאריך לחישוב סדרות זמן מלאות (gap filling)</li><li>בניית טבלת התייחסות לכל קומבינציה של מוצר וחנות</li><li>סימולציות A/B עם כל קומבינציה של פרמטרים</li><li>יצירת dataset מאוזן לבדיקת מודל המלצות</li><li>הכנת lookup table של תאי גריד גאוגרפי x זמן</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>התפוצצות שורות: בדקו את גודל שתי הטבלאות לפני הרצה</li><li>כתיבת INNER JOIN בלי ON גורמת ב-MySQL ל-CROSS JOIN שקט — בדקו את ה-ON שלכם</li><li>ללא LIMIT, CROSS JOIN על production יכול להפיל את ה-DB</li></ul></div>
+</section>
+<section class="slide" data-idx="21" data-layer="0">
+<div class="layer-context"><span class="layer-name">SQL לדאטה סיינטיסטים</span> · ערך 6 מתוך 6</div>
+<div class="entry-head"><h2>טיפים לביצועים ב-JOINs</h2><span class="en-name">Performance tips for joins</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>ביצועי JOIN תלויים באינדקסים, בכמות הנתונים ובסדר העיבוד. אינדקס על שדות ה-JOIN, סינון מוקדם ב-WHERE, ובחירת סוג ה-JOIN המינימלי הנדרש — כל אלה משפרים זמני ריצה דרמטית. בעבודה עם נתוני production, EXPLAIN הוא הכלי הראשון להבנת תוכנית הביצוע.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">-- 1. אינדקס על שדות ה-JOIN
+CREATE INDEX idx_album_artist ON album(artist_id);
+
+-- 2. סינון מוקדם לפני JOIN (לעיתים)
+SELECT a.name, al.title
+FROM artist AS a
+INNER JOIN (
+  SELECT artist_id, title
+  FROM album
+  WHERE release_year >= 2020
+) AS al
+  ON a.artist_id = al.artist_id;
+
+-- 3. EXPLAIN כדי לראות את תוכנית הביצוע
+EXPLAIN ANALYZE
+SELECT *
+FROM artist a
+JOIN album al ON a.artist_id = al.artist_id
+WHERE a.country = 'US';</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אופטימיזציה של דשבורד שנטען לאט בגלל JOIN על מיליוני שורות</li><li>הכנת pipeline ETL לילי שלא יעבור את חלון הזמן</li><li>צמצום עלויות ענן ב-BigQuery/Snowflake לפי data scanned</li><li>האצת שאילתות feature engineering לפני אימון מודל</li><li>מעבר מ-subquery יקר ל-JOIN עם אינדקס מתאים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>JOIN על שדה עם רמת cardinality נמוכה (למשל boolean) אינו נהנה מאינדקס</li><li>WHERE על עמודה שעברה פונקציה (UPPER, CAST) שובר את השימוש באינדקס</li><li>סטטיסטיקות ישנות גורמות ל-optimizer לבחור תוכנית גרועה — הריצו ANALYZE מדי פעם</li></ul></div>
+</section>
+<section class="slide" data-idx="22" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 1 מתוך 6</div>
+<div class="entry-head"><h2>ה-workflow הבסיסי של scikit-learn</h2><span class="en-name">Basic supervised learning workflow</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>כל פרויקט ML ב-scikit-learn מבוסס על אותה תבנית: טעינת נתונים, חלוקה ל-train/test, סקיילינג, התאמת מודל (fit), חיזוי (predict) והערכה. ה-API האחיד מאפשר להחליף מודלים בשורה אחת. זוהי נקודת הפתיחה לכל בעיית סיווג או רגרסיה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from sklearn import neighbors, datasets, preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# 1. טעינה
+iris = datasets.load_iris()
+X, y = iris.data[:, :2], iris.target
+
+# 2. חלוקה
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=33
+)
+
+# 3. סקיילינג — fit רק על ה-train
+scaler = preprocessing.StandardScaler().fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+# 4. אימון, חיזוי, הערכה
+knn = neighbors.KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(accuracy_score(y_test, y_pred))</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>POC ראשוני לבעיית סיווג לפני בחירת המודל הסופי</li><li>Baseline פשוט שמולו משווים מודלים מתקדמים</li><li>אימון מהיר לסטודנט/מתחיל שלומד את ה-API</li><li>השוואת אלגוריתמים שונים על אותו dataset</li><li>אינטגרציה כשלב ראשון בפייפליין production לפני CV</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>סקיילינג של X_test לפני train_test_split = data leakage</li><li>שכחה של random_state פוגעת בשחזוריות התוצאות</li><li>שימוש ב-accuracy על dataset לא מאוזן נותן תחושת בטחון מזויפת</li></ul></div>
+</section>
+<section class="slide" data-idx="23" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 2 מתוך 6</div>
+<div class="entry-head"><h2>עיבוד מקדים: סקיילינג, נרמול וקידוד</h2><span class="en-name">Preprocessing: scaling, normalization, encoding</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>רוב המודלים (SVM, KNN, רשתות, רגרסיה לוגיסטית עם רגולריזציה) רגישים לסקאלה של הפיצ’רים. StandardScaler מביא לממוצע 0 וסטיית תקן 1, MinMax למרחב [0,1], ו-Normalizer מנרמל כל שורה לאורך 1. LabelEncoder ו-OneHotEncoder ממירים משתנים קטגוריאליים למספרים. תמיד fit על ה-train בלבד.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from sklearn.preprocessing import (
+    StandardScaler, Normalizer, Binarizer, LabelEncoder
+)
+
+# סטנדרטיזציה (z-score)
+scaler = StandardScaler().fit(X_train)
+X_train_std = scaler.transform(X_train)
+X_test_std = scaler.transform(X_test)
+
+# נרמול לפי שורה (L2)
+norm = Normalizer().fit(X_train)
+X_train_norm = norm.transform(X_train)
+
+# בינריזציה לפי סף
+binarizer = Binarizer(threshold=0.0).fit(X)
+binary_X = binarizer.transform(X)
+
+# קידוד תווית קטגוריאלית
+enc = LabelEncoder()
+y_encoded = enc.fit_transform(y)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>הכנת פיצ’רים מספריים לאלגוריתמי מרחק (KNN, K-Means, SVM)</li><li>קידוד country/category לפני הכנסה ל-XGBoost או רגרסיה</li><li>הפיכת ציוני סנטימנט רציפים לתוויות חיוביות/שליליות (Binarization)</li><li>נרמול וקטורי TF-IDF במערכת חיפוש דמיון טקסטואלי</li><li>סטנדרטיזציה לפני PCA כדי שכל פיצ’ר ישפיע באופן שווה</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>fit על כל ה-X לפני train_test_split זולג מידע מה-test ל-train</li><li>LabelEncoder על פיצ’רים (לא על y) יוצר סדר מלאכותי שמטעה מודלים לינאריים — העדיפו OneHotEncoder</li><li>Imputer/SimpleImputer הוסר ל-sklearn.impute החל מ-0.20 — שימו לב לגרסה</li></ul></div>
+</section>
+<section class="slide" data-idx="24" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 3 מתוך 6</div>
+<div class="entry-head"><h2>Pipeline ו-ColumnTransformer</h2><span class="en-name">Pipeline + ColumnTransformer</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Pipeline משרשרת שלבי עיבוד מקדים ומודל לאובייקט אחד עם fit/predict, ומונעת data leakage ב-cross-validation. ColumnTransformer מאפשר להחיל טרנספורמציות שונות על עמודות שונות — סקיילינג למספריים ו-OneHot לקטגוריאליים. זהו הסטנדרט בעבודה מקצועית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+
+numeric_cols = ['age', 'income']
+cat_cols = ['country', 'gender']
+
+numeric_pipe = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler',  StandardScaler()),
+])
+
+cat_pipe = Pipeline([
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot',  OneHotEncoder(handle_unknown='ignore')),
+])
+
+preprocess = ColumnTransformer([
+    ('num', numeric_pipe, numeric_cols),
+    ('cat', cat_pipe,     cat_cols),
+])
+
+model = Pipeline([
+    ('prep', preprocess),
+    ('clf',  LogisticRegression(max_iter=1000)),
+])
+
+model.fit(X_train, y_train)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>מודלים על נתונים טבלאיים מעורבים (מספריים + קטגוריאליים)</li><li>מניעת data leakage בעת שימוש ב-cross_val_score ו-GridSearchCV</li><li>הפצת מודל אחד מסודר ל-production בלי לשכוח שלבים</li><li>השוואת מודלים שונים עם אותו preprocessing זהה</li><li>טיפול עקבי בערכים חסרים במהלך אימון וב-inference</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>fit_transform על test set שובר את הלוגיקה — תמיד fit על train בלבד</li><li>OneHotEncoder ללא handle_unknown='ignore' יקרוס על קטגוריות חדשות ב-production</li><li>ColumnTransformer עם remainder='drop' (ברירת המחדל) משמיט עמודות שלא ציינתם</li></ul></div>
+</section>
+<section class="slide" data-idx="25" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 4 מתוך 6</div>
+<div class="entry-head"><h2>GridSearchCV ו-RandomizedSearchCV</h2><span class="en-name">Hyperparameter tuning</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>GridSearchCV סורק את כל הצירופים בגריד פרמטרים עם cross-validation ובוחר את הטוב ביותר. RandomizedSearchCV מדגם תת-קבוצה אקראית — מהיר משמעותית כשגריד גדול. שני הכלים עוזרים לבחור היפרפרמטרים אופטימליים בלי לדגום ידנית ומדווחים best_score_ ו-best_estimator_.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import numpy as np
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier()
+
+# חיפוש ממצה
+params = {
+    'n_neighbors': np.arange(1, 10),
+    'metric':      ['euclidean', 'cityblock'],
+}
+grid = GridSearchCV(estimator=knn, param_grid=params, cv=5)
+grid.fit(X_train, y_train)
+print(grid.best_score_)
+print(grid.best_estimator_.n_neighbors)
+
+# חיפוש אקראי — מהיר יותר
+rand_params = {
+    'n_neighbors': range(1, 50),
+    'weights':     ['uniform', 'distance'],
+}
+rsearch = RandomizedSearchCV(
+    estimator=knn,
+    param_distributions=rand_params,
+    cv=4, n_iter=8, random_state=5,
+)
+rsearch.fit(X_train, y_train)
+print(rsearch.best_score_)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>כיוון max_depth ו-n_estimators ב-RandomForest/XGBoost</li><li>מציאת C ו-gamma אופטימליים ל-SVM</li><li>בחירת alpha ב-Ridge/Lasso</li><li>אופטימיזציה של k ב-KNN למערכות המלצה</li><li>סריקת היפרפרמטרים של Pipeline שלם כולל preprocessing</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Grid גדול מדי = זמן ריצה אקספוננציאלי — התחילו עם RandomizedSearch</li><li>scoring ברירת המחדל הוא accuracy — על dataset לא מאוזן הגדירו f1/roc_auc במפורש</li><li>ללא Pipeline, סקיילינג מחוץ ל-CV יוצר דליפת מידע בכל קיפול</li></ul></div>
+</section>
+<section class="slide" data-idx="26" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 5 מתוך 6</div>
+<div class="entry-head"><h2>הערכת מודלים ו-Cross-Validation</h2><span class="en-name">Model evaluation metrics</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>הערכת מודל לעולם לא מסתמכת על מספר יחיד. לסיווג: accuracy, precision/recall/f1, confusion matrix ו-classification_report. לרגרסיה: MAE, MSE/RMSE ו-R². ל-clustering: ARI, homogeneity, V-measure. cross_val_score נותן הערכה יציבה יותר מ-split יחיד על ידי ממוצע על כמה קיפולים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from sklearn.metrics import (
+    accuracy_score, classification_report, confusion_matrix,
+    mean_absolute_error, mean_squared_error, r2_score,
+)
+from sklearn.model_selection import cross_val_score
+
+# סיווג
+print(accuracy_score(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+
+# רגרסיה
+print(mean_absolute_error(y_true, y_pred))
+print(mean_squared_error(y_true, y_pred))
+print(r2_score(y_true, y_pred))
+
+# Cross-validation: ממוצע יציב
+scores = cross_val_score(knn, X_train, y_train, cv=4)
+print(scores.mean(), scores.std())</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>בחירת מודל סופי בין כמה מועמדים לפני העלאה ל-production</li><li>דיווח ביצועי מודל לבעלי עניין עסקיים (precision/recall ללא איזון)</li><li>השוואת ביצועים בין קיפולים כדי לזהות overfitting</li><li>ניטור drift של מודל בייצור מול baseline היסטורי</li><li>אופטימיזציה של threshold סיווג על בסיס precision-recall curve</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>accuracy על dataset לא מאוזן (95% מחלקה אחת) חסר משמעות — השתמשו ב-f1 או ROC-AUC</li><li>MSE רגיש מאוד לערכי קצה — שקלו MAE כשיש outliers</li><li>cross_val_score על נתוני סדרת זמן ב-KFold שובר את סדר הזמן — השתמשו ב-TimeSeriesSplit</li></ul></div>
+</section>
+<section class="slide" data-idx="27" data-layer="0">
+<div class="layer-context"><span class="layer-name">Scikit-learn - קוד מעשי</span> · ערך 6 מתוך 6</div>
+<div class="entry-head"><h2>שמירת והעמסת מודל (joblib)</h2><span class="en-name">Model persistence with joblib</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>אחרי אימון מוצלח, יש לשמור את המודל לדיסק כדי לטעון אותו ב-production בלי לאמן מחדש. joblib יעיל יותר מ-pickle עבור מערכי numpy גדולים, ומומלץ רשמית על ידי scikit-learn. שמירת ה-Pipeline כולה (preprocessing + model) מבטיחה שלא יישכח שלב inference.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import joblib
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+# אימון Pipeline שלמה
+model = Pipeline([
+    ('scaler', StandardScaler()),
+    ('clf',    LogisticRegression(max_iter=1000)),
+])
+model.fit(X_train, y_train)
+
+# שמירה לדיסק
+joblib.dump(model, 'model.joblib')
+
+# טעינה ב-production
+loaded = joblib.load('model.joblib')
+y_pred = loaded.predict(X_new)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>פריסת מודל מאומן ל-Flask/FastAPI לחיזוי בזמן אמת</li><li>טעינת מודל ב-job batch לילי לציון מיליוני שורות</li><li>שמירת קבצי מודל ב-S3/GCS לגרסאות שונות</li><li>החזקת מודל baseline להשוואה מול ניסויים חדשים</li><li>אריזת מודל בתוך Docker image עבור Kubernetes</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>טעינת joblib מגרסת sklearn שונה ממה שאיתה נשמר — עלולה להישבר בשקט</li><li>אל תטענו joblib ממקור לא מהימן — pickle יכול להריץ קוד שרירותי</li><li>שכחה לשמור את ה-preprocessing יחד עם המודל גורמת לפיצ’רים שגויים ב-inference</li></ul></div>
+</section>
+<section class="slide" data-idx="28" data-layer="0">
+<div class="layer-context"><span class="layer-name">Plotly ו-Matplotlib</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>Plotly Express - יסודות</h2><span class="en-name">Plotly Express Fundamentals</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Plotly Express הוא ממשק ברמה גבוהה ליצירת גרפים אינטראקטיביים בקוד מינימלי, הבנוי מעל Plotly Graph Objects. הוא מתאים במיוחד לעבודה עם DataFrames של pandas - מספיק להעביר DataFrame ולציין עמודות לציר X ול-Y כדי לקבל גרף מוכן עם זום, hover ובחירה אינטראקטיבית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import plotly.express as px
+import pandas as pd
+
+# הגרף הבסיסי - DataFrame + שמות עמודות
+fig = px.scatter(df,
+                 x="experiment_1",
+                 y="experiment_2",
+                 title="השוואת ניסויים",
+                 width=800, height=500)
+
+fig.update_layout(xaxis_title="ניסוי 1",
+                  yaxis_title="ניסוי 2")
+fig.show()  # מציג גרף אינטראקטיבי בדפדפן/בנוטבוק</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>דשבורד ניסויים קליניים שמאפשר חוקרים להתקרב לאזורי עניין</li><li>אנליזת מכירות אינטראקטיבית עבור צוות עסקי בנוטבוק Jupyter</li><li>הצגת מודלים של ML בפני מנהלים עם פירוט נקודות בעת hover</li><li>בניית דוחות HTML שמשלבים גרפים אינטראקטיביים ב-Streamlit/Dash</li><li>השוואה מהירה בין מספר אלגוריתמים על אותם נתונים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Plotly Express דורש נתונים בפורמט long (tidy) - טבלה רחבה תדרוש melt לפני העברה</li><li>גרפים אינטראקטיביים מגדילים מאוד את גודל קובץ ה-HTML/הנוטבוק - לא מתאימים לסטים של מאות אלפי נקודות ללא דגימה</li><li>Plotly Express יוצר Graph Object - תיקונים מעמיקים דורשים מעבר ל-update_traces/update_layout ולא ל-px עצמו</li></ul></div>
+</section>
+<section class="slide" data-idx="29" data-layer="0">
+<div class="layer-context"><span class="layer-name">Plotly ו-Matplotlib</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>סוגי גרפים נפוצים ב-Plotly</h2><span class="en-name">Scatter, Line, Bar, Histogram & Heatmap</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Plotly Express מספק פונקציה ייעודית לכל סוג גרף: px.scatter לקשרים, px.line לסדרות זמן, px.bar להשוואות קטגוריות, px.histogram להתפלגויות ו-px.imshow ל-heatmap. הפרמטרים אחידים בין הפונקציות, מה שמקל מאוד על מעבר בין סוגי ויזואליזציה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># Scatter עם גודל וצבע משתנים (bubble plot)
+px.scatter(df, x="gdp", y="life_exp", size="pop", color="continent")
+
+# Line plot עם מספר סדרות
+px.line(stock_data, x="date", y=["FB", "AMZN"])
+
+# Bar plot עם מיפוי צבעים מותאם
+px.bar(commodity_data, x="nation", y=["gold", "silver", "bronze"],
+       color_discrete_map={"gold": "yellow", "silver": "grey", "bronze": "brown"})
+
+# Histogram עם מספר binים נשלט
+px.histogram(bill_data, x="total_bill", nbins=30)
+
+# Heatmap של מטריצת קורלציה
+px.imshow(df.corr(numeric_only=True), zmin=-1, zmax=1,
+          color_continuous_scale="rdbu", text_auto=True)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Scatter: בחינת קשר בין משתני BMI ולחץ דם במחקר רפואי</li><li>Line: מעקב אחרי מחיר מניות לאורך זמן עם השוואת חברות</li><li>Bar אופקי (החלפת x↔y): דירוג מדינות לפי מדליות אולימפיות</li><li>Histogram: התפלגות חשבון לקוחות במסעדה לאיתור חריגים</li><li>Heatmap: ויזואליזציה של מטריצת קורלציה לפני בניית מודל</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>כאשר מציינים רשימה ב-y (למשל y=["FB","AMZN"]), Plotly ימזג אותן לסדרות נפרדות עם legend אוטומטי - נדרש פורמט wide</li><li>px.histogram מתחיל את ה-bins אוטומטית - חשוב לקבע nbins כשמשווים בין מספר היסטוגרמות</li><li>ב-px.imshow צריך לקבע zmin/zmax בקורלציה ל-[-1, 1] אחרת קנה המידה יתעוות</li></ul></div>
+</section>
+<section class="slide" data-idx="30" data-layer="0">
+<div class="layer-context"><span class="layer-name">Plotly ו-Matplotlib</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>התאמה וסגנון של גרפים</h2><span class="en-name">Customizing Markers, Lines & Bars</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>לאחר יצירת הגרף עם px משתמשים ב-update_traces() לעיצוב חזותי וב-update_layout() לכותרות וצירים. ניתן לשלוט בגודל, צבע, שקיפות, סימן, סוג קו ועובי - באמצעות מילון אחיד שעובד לכל סוגי הגרפים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">fig = px.scatter(df, x="x", y="y")
+
+# התאמת markers ב-scatter
+fig.update_traces(marker={
+    "size": 24,
+    "color": "magenta",
+    "opacity": 0.5,
+    "line": {"width": 2, "color": "cyan"},
+    "symbol": "square"
+})
+
+# התאמת קווים ב-line plot
+fig_ln = px.line(df, x="date", y="value")
+fig_ln.update_traces(patch={
+    "line": {"dash": "dot", "shape": "spline", "width": 6}
+})
+
+fig.update_layout(title="גרף מותאם אישית",
+                  xaxis_title="זמן",
+                  yaxis_title="ערך")
+fig.show()</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>התאמת צבעי מותג בגרפים שמופיעים בדוחות חיצוניים ללקוחות</li><li>שימוש ב-opacity נמוך כדי לחשוף ריכוזי נקודות ב-scatter עמוס</li><li>סימון קווי מגמה ב-dash שונה מהסדרה הראשית להבחנה ויזואלית</li><li>הדגשת קטגוריה ספציפית בגרף עמודות עם צבע יוצא דופן</li><li>הגדלת markers בנקודות בודדות שמסמלות אירועים חריגים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>update_traces משפיע על כל ה-traces - לעריכת trace בודד יש להשתמש ב-selector</li><li>שינוי color ב-update_traces דורס את color discrete שהוגדר ב-px - לפעמים זה לא הכוונה</li><li>Plotly יכבד את גודל ה-marker רק אם הוא מספרי או רשימה באורך תואם - ערך לא תואם יגרום לכל הנקודות להיעלם</li></ul></div>
+</section>
+<section class="slide" data-idx="31" data-layer="0">
+<div class="layer-context"><span class="layer-name">Plotly ו-Matplotlib</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>אינטראקטיביות ופאנלים מרובים</h2><span class="en-name">Interactivity, Facets & Hover</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>החוזק העיקרי של Plotly מול Matplotlib הוא האינטראקטיביות מובנית: זום, pan, lasso, hover עם פירוט, הסתרת סדרות מה-legend ו-spike lines. בנוסף, פרמטרים כמו facet_row/facet_col מאפשרים יצירת מטריצת תתי-גרפים אוטומטית לחקירה לפי קטגוריות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import plotly.express as px
+
+fig = px.scatter(
+    df,
+    x="gdpPercap", y="lifeExp",
+    color="continent", size="pop",
+    facet_col="year", facet_col_wrap=3,
+    hover_data=["country", "pop"],
+    log_x=True,
+    title="תוחלת חיים מול תמ\"ג לאורך השנים"
+)
+
+# הצגת spike lines עם hover שמתפרס לכל הסדרות באותו x
+fig.update_layout(
+    hovermode="x unified",
+    xaxis=dict(showspikes=True),
+    yaxis=dict(showspikes=True)
+)
+fig.show()</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>השוואת מגמות מכירה לפי אזור עם facet אוטומטי</li><li>דשבורד אינטראקטיבי שבו משתמש סוגר/פותח סדרות מה-legend</li><li>השוואת תוחלת חיים על פני שנים שונות כמטריצת תתי-גרפים</li><li>ניתוח חריגים - זום ו-lasso-select לבחירת נקודות לבדיקה</li><li>מצגת חיה שבה המנחה עובר עם hover לפרטים מדויקים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>facet_col_wrap עלול לייצר עשרות תתי-גרפים זעירים - יש להגביל קטגוריות מראש</li><li>hover_data מציג את כל העמודות שביקשתם - הימנעו מעמודות עם טקסט ארוך מאוד</li><li>כשמייצאים ל-PNG (סטטי) האינטראקטיביות אובדת - צריך לבחור פורמט HTML לאינטראקציה אמיתית</li></ul></div>
+</section>
+<section class="slide" data-idx="32" data-layer="0">
+<div class="layer-context"><span class="layer-name">Plotly ו-Matplotlib</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>Plotly מול Matplotlib</h2><span class="en-name">Plotly vs Matplotlib</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Matplotlib הוא הסטנדרט לויזואליזציות סטטיות ולפרסומים אקדמיים - שליטה מלאה, פלט נקי ל-PDF. Plotly מצטיין באינטראקטיביות, דשבורדים ושיתוף ב-web. הבחירה תלויה ביעד: מצגת מודפסת או חקירה אינטראקטיבית בדפדפן.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># אותו גרף בשתי הספריות:
+
+# Matplotlib - סטטי, מצוין לדוחות PDF
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(figsize=(8,5))
+ax.scatter(df["x"], df["y"], c=df["category"].astype("category").cat.codes)
+ax.set_xlabel("X"); ax.set_ylabel("Y")
+plt.savefig("out.pdf")  # פלט נקי לוקטור
+
+# Plotly - אינטראקטיבי, מצוין לדשבורד/notebook
+import plotly.express as px
+fig = px.scatter(df, x="x", y="y", color="category",
+                 hover_data=df.columns)
+fig.write_html("out.html")  # קובץ HTML עם זום, hover, lasso</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Matplotlib: גרפים לעבודה אקדמית/מאמר עם פלט וקטורי איכותי</li><li>Plotly: דשבורד שיתופי לצוות מוצר עם hover ופירוט נקודות</li><li>Matplotlib: יצירת אלפי גרפים סדרתיים (batch reports) - מהיר וקל</li><li>Plotly: הצגה ללקוחות בלי קוד - קובץ HTML עצמאי</li><li>שילוב: EDA ראשוני ב-Plotly, פלט סופי למאמר ב-Matplotlib/Seaborn</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Plotly יוצר קבצי HTML גדולים - לא מתאים למאמרים או למאות כרטיסיות במייל</li><li>Matplotlib דורש קוד רב יותר לאינטראקטיביות (mpl_interactions/widgets) - ולעיתים זה מאמץ מיותר</li><li>אין כפתור עבר את הקוד - צריך לבחור מראש על איזה stack לבנות את התהליך, מעבר באמצע הפרויקט יקר</li></ul></div>
+</section>
+<section class="slide" data-idx="33" data-layer="0">
+<div class="layer-context"><span class="layer-name">בחירת ויזואליזציה</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>חלק מתוך שלם</h2><span class="en-name">Part-to-Whole Charts</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>גרפי חלק מתוך שלם מציגים כיצד קטגוריות מתחלקות בתוך סך כולל. הסוגים הנפוצים: עוגה (pie), דונאט (donut), עמודות מוערמות (stacked column), heatmap ו-treemap. יש לבחור לפי מספר הקטגוריות וההיררכיה - Pie טוב ל-2-5 קטגוריות, Treemap להיררכיה מקוננת.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">דוגמאות לבחירה:
+• Pie chart   → התפלגות העדפות הצבעה לפי קבוצת גיל (3-5 קבוצות)
+• Donut chart → נתח שוק של ספקי ענן (קריא יותר מ-pie רגיל)
+• Stacked column → השוואת מכירות רבעוניות לפי אזור עם פירוט מוצרים
+• Treemap     → קטגוריות מצרכים בסופר, עם גודל מלבן יחסי למכירות
+• Heatmap     → טמפרטורות חודשיות ממוצעות לפי עיר (שורה=עיר, עמודה=חודש)
+
+כלל אצבע: יותר מ-6 קטגוריות? אל תשתמשו ב-Pie - עברו ל-Bar/Treemap.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Pie: נתח שוק של חמשת מובילי הקטגוריה (לא יותר!)</li><li>Donut: דשבורד מנהלים עם KPI במרכז העיגול</li><li>Stacked column: מכירות לרבעון לפי אזור עם פירוט סוג מוצר</li><li>Treemap: בניית מפת תקציב ארגוני להמחשת חלוקת משאבים</li><li>Heatmap: דפוסי שימוש שעתיים-יומיים באתר</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Pie chart עם יותר מ-5-6 פרוסות הופך לבלתי קריא - עדיף bar chart ממוין</li><li>Stacked column קשה להשוואת חלקי הביניים - הקטגוריה התחתונה תיקרא טוב, השאר פחות</li><li>Treemap מאבד יחסיות כאשר ערך אחד דומיננטי - שאר המלבנים נדרסים</li></ul></div>
+</section>
+<section class="slide" data-idx="34" data-layer="0">
+<div class="layer-context"><span class="layer-name">בחירת ויזואליזציה</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>השוואות בין קטגוריות</h2><span class="en-name">Comparison Charts</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>להשוואת ערכים מספריים בין קטגוריות (קבוצות, מוצרים, אזורים) משתמשים בעיקר ב-bar chart וב-column chart. Bar (אופקי) טוב לתוויות ארוכות; Column (אנכי) טוב לתוויות קצרות וטווחי תאריכים. תמיד למיין את הקטגוריות (אלא אם יש סדר טבעי) - זה מקל מאוד על הקריאה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">כללי בחירה מהירים:
+• Bar chart        → השוואת ערך אחד בין קטגוריות (Top-10 ערים לפי הכנסה)
+• Column chart     → השוואה לאורך זמן בקטגוריות בודדות (מכירות חודשיות)
+• Grouped bar      → השוואת שני מדדים על אותן קטגוריות (Q3 vs Q4)
+• Lollipop / Dot   → גרסה מינימליסטית ל-bar עם הרבה קטגוריות
+• Bullet chart     → השוואת ערך בפועל מול יעד
+
+כלל זהב: ציר ערך תמיד מתחיל מ-0, אחרת ההפרשים מוטעים.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Bar: דירוג עשר הערים עם רוב חיפושי גוגל</li><li>Column: השוואת מכירות חודשיות לאורך שנה</li><li>Grouped bar: השוואת רווח לפי אזור בין Q3 ל-Q4</li><li>Bullet: ביצועי איש מכירות מול יעד אישי</li><li>Lollipop: דירוג 30 מוצרים בלי לחנוק את הציר</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>אי-מיון של עמודות מקשה על איתור הקטגוריה המובילה</li><li>התחלת ציר הערך מערך שונה מאפס מנפחת הבדלים קטנים - שגיאת אינטגריטי קלאסית</li><li>Stacked bar להשוואת ערכי ביניים - העין יכולה להשוות רק את הסדרה הראשונה אמינות</li></ul></div>
+</section>
+<section class="slide" data-idx="35" data-layer="0">
+<div class="layer-context"><span class="layer-name">בחירת ויזואליזציה</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>התפלגויות</h2><span class="en-name">Distribution Charts</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>להבנת איך משתנה מספרי מתפזר משתמשים ב-histogram, box plot, violin plot ו-density plot. Histogram מציג תדירות לפי binים; Box plot מציג חמש סטטיסטיקות סיכום וחריגים; Violin משלב את שניהם; Density יוצר עקומה חלקה לזיהוי שיאים מרובים (multimodal).</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">מתי להשתמש בכל אחד?
+• Histogram    → סקירה ראשונית של התפלגות שכר/גיל (משתנה אחד)
+• Box plot     → השוואת התפלגויות בין 2-10 קבוצות (יעילות דלק לפי יצרן)
+• Violin plot  → כאשר חשוב לראות את צורת ההתפלגות (bimodality)
+• Density (KDE) → השוואה חלקה של מספר התפלגויות חופפות
+• Strip / Swarm → דאטה קטן (<200 נקודות) - הצגת כל נקודה
+
+כלל: התחילו ב-histogram להבנה, ועברו ל-box/violin להשוואה.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Histogram: התפלגות שכר בארגון לאיתור פערים</li><li>Box plot: השוואת זמני קריאה לפי קבוצות גיל</li><li>Violin: בדיקת השפעת מינון תרופה (לחיפוש bimodality)</li><li>Density: השוואת מחירי דירות בכמה ערים על אותו ציר</li><li>Box plot ב-EDA: זיהוי מהיר של חריגים לפני בניית מודל</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Histogram רגיש מאוד למספר ה-bins - מעט מדי מסתיר את הצורה, יותר מדי מרעיש</li><li>Box plot מסתיר התפלגות bimodal - נראית סימטרית גם כשיש שתי פסגות</li><li>Violin שטוח עלול להטעות עבור מדגמים קטנים מאוד (פחות מ-30 תצפיות)</li></ul></div>
+</section>
+<section class="slide" data-idx="36" data-layer="0">
+<div class="layer-context"><span class="layer-name">בחירת ויזואליזציה</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>קשרים וקורלציות</h2><span class="en-name">Relationships & Correlations</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>לבחינת קשר בין שני משתנים מספריים: scatter plot הוא ברירת המחדל. כאשר רוצים להוסיף ממד שלישי - bubble chart (גודל). connected scatter עוקב אחרי טיימליין דרך נקודות, ו-heatmap קורלציה מסכם את כל הזוגות במטריצה אחת.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">מתי להשתמש בכל אחד?
+• Scatter plot       → קשר בין שני משתנים (BMI מול לחץ דם)
+• Bubble chart       → 3 ממדים - x, y וגודל הבועה (תוחלת חיים, תמ\"ג, אוכלוסייה)
+• Connected scatter  → אבולוציה לאורך זמן בין שני משתנים (שיעור אבטלה מול אינפלציה)
+• Hex-bin / 2D hist  → scatter עם עשרות אלפי נקודות (overplotting)
+• Correlation heatmap → סקירת כל הקשרים ב-DataFrame לפני בחירת features
+
+טיפ: הוסיפו קו רגרסיה (trendline="ols" ב-Plotly) להמחשת מגמה.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Scatter: יחס שעות לימוד לציון בבחינה</li><li>Bubble: יחסי תוחלת חיים-תמ\"ג-אוכלוסייה (Gapminder)</li><li>Connected scatter: שינוי במחיר נפט מול שער הדולר לאורך שנים</li><li>Hex-bin: ניתוח לוגים של מיליוני אירועים בלי overplotting</li><li>Corr heatmap: סינון feature לפני רגרסיה ליניארית</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Scatter עם הרבה נקודות חופפות (overplotting) מסתיר את הצפיפות - פתרון: alpha/hex-bin</li><li>קורלציה גבוהה ב-heatmap אינה סיבתיות - יש להיזהר עם פרשנות לקהל לא טכני</li><li>bubble chart שגוי כשגודל הבועה מסומן לפי קוטר במקום שטח - יוצר אשליה ויזואלית</li></ul></div>
+</section>
+<section class="slide" data-idx="37" data-layer="0">
+<div class="layer-context"><span class="layer-name">בחירת ויזואליזציה</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>סדרות זמן ומגמות</h2><span class="en-name">Time Series & Trends</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>כדי לתאר שינוי לאורך זמן: line chart הוא ברירת המחדל; multi-line להשוואת סדרות; area chart להדגשת גודל מצטבר; stacked area לפירוק לקבוצות; spline להחלקה. שימו לב שטווח הזמן יהיה מספיק רחב כדי לא לתאר טרנד מטעה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">מתי להשתמש בכל אחד?
+• Line chart        → הכנסה לאורך זמן (סדרה אחת)
+• Multi-line        → השוואת מניות Apple מול Amazon
+• Area chart        → צריכת אנרגיה מצטברת לאורך השנה
+• Stacked area      → משתמשים פעילים לאורך זמן לפי segment
+• Spline            → סדרות עם ערכים חסרים - החלקה למעבר רך
+• Candlestick / OHLC → מחירי מניות עם open/high/low/close
+
+כלל זהב: ציר זמן תמיד שמאל→ימין, מרווחים אחידים.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Line: חיפושי Google למילת מפתח לאורך זמן</li><li>Multi-line: השוואת חיפושי LeBron מול Stephen Curry</li><li>Area: צריכת חשמל מצטברת ביום קיץ</li><li>Stacked area: התפלגות הכנסה לאורך זמן לפי מדינה</li><li>Spline: מדידות חיישן עם פערים - מבליט מגמה ולא רעש</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>טווח זמן קצר מדי מוביל למסקנות שגויות - הקפידו על horizon מספק</li><li>Stacked area מסתיר ירידות בקטגוריה אמצעית - העין קולטת רק את הסדרה התחתונה ועליונה</li><li>ציר Y שלא מתחיל מ-0 בסדרה גורם להגזמת תנודות (the same data, different y-axis trap)</li></ul></div>
+</section>
+<section class="slide" data-idx="38" data-layer="0">
+<div class="layer-context"><span class="layer-name">Data Storytelling</span> · ערך 1 מתוך 4</div>
+<div class="entry-head"><h2>שלושת מרכיבי ה-Data Storytelling</h2><span class="en-name">Data, Visuals & Narrative</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Data Storytelling מוגדר כשילוב של שלושה רכיבים: נתונים (Data), ויזואליזציות (Visuals) ונרטיב (Narrative). שילוב נכון של השלושה הוא מה שמייצר change - הסקת מסקנה אינה מספיקה, צריך גם להעביר אותה כך שתניע פעולה. זה הקילומטר האחרון של אנליטיקה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">מסגרת לבדיקה עצמית לפני כל מצגת:
+
+1. Data       - האם המספרים נכונים, מייצגים, ומעודכנים?
+              - האם בחרתי מדדים שמשרתים את הנרטיב?
+
+2. Visuals    - האם בחרתי את סוג הגרף המתאים לסיפור?
+              - האם הסרתי clutter? (קווי רשת, מסגרות, legend מיותר)
+              - האם הצבעים מדגישים את הנקודה החשובה?
+
+3. Narrative  - מהי השאלה שאני עונה עליה?
+              - מהי הפעולה שאני מבקש מהקהל לבצע?
+              - האם יש arc: מצב התחלתי → קונפליקט → פתרון/CTA?</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>הצגת בקשת תקציב להנהלה - נתונים + גרף + סיפור הצורך = החלטה</li><li>דוח עוקבים (Quarterly review) - הצגת ביצועים עם נרטיב מה השתנה והבא</li><li>מצגת ל-stakeholders על מודל ML - הסבר השפעה עסקית עם נתונים</li><li>Post-mortem על ירידת KPI - story-driven עם DATA+CTA</li><li>פיץ’ למשקיעים - נתוני שוק + ויזואליות + סיפור החזון</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>התמקדות רק ב-Data מבלי נרטיב - הקהל יוצא ללא מסקנה ברורה</li><li>ויזואליות מרשימה ללא נתונים אמינים = ויברס פלוס מספרים - אובדן אמון</li><li>נרטיב חזק שאינו נתמך על ידי הנתונים = manipulation, פוגע באמינות לטווח הארוך</li></ul></div>
+</section>
+<section class="slide" data-idx="39" data-layer="0">
+<div class="layer-context"><span class="layer-name">Data Storytelling</span> · ערך 2 מתוך 4</div>
+<div class="entry-head"><h2>בחירת הגרף הנכון לסיפור</h2><span class="en-name">Choosing the Right Visualization</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>כל סוג גרף מותאם לסיפור אחר: line למגמה, bar להשוואה, scatter לקשר, histogram להתפלגות. בחירה לא נכונה מקשה על הקהל להבין את הנקודה ומחלישה את המסר. תמיד התחילו מהשאלה הניהולית: מה אני רוצה שיראו? - הסוג צריך לשרת את התשובה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">מטריצת החלטה מהירה:
+
+שאלה שאני שואל              →  סוג הגרף המומלץ
+----------------------------  -----------------
+'איך זה השתנה לאורך זמן?'    →  Line / Area
+'מי הכי גדול?'                →  Bar (ממוין!)
+'האם יש קשר בין X ל-Y?'      →  Scatter (+trendline)
+'איך זה מתפזר?'               →  Histogram / Box plot
+'מתוך מה זה מורכב?'           →  Treemap / Stacked bar
+'איפה במפה?'                   →  Choropleth / Bubble map
+'איך זורם הערך בין שלבים?'    →  Sankey diagram
+'מהו ה-KPI הנוכחי?'           →  Big Number / Card
+
+כלל זהב: אם צריך להסביר איך לקרוא את הגרף - זה הגרף הלא נכון.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>מנהל מבקש לדעת מי המוצר הטוב ביותר השנה → bar chart ממוין יורד</li><li>תיאור מגמת רישום משתמשים → line chart פשוט עם annotation לאירוע</li><li>הצגת קשר השכלה-שכר → scatter עם trendline ו-R²</li><li>Status report של אי-שוויון תשלום → box plot לפי מחלקה</li><li>מצגת על Funnel המרה → Sankey diagram שמראה איפה נושרים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>שימוש ב-pie chart לרבים מ-5 קטגוריות - הופך לבלתי-קריא</li><li>Dual-axis chart כשהיחידות שונות - הקהל נוטה להניח קורלציה שלא קיימת</li><li>3D charts מרשימים אסטטית אך מעוותים פרופורציות - הימנעו</li></ul></div>
+</section>
+<section class="slide" data-idx="40" data-layer="0">
+<div class="layer-context"><span class="layer-name">Data Storytelling</span> · ערך 3 מתוך 4</div>
+<div class="entry-head"><h2>פישוט והפחתת רעש</h2><span class="en-name">Decluttering & Simplifying</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>עורכים אכזרית - זה הציטוט המרכזי של Cole Nussbaumer Knaflic. הסרת אלמנטים שאינם מייצגים נתונים (gridlines, borders, legend מיותר) מאפשרת לקהל להתמקד במסר. השתמשו ב-text וב-color בכוונה כדי להדגיש את הנקודה החשובה, לא כקישוט.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">Checklist לפישוט גרף:
+
+☐ הסירו מסגרת הגרף
+☐ הסירו/הקלישו קווי רשת
+☐ נקו תוויות צירים (אל תכפילו יחידות)
+☐ סימנו נתונים ישירות במקום legend נפרד
+☐ הסירו markers מיותרים בקווים
+☐ השתמשו ב-bold/underline בחיסכון
+☐ צבע אפור לכל הנתונים, צבע בולט לעיקר
+☐ כותרת = המסקנה, לא תיאור הגרף
+     ('המכירות עלו 23%' - לא 'מכירות לפי חודש')
+
+התאמת תוכן לקהל:
+• Executive   → outcome & decision (KPI אחד גדול)
+• Data leader → rigor & methodology
+• Business    → impact על workflow היומי</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>ניקוי דשבורד מנהלים - הסרת gridlines וצמצום ל-3 KPI עיקריים</li><li>מצגת ל-CEO - שינוי כותרת לתובנה במקום תיאור (action title)</li><li>דוח מצטבר - צבע אפור לכל הסדרות מלבד הסדרה שמספרת את הסיפור</li><li>מצגת ללקוח שאינו טכני - החלפת box plot ב-bar chart פשוט</li><li>מסמך באורך מלא - העברת פרטים טכניים לנספח</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>יותר זה לא טוב יותר - הוספת אלמנטים גרפיים מסיחה במקום להעצים</li><li>הסתמכות על legend במקום סימון ישיר מאלצת את העין לדלג קדימה ואחורה</li><li>שכחה להתאים את הסיפור לקהל - אותה מצגת לא תעבוד ל-CTO ול-VP Sales</li></ul></div>
+</section>
+<section class="slide" data-idx="41" data-layer="0">
+<div class="layer-context"><span class="layer-name">Data Storytelling</span> · ערך 4 מתוך 4</div>
+<div class="entry-head"><h2>מלכודות נפוצות והטעיה</h2><span class="en-name">Common Pitfalls & Misleading Visuals</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>הדרך המהירה ביותר לאבד אמינות היא להטעות עם נתונים - בכוונה או בלי כוונה. השגיאות הנפוצות כוללות ציר Y שלא מתחיל מאפס, טווח זמן צר מדי, דגימה לא מייצגת והשמטת context. בדקו את עצמכם לפני כל מצגת - אם השינוי בציר Y משנה את הסיפור, זה דגל אדום.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">Red Flags לפני שליחה:
+
+1. ציר Y       → האם הוא מתחיל מ-0? אם לא - יש סיבה ברורה?
+2. ציר X       → טווח הזמן מספיק רחב? (לפחות שני מחזורים)
+3. דגימה       → האם המדגם מייצג? איזה bias אפשרי?
+4. ממוצע/חציון → השתמשתי בהתאם להתפלגות? (היטוי דורש חציון)
+5. Context     → ערך זה גדול/קטן? מה ה-benchmark?
+6. כותרת       → היא מתארת או מפרשת? (שתי גישות לגיטימיות)
+7. צבע         → לא מטעה? (אדום-ירוק עיוורון, אסוציאציות)
+
+דוגמה קלאסית: גרף interest rates עם ציר 3.140%-3.154% נראה כמו
+תנודה דרמטית, אך באותו דאטה עם ציר 0%-3.5% - הקו נראה שטוח.</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>בדיקת דוחות פנים-ארגוניים לפני הפצה למנכ"ל</li><li>אימות מצגת חברת ניירות ערך מול רגולציה</li><li>סקירת אינפוגרפיקה לפני פרסום עיתונאי</li><li>Review של דשבורד מוצרי - ליישר ציר Y לכל הגרפים</li><li>בדיקת מצגת לפני pitch למשקיעים - הימנעות מ-cherry-picking</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>ציר Y תחום-מדי מנפח שינויים זעירים לסיפור דרמטי</li><li>Cherry-picking של חלון זמן (השוואה מ-השפל) מטעה לגבי מגמה אמיתית</li><li>שימוש בממוצע בהתפלגות אסימטרית (שכר/הכנסה) - חציון אמין יותר</li></ul></div>
+</section>
+<section class="slide" data-idx="42" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 1 מתוך 6</div>
+<div class="entry-head"><h2>טנזורים ויסודות PyTorch</h2><span class="en-name">Tensors and PyTorch Basics</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>טנזור הוא מבנה הנתונים הבסיסי של PyTorch, דומה ל-NumPy array אך יכול לרוץ על GPU ולתמוך ב-autograd לחישוב גרדיאנטים. משתמשים בטנזורים לייצוג קלטים, משקלים ופלטים של רשתות נוירונים. זהו הצעד הראשון בכל פרויקט למידה עמוקה ב-PyTorch.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import torch
+
+# יצירת טנזור מרשימה
+tnsr = torch.tensor([1, 3, 6, 10])
+tnsr.dtype          # torch.int64
+tnsr.shape          # torch.Size([4])
+tnsr.device         # cpu או cuda
+
+# טנזורי אפסים ואקראיים
+tnsr_zrs = torch.zeros(2, 3)
+tnsr_rndm = torch.rand(size=(3, 4))
+
+# טנזור עם דרישת גרדיאנט (לאוטוגרד)
+x = torch.tensor([2.0], requires_grad=True)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>ייצוג batch של תמונות בגודל (N, C, H, W) לרשת CNN</li><li>המרת DataFrame של pandas לטנזורים עבור אימון מודל</li><li>אחסון embeddings של מילים במודל NLP</li><li>חישוב פעולות ליניאריות מהירות על GPU במקום על CPU</li><li>ייצוג מטריצות משקלים בשכבות מותאמות אישית</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>ערבוב טנזורים בין CPU ל-GPU גורם לשגיאה - צריך לוודא ששניהם על אותו device עם .to(device)</li><li>סוג נתונים שגוי (לדוגמה int במקום float) יכול לגרום לכישלון בכפלי מטריצות או בחישוב loss</li><li>שינוי טנזור במקום (in-place עם _) על טנזור שמשתתף ב-autograd עלול לשבור את גרף החישוב</li></ul></div>
+</section>
+<section class="slide" data-idx="43" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 2 מתוך 6</div>
+<div class="entry-head"><h2>שכבות nn.Module ו-Sequential</h2><span class="en-name">nn.Module, Linear Layers and Sequential</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>מודולי nn מהווים את אבני הבניין של רשתות נוירונים ב-PyTorch - שכבות Linear, Dropout ופונקציות אקטיבציה. nn.Sequential מאפשר לבנות במהירות מודל פיד-פורוורד על ידי שרשור שכבות. משתמשים בו כשהארכיטקטורה ליניארית וברורה ואין צורך בלוגיקה מותאמת אישית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from torch import nn
+
+# שכבה ליניארית: m קלטים, n פלטים
+lnr = nn.Linear(m, n)
+lnr.weight   # מטריצת משקלים
+lnr.bias     # וקטור הטיה
+
+# מודל סדרתי לסיווג רב-מחלקתי
+model = nn.Sequential(
+    nn.Linear(n_features, 64),
+    nn.ReLU(),
+    nn.Dropout(p=0.5),
+    nn.Linear(64, 32),
+    nn.ReLU(),
+    nn.Linear(32, n_classes),
+    nn.Softmax(dim=-1)   # שכבת אקטיבציה אחרונה
+)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>בניית MLP לסיווג טבלאי על נתוני לקוחות או עסקאות</li><li>הרכבת ראש סיווג מעל מודל מאומן מראש (transfer learning)</li><li>אבטיפוס מהיר של רשת רגרסיה למחירי דירות</li><li>שכבה אחרונה לסיווג בינארי עם nn.Sigmoid</li><li>שילוב Dropout בין שכבות לרגולריזציה במודלים עמוקים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>הפלט של שכבה אחת חייב להתאים בדיוק לקלט של הבאה - אי-התאמה תזרוק שגיאת shape</li><li>Softmax בסוף יחד עם CrossEntropyLoss היא טעות נפוצה: CrossEntropyLoss מצפה ל-logits ומפעיל log-softmax בעצמו</li><li>Dropout פעיל רק במצב train; שכחה לקרוא ל-model.eval() בהערכה תגרום לתוצאות לא יציבות</li></ul></div>
+</section>
+<section class="slide" data-idx="44" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 3 מתוך 6</div>
+<div class="entry-head"><h2>פונקציות אקטיבציה</h2><span class="en-name">Activation Functions</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>פונקציות אקטיבציה מכניסות אי-ליניאריות לרשת ומאפשרות לה ללמוד יחסים מורכבים. בחירת האקטיבציה משפיעה על מהירות האימון, על בעיית הסיווה (saturation) ועל יציבות הגרדיאנטים. ReLU היא ברירת המחדל לשכבות נסתרות, Sigmoid לסיווג בינארי ו-Softmax לסיווג רב-מחלקתי.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from torch import nn
+
+# סיווג בינארי - פלט בין 0 ל-1
+nn.Sigmoid()
+
+# סיווג רב-מחלקתי - התפלגות הסתברויות
+nn.Softmax(dim=-1)
+
+# ברירת מחדל לשכבות נסתרות, מונעת saturation
+nn.ReLU()
+
+# גרסה שמטפטפת גם לערכים שליליים
+nn.LeakyReLU(negative_slope=0.05)
+
+# רגולריזציה: כיבוי אקראי של נוירונים
+nn.Dropout(p=0.5)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>ReLU בכל שכבה נסתרת של MLP או CNN סטנדרטיים</li><li>Sigmoid בשכבת הפלט של מסווג ספאם</li><li>Softmax בשכבת הפלט של מסווג ספרות MNIST</li><li>LeakyReLU במודלים גנרטיביים (GAN) למניעת dying ReLU</li><li>Dropout בין שכבות צפופות ברשת עם נטייה לאוברפיטינג</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>ReLU עלולה לגרום ל-dead neurons (פלט קבוע 0) אם learning rate גבוה מדי - LeakyReLU מקלה</li><li>Softmax מצריך לציין dim נכון; ב-dim שגוי הפלט לא יהיה התפלגות חוקית</li><li>שילוב Sigmoid + BCELoss רגיש לאי-יציבות נומרית; BCEWithLogitsLoss בטוח יותר</li></ul></div>
+</section>
+<section class="slide" data-idx="45" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 4 מתוך 6</div>
+<div class="entry-head"><h2>לולאת אימון, loss ואופטימייזרים</h2><span class="en-name">Training Loop, Loss and Optimizers</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>לולאת האימון ב-PyTorch כתובה ידנית: forward pass, חישוב loss, backward pass ועדכון משקלים. בחירת פונקציית ה-loss תלויה במשימה (MSE לרגרסיה, CrossEntropy לסיווג), והאופטימייזר (SGD, Adam) שולט באופן עדכון הפרמטרים. שליטה בלולאה היא יסוד מרכזי שמבדיל את PyTorch מ-Keras.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import torch.optim as optim
+from torch import nn
+
+loss_criterion = nn.MSELoss()
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.95)
+
+model.train()                       # מצב אימון
+for features, targets in dataloader:
+    optimizer.zero_grad()           # איפוס גרדיאנטים
+    predictions = model(features)   # forward
+    loss = loss_criterion(predictions, targets)
+    loss.backward()                 # backpropagation
+    optimizer.step()                # עדכון משקלים</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אימון מודל רגרסיה עם MSELoss על מחירי נדל"ן</li><li>אימון מסווג רב-מחלקתי עם CrossEntropyLoss על תמונות</li><li>סיווג בינארי של תמלילי סנטימנט עם BCELoss</li><li>כיוונון עדין של מודל מאומן מראש עם learning rate נמוך</li><li>רגרסיה עמידה לחריגים עם SmoothL1Loss</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>שכחת optimizer.zero_grad() גורמת לצבירת גרדיאנטים בין batches ולאימון שגוי</li><li>lr גבוה מדי גורם להתבדרות, נמוך מדי מאריך את האימון או נתקע במינימום מקומי</li><li>CrossEntropyLoss מצפה ל-logits גולמיים ולתוויות שלמות (int), לא ל-one-hot ולא לפלט Softmax</li></ul></div>
+</section>
+<section class="slide" data-idx="46" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 5 מתוך 6</div>
+<div class="entry-head"><h2>Dataset ו-DataLoader</h2><span class="en-name">Datasets and DataLoaders</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>TensorDataset ו-DataLoader אחראים על אספקת הנתונים למודל ב-batches, עם ערבוב (shuffle) ועיבוד מקבילי. הם מפרידים בין לוגיקת הנתונים ללוגיקת האימון ומאפשרים לטפל ביעילות בדאטה גדול שלא נכנס לזיכרון. זהו רכיב סטנדרטי כמעט בכל פרויקט PyTorch.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import torch
+from torch.utils.data import TensorDataset, DataLoader
+
+# המרת DataFrame לטנזורים
+X = df[feature_columns].values
+y = df[target_column].values
+dataset = TensorDataset(
+    torch.tensor(X).float(),
+    torch.tensor(y).float()
+)
+
+# טעינה ב-batches עם ערבוב
+dataloader = DataLoader(
+    dataset, batch_size=32, shuffle=True
+)
+
+for features, targets in dataloader:
+    predictions = model(features)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אימון מודל על דאטה טבלאי גדול מ-pandas</li><li>ערבוב נתונים בכל epoch למניעת הטיית סדר</li><li>טעינת תמונות מקבילית עם num_workers להאצת אימון</li><li>פיצול train/validation עם torch.utils.data.random_split</li><li>בניית Dataset מותאם אישית למקור נתונים חיצוני</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>shuffle=True על סט הוולידציה או הטסט פוגע בעקביות ההערכה - מפעילים רק על train</li><li>batch_size גדול מדי גורם ל-out-of-memory, בעיקר על GPU</li><li>כשהאורך לא מתחלק ב-batch_size, ה-batch האחרון קטן יותר וזה לפעמים מטריד את BatchNorm - אפשר drop_last=True</li></ul></div>
+</section>
+<section class="slide" data-idx="47" data-layer="0">
+<div class="layer-context"><span class="layer-name">PyTorch - Deep Learning</span> · ערך 6 מתוך 6</div>
+<div class="entry-head"><h2>מצב הערכה ומדדים</h2><span class="en-name">Evaluation Mode and Metrics</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>במצב הערכה מבטלים Dropout ומקפיאים סטטיסטיקות של BatchNorm כדי לקבל תוצאה דטרמיניסטית. torchmetrics מספקת מימושים מהירים של מדדים נפוצים כמו Accuracy, Precision ו-Recall שמצטברים על פני batches. תמיד צריך להעריך תחת torch.no_grad() כדי לחסוך זיכרון.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import torchmetrics
+
+model.eval()   # מצב הערכה - מבטל Dropout
+metric = torchmetrics.Accuracy(
+    task="multiclass", num_classes=3
+)
+
+with torch.no_grad():
+    for features, targets in val_loader:
+        output = model(features)
+        # עדכון המדד לפי batch
+        metric(output.argmax(dim=-1), targets)
+
+accuracy = metric.compute()
+print(f"Accuracy: {accuracy}")
+metric.reset()   # איפוס לאפוק הבא</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>הערכת מסווג תמונות על סט ולידציה בסוף כל epoch</li><li>מעקב אחר Precision/Recall במסווג רפואי</li><li>חישוב F1 על סט בדיקה לפני שליחת מודל לפרודקשן</li><li>השוואת שתי גרסאות מודל באותו מדד אחיד</li><li>ניטור מדדים תוך כדי אימון לזיהוי overfitting</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>שכחה לקרוא ל-model.eval() - Dropout ימשיך לפעול וייצור תוצאות לא יציבות</li><li>שכחה ב-torch.no_grad() - צריכת זיכרון GPU תזנק מיותר על גרפי autograd</li><li>אי-איפוס metric בין epochs - הצבירה תכלול ערכים ישנים ותעוות את התוצאה</li></ul></div>
+</section>
+<section class="slide" data-idx="48" data-layer="0">
+<div class="layer-context"><span class="layer-name">Keras / TensorFlow</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>Sequential API של Keras</h2><span class="en-name">Keras Sequential Model</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Sequential הוא ה-API הפשוט ביותר ב-Keras לבניית רשת שבה כל שכבה מקבלת קלט יחיד ומחזירה פלט יחיד. מוסיפים שכבות בזו אחר זו עם .add() עד שהמודל מוכן ל-compile. מתאים לרוב מודלי MLP, CNN ו-RNN הסטנדרטיים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+data = np.random.random((1000, 100))
+labels = np.random.randint(2, size=(1000, 1))
+
+model = Sequential()
+model.add(Dense(32, activation='relu', input_dim=100))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(optimizer='rmsprop',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+model.fit(data, labels, epochs=10, batch_size=32)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אבטיפוס מהיר של MLP לסיווג בינארי על דאטה טבלאי</li><li>בניית CNN פשוט לסיווג ספרות MNIST</li><li>רשת רגרסיה לחיזוי מחירי דירות מ-Boston Housing</li><li>סטודנטים שלומדים deep learning ורוצים API קריא</li><li>מודל בסיס (baseline) להשוואה מול ארכיטקטורות מורכבות יותר</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Sequential לא תומך במספר קלטים/פלטים או בקשרי skip - צריך לעבור ל-Functional API</li><li>השכבה הראשונה חייבת לדעת את ממדי הקלט (input_dim או input_shape), אחרת המודל לא ייבנה</li><li>המעבר בין שכבות קונבולוציה לשכבות צפופות דורש Flatten מפורש - שכחתו גורמת לשגיאות shape</li></ul></div>
+</section>
+<section class="slide" data-idx="49" data-layer="0">
+<div class="layer-context"><span class="layer-name">Keras / TensorFlow</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>שכבות, אקטיבציות ורגולריזציה</h2><span class="en-name">Layers, Activations and Regularization</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Keras מספקת ספרייה עשירה של שכבות מוכנות: Dense לחיבור מלא, Conv2D ו-MaxPooling2D ל-CNN, Embedding ו-LSTM ל-RNN, ו-Dropout לרגולריזציה. בחירת השכבות והאקטיבציות הנכונה משקפת את סוג הנתונים: תמונות, רצפים או טבלאות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import (
+    Dense, Dropout, Conv2D,
+    MaxPooling2D, Flatten, Embedding, LSTM
+)
+
+# CNN לסיווג תמונות
+cnn = Sequential()
+cnn.add(Conv2D(32, (3, 3), padding='same',
+               activation='relu',
+               input_shape=(32, 32, 3)))
+cnn.add(MaxPooling2D(pool_size=(2, 2)))
+cnn.add(Dropout(0.25))
+cnn.add(Flatten())
+cnn.add(Dense(10, activation='softmax'))
+
+# RNN לסיווג טקסט
+rnn = Sequential()
+rnn.add(Embedding(20000, 128))
+rnn.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
+rnn.add(Dense(1, activation='sigmoid'))</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>סיווג CIFAR-10 עם רשת Conv2D + MaxPooling + Dropout</li><li>ניתוח סנטימנט על ביקורות IMDB עם Embedding ו-LSTM</li><li>סיווג מסמכים ארוכים עם שכבת LSTM דו-כיוונית</li><li>MLP צפוף עם Dropout נגד אוברפיטינג על דאטה רפואי קטן</li><li>פלט softmax בסיווג רב-מחלקתי, sigmoid בסיווג בינארי</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>Conv2D דורש input_shape של 3 ממדים (H, W, C); העברת תמונות בגווני אפור ללא הוספת ערוץ תשבור את הצורה</li><li>Dropout פעיל רק באימון - אין סיבה לכבותו ידנית בהערכה, ה-API דואג לכך, אבל אסור לסמוך עליו במצב inference מותאם אישית</li><li>LSTM איטי על רצפים ארוכים מאוד; שווה לשקול GRU או ארכיטקטורת Transformer</li></ul></div>
+</section>
+<section class="slide" data-idx="50" data-layer="0">
+<div class="layer-context"><span class="layer-name">Keras / TensorFlow</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>Compile ו-Fit</h2><span class="en-name">Compile and Fit</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>compile מגדיר את אופן הלמידה - אופטימייזר, פונקציית loss ומדדים - ו-fit מריץ את האימון בפועל. ההפרדה בין הגדרה לאימון מאפשרת ב-Keras לעבוד ברמת הפשטה גבוהה מאוד. בחירת loss תלויה במשימה: binary_crossentropy, categorical_crossentropy או mse.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from tensorflow.keras.optimizers import RMSprop
+
+# סיווג בינארי
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+# סיווג רב-מחלקתי
+model.compile(optimizer='rmsprop',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+# רגרסיה
+model.compile(optimizer='rmsprop',
+              loss='mse',
+              metrics=['mae'])
+
+# אופטימייזר מותאם אישית
+opt = RMSprop(learning_rate=0.0001, decay=1e-6)
+
+model.fit(x_train, y_train,
+          batch_size=32, epochs=15,
+          verbose=1,
+          validation_data=(x_test, y_test))</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אימון מודל סיווג ספאם עם binary_crossentropy</li><li>אימון מסווג תמונות עם categorical_crossentropy על תוויות one-hot</li><li>אימון מודל רגרסיה עם mse ומדד mae להסבר עסקי</li><li>השוואת ביצועים בין אופטימייזרים שונים על אותו מודל</li><li>ניטור validation_data בכל epoch לזיהוי אוברפיטינג</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>categorical_crossentropy מצפה לתוויות one-hot; אם התוויות שלמות צריך sparse_categorical_crossentropy</li><li>verbose=0 מסתיר את אינדיקטור ההתקדמות - מועיל ב-CI אבל מבלבל בפיתוח אינטראקטיבי</li><li>validation_split יחתוך את הסוף של הדאטה - אם הוא לא מעורבב, ההערכה לא תהיה מייצגת</li></ul></div>
+</section>
+<section class="slide" data-idx="51" data-layer="0">
+<div class="layer-context"><span class="layer-name">Keras / TensorFlow</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>Callbacks ושמירת מודלים</h2><span class="en-name">Callbacks and Model Save/Load</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Callbacks הם פונקציות שרצות במהלך האימון כדי לנטר אותו, לעצור מוקדם או לשמור צ’קפוינטים. EarlyStopping עוצר אימון כשהשיפור נעצר ומונע אוברפיטינג ובזבוז זמן. שמירת המודל ל-HDF5 או ל-SavedModel מאפשרת לטעון אותו מאוחר יותר ולעבור לפרודקשן.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import load_model
+
+# עצירה מוקדמת כשאין שיפור 2 epochs ברצף
+early_stopping = EarlyStopping(
+    monitor='val_loss', patience=2,
+    restore_best_weights=True
+)
+
+model.fit(x_train, y_train,
+          batch_size=32, epochs=15,
+          validation_data=(x_test, y_test),
+          callbacks=[early_stopping])
+
+# שמירה וטעינה
+model.save('model_file.h5')
+my_model = load_model('my_model.h5')</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>EarlyStopping בעת אימון רשת עמוקה עם נטייה לאוברפיטינג</li><li>ModelCheckpoint לשמירת המודל הטוב ביותר במהלך אימון ארוך</li><li>ReduceLROnPlateau להורדה אוטומטית של learning rate כשהשיפור נעצר</li><li>TensorBoard לניטור גרפי של loss ומדדים בזמן אמת</li><li>טעינת מודל מאומן מראש להגשת תחזיות באפליקציה</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>patience נמוך מדי עוצר את האימון עוד לפני שהמודל מתחמם - צריך להתאים לגודל הדאטה</li><li>שמירת המודל בלי restore_best_weights=True משאירה את המשקלים של ה-epoch האחרון, לא הטוב ביותר</li><li>פורמט h5 ישן; ב-TF 2.x מומלץ פורמט SavedModel או .keras החדש להגשה ופריסה</li></ul></div>
+</section>
+<section class="slide" data-idx="52" data-layer="0">
+<div class="layer-context"><span class="layer-name">Keras / TensorFlow</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>עיבוד מוקדם של נתונים ל-Keras</h2><span class="en-name">Preprocessing for Keras</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Keras מצפה לקלט כ-NumPy arrays או tf.data.Dataset. עיבוד מוקדם נפוץ כולל padding לרצפים באורך משתנה, one-hot encoding לתוויות סיווג ונרמול מאפיינים מספריים עם StandardScaler. עיבוד נכון משפיע מאוד על מהירות ועל איכות האימון.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Padding לרצפים באורך אחיד
+x_train4 = sequence.pad_sequences(x_train4, maxlen=80)
+x_test4  = sequence.pad_sequences(x_test4,  maxlen=80)
+
+# One-hot לתוויות
+Y_train = to_categorical(y_train, num_classes=10)
+Y_test  = to_categorical(y_test,  num_classes=10)
+
+# פיצול ונרמול
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.33, random_state=42
+)
+scaler = StandardScaler().fit(X_train)
+X_train = scaler.transform(X_train)
+X_test  = scaler.transform(X_test)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>Padding ביקורות סרטים באורך משתנה למודל LSTM</li><li>המרת תוויות ספרות 0-9 ל-one-hot לפני categorical_crossentropy</li><li>נרמול מאפייני Boston Housing לפני אימון רגרסיה</li><li>פיצול train/test עם sklearn לפני העברה ל-Keras</li><li>טעינת דאטסטים מובנים (MNIST, CIFAR-10, IMDB) מ-keras.datasets</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>fit של ה-scaler על כל הדאטה (כולל test) גורם לדליפת מידע - צריך fit רק על train</li><li>maxlen גדול מדי בריצוף מנפח את הזיכרון; קטן מדי קוטע מידע חשוב</li><li>to_categorical על תוויות בעלות ערכים גבוהים בלי לציין num_classes יוצר וקטור גדול ולא תואם למודל</li></ul></div>
+</section>
+<section class="slide" data-idx="53" data-layer="0">
+<div class="layer-context"><span class="layer-name">Hugging Face</span> · ערך 1 מתוך 5</div>
+<div class="entry-head"><h2>סקירה כללית של Hugging Face Hub</h2><span class="en-name">Hugging Face Hub Overview</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>Hugging Face הוא אקוסיסטם פתוח לגילוי, הרצה, אימון ושיתוף של מודלים ודאטהסטים בלמידת מכונה. ה-Hub הוא פלטפורמה מבוססת Git לאחסון Models, Datasets ו-Spaces, ומתאימה כשרוצים לאתר מודלים מאומנים מראש או דאטה ציבורי במקום לאמן מאפס. ארבע הספריות המרכזיות הן transformers, tokenizers, datasets ו-huggingface_hub.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># התחברות ל-Hub מקומית (דורש token מהאתר)
+from huggingface_hub import login
+
+login()  # ייפתח חלון להזנת ה-token
+
+# שמירת זיהוי המאגר בפורמט username/model_name
+repo_id = "your-username/my-model"</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>חיפוש מודל NLP מאומן מראש לפי שפה או משימה</li><li>שיתוף דאטהסט פנימי בתוך צוות מחקר</li><li>הרצת דמו אינטראקטיבי של מודל דרך Space</li><li>ניהול גרסאות של checkpoints במחקר</li><li>בדיקת Model Card להבנת הטיות ומגבלות לפני שימוש</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>אל תעלו מודלים עם משקלים סודיים או נתונים רגישים לרפו ציבורי</li><li>ה-token של ה-Hub הוא סיסמה לכל דבר, אסור לדחוף אותו ל-Git</li><li>בדקו תמיד את הלייסנס של המודל לפני שימוש מסחרי, רבים אינם פתוחים מסחרית</li></ul></div>
+</section>
+<section class="slide" data-idx="54" data-layer="0">
+<div class="layer-context"><span class="layer-name">Hugging Face</span> · ערך 2 מתוך 5</div>
+<div class="entry-head"><h2>פייפליינים של transformers להסקה מהירה</h2><span class="en-name">Transformers Pipelines for Quick Inference</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>pipeline היא ההפשטה הגבוהה ביותר של ספריית transformers, ועוטפת preprocessing, inference ו-postprocessing במשימה אחת. משתמשים בה כשרוצים להריץ מודל מאומן מראש על טקסט בלי לטפל ידנית בטוקניזציה או בלוגיטים. תומכת במשימות כמו ניתוח סנטימנט, סיכום טקסט, מענה על שאלות וטרנסלציה.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from transformers import pipeline
+
+# יצירת פייפליין על ידי ציון משימה ו-model ID
+analyze_sentiment = pipeline(
+    "sentiment-analysis",
+    model="distilbert-base-uncased-finetuned-sst-2-english"
+)
+
+# הרצת הסקה על טקסט קלט
+analyze_sentiment("Hugging Face makes NLP workflows easy!")
+
+# פייפליין סיכום
+summarize_text = pipeline("summarization", model="facebook/bart-large-cnn")
+summarize_text("Long document text goes here...")</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>ניתוח סנטימנט של ביקורות לקוחות באתר</li><li>סיכום אוטומטי של מסמכים ארוכים בארגון</li><li>מענה על שאלות מתוך מסמכי PDF סרוקים</li><li>סיווג טקסטים פתוחים בקטגוריות פנימיות</li><li>תרגום אוטומטי של תכנים לאתר רב-לשוני</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>פייפליין טוען את כל המודל לזיכרון, אצל מודלים גדולים זה עלול לחנוק GPU או RAM</li><li>ברירת המחדל היא CPU, להפעלת GPU צריך להעביר device=0 או להשתמש ב-accelerate</li><li>התוצאות תלויות מאוד במודל שנבחר, שווה לבדוק כמה checkpoints על דאטה אמיתי</li></ul></div>
+</section>
+<section class="slide" data-idx="55" data-layer="0">
+<div class="layer-context"><span class="layer-name">Hugging Face</span> · ערך 3 מתוך 5</div>
+<div class="entry-head"><h2>טוקנייזרים והרצה ידנית של מודלים</h2><span class="en-name">Tokenizers and Manual Model Inference</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>טוקנייזר מתרגם טקסט גולמי למזהי טוקנים שהמודל יודע לעבד, וזה השלב הקריטי ביותר באיכות התוצאה. AutoTokenizer ו-AutoModel טוענים אוטומטית את המחלקה המתאימה לכל checkpoint. משתמשים בהרצה ידנית כשצריך שליטה על batching, על padding או על קבלת logits גולמיים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+model_id = "distilbert-base-uncased-finetuned-sst-2-english"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForSequenceClassification.from_pretrained(model_id)
+
+# המרת טקסט לטנסורי PyTorch
+inputs = tokenizer("Hugging Face is great", return_tensors="pt")
+
+# הסקה ללא חישוב גרדיאנטים לחיסכון בזיכרון
+with torch.no_grad():
+    outputs = model(**inputs)
+
+# בחירת המחלקה עם ההסתברות הגבוהה ביותר
+outputs.logits.argmax(dim=-1).item()</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>שליטה ב-truncation ו-padding על batches גדולים</li><li>חילוץ embeddings ביניים לצורכי clustering</li><li>אימון או fine-tuning של מודל מותאם</li><li>אינטגרציה עם לוגיקת postprocessing מותאמת אישית</li><li>השוואת logits בין מודלים שונים על אותו קלט</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>חובה להשתמש בטוקנייזר שתואם בדיוק ל-checkpoint, אחרת ה-ID-ים שונים לחלוטין</li><li>בלי torch.no_grad הזיכרון יתפוצץ בהסקה על batches גדולים</li><li>padding="max_length" מבזבז חישוב, עדיף dynamic padding על מודלים עם GPU מוגבל</li></ul></div>
+</section>
+<section class="slide" data-idx="56" data-layer="0">
+<div class="layer-context"><span class="layer-name">Hugging Face</span> · ערך 4 מתוך 5</div>
+<div class="entry-head"><h2>ספריית datasets לטעינה ועיבוד</h2><span class="en-name">Datasets Library for Loading and Preprocessing</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>ספריית datasets מבוססת על Apache Arrow ומאפשרת טעינת דאטהסטים בגדלים עצומים בזיכרון ממופה (memory-mapped) ללא overflow. היא מספקת splits מובנים של train/validation/test ופונקציות map יעילות ל-batched preprocessing. משתמשים בה לכל workflow של אימון NLP כדי לחבר בקלות בין דאטה לבין tokenizer.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from datasets import load_dataset
+from transformers import AutoTokenizer
+
+dataset = load_dataset("imdb")
+tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+
+# פונקציית טוקניזציה ברמת batch
+def tokenize_batch(batch):
+    return tokenizer(
+        batch["text"],
+        truncation=True,
+        padding="max_length",
+        max_length=256
+    )
+
+# הפעלה ממופה על כל הדאטהסט
+tokenized_dataset = dataset.map(
+    tokenize_batch,
+    batched=True,
+    remove_columns=["text"]
+)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>אימון מסווג טקסט על דאטהסט סטנדרטי כמו IMDB</li><li>דגימה מהירה של 100 שורות לבדיקות פיתוח עם select</li><li>הכנה של דאטה מותאם אישית לאימון מודל שפה</li><li>פיצול דאטה גולמי ל-train/validation/test</li><li>המרה בין פורמטים כמו CSV, JSON ו-Parquet</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>load_dataset מוריד למטמון מקומי גדול, שווה לנקות את ~/.cache/huggingface מעת לעת</li><li>map בלי batched=True איטי משמעותית, תמיד עדיף batched על דאטהסטים גדולים</li><li>שכחה של remove_columns משאירה את הטקסט הגולמי ויוצרת צריכת זיכרון מיותרת באימון</li></ul></div>
+</section>
+<section class="slide" data-idx="57" data-layer="0">
+<div class="layer-context"><span class="layer-name">Hugging Face</span> · ערך 5 מתוך 5</div>
+<div class="entry-head"><h2>שמירה, טעינה והעלאת מודלים ל-Hub</h2><span class="en-name">Saving, Loading, and Pushing Models to the Hub</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>save_pretrained ו-from_pretrained מאפשרים מחזור עבודה מקומי ללא תלות באינטרנט, מה שחיוני בסביבות production סגורות. push_to_hub מעלה את המודל והטוקנייזר ל-Hub עם versioning מובנה מבוסס Git. שילוב השניים מאפשר אימון מקומי, בדיקה ולבסוף שיתוף עם הקהילה או הצוות.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code">from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+model_id = "distilbert-base-uncased-finetuned-sst-2-english"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForSequenceClassification.from_pretrained(model_id)
+
+# שמירה מקומית לדיסק
+tokenizer.save_pretrained("local_tokenizer")
+model.save_pretrained("local_model")
+
+# טעינה חזרה מהדיסק המקומי
+AutoTokenizer.from_pretrained("local_tokenizer")
+AutoModelForSequenceClassification.from_pretrained("local_model")
+
+# העלאה ל-Hub (נדרש login קודם)
+repo_id = "your-username/my-model"
+tokenizer.push_to_hub(repo_id)
+model.push_to_hub(repo_id)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>הקפאת checkpoint לאחר fine-tuning לפני deploy</li><li>שיתוף מודל מותאם בין צוותי מחקר ופיתוח</li><li>deployment בסביבת production ללא גישה לאינטרנט</li><li>ניהול גרסאות של מודל לאורך זמן עם Git tags</li><li>פרסום מודל פתוח לקהילה עם Model Card מתאים</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>push_to_hub יוצר רפו ציבורי כברירת מחדל, צריך private=True לרפו פרטי</li><li>המודלים יכולים להגיע למאות MB ואף GB, להיזהר ממכסת אחסון ומ-bandwidth</li><li>Model Card הוא לא רק נחמד אלא חובה, חוקים כמו ה-AI Act דורשים תיעוד שימוש מותר</li></ul></div>
+</section>
+<section class="slide" data-idx="58" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 1 מתוך 6</div>
+<div class="entry-head"><h2>מהו סוכן AI</h2><span class="en-name">What Is an AI Agent</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>סוכן AI הוא מערכת שמשתמשת במודל שפה כדי להשיג מטרה מוגדרת על ידי המשתמש, באמצעות חשיבה, תכנון וביצוע פעולות באמצעות כלים חיצוניים. סוכן מורכב משלושה רכיבים: מודל שפה כמנוע החלטה, כלים לאינטראקציה עם העולם, ושכבת תזמור (orchestration) שמנהלת את התהליך. משתמשים בסוכנים כשהמשימה דורשת מספר צעדים, גישה למידע חיצוני או קבלת החלטות דינמית.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># פסאודו-קוד של מבנה סוכן בסיסי
+class AIAgent:
+    def __init__(self, llm, tools, orchestrator):
+        self.llm = llm                    # מנוע הנמקה
+        self.tools = tools                # רשימת כלים זמינים
+        self.orchestrator = orchestrator  # שכבת תזמור
+
+    def run(self, user_goal):
+        state = {"goal": user_goal, "history": []}
+        while not self.orchestrator.is_done(state):
+            thought = self.llm.reason(state)
+            action = self.orchestrator.plan(thought, self.tools)
+            result = action.execute()
+            state["history"].append((thought, action, result))
+        return state["history"][-1][2]</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>סוכן הזמנת טיסות שמחפש אפשרויות ומשלים רכישה</li><li>עוזר וירטואלי שמסכם פגישות ושולח follow-up</li><li>סוכן מחקר שאוסף מקורות עבור דוח שיווקי</li><li>בוט תמיכה שניגש למסד נתונים פנימי ועונה ללקוחות</li><li>סוכן ניטור שמזהה חריגות ופותח tickets אוטומטית</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>טעות נפוצה לבלבל בין LLM לסוכן, ה-LLM לבדו לא יכול לפעול בעולם</li><li>סוכנים נוטים ל-infinite loops כשאין תנאי עצירה ברור</li><li>עלות יכולה לגדול במהירות, כל קריאת LLM וכל קריאת tool צוברת חשבון</li></ul></div>
+</section>
+<section class="slide" data-idx="59" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 2 מתוך 6</div>
+<div class="entry-head"><h2>מודל שפה וכלים בסוכן AI</h2><span class="en-name">Language Model and Tools Pattern</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>ה-LLM הוא מנוע ההחלטה אך אין לו גישה לעולם החיצוני, ולכן חייבים לחבר אותו לכלים: Extensions שגשרים ל-API חיצוני, Functions שהן קוד מקומי שהמודל קורא לו, ו-Data stores שמשמשים כמאגרי ידע ב-RAG. המודל מחליט מתי להפעיל כל כלי ועם איזה ארגומנטים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># הגדרת tool ב-OpenAI-style function calling
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_weather",
+        "description": "Get current weather for a city",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string"}
+            },
+            "required": ["city"]
+        }
+    }
+}]
+
+# המודל מחזיר tool_call, הקוד שלנו מריץ אותו
+response = llm.chat(messages, tools=tools)
+if response.tool_calls:
+    result = get_weather(**response.tool_calls[0].arguments)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>סוכן מזג אוויר שמתחבר ל-API חיצוני של תחזית</li><li>סוכן פיננסי שמושך נתוני מניות בזמן אמת</li><li>סוכן שולח מיילים דרך פונקציה לוקאלית בשרת שלכם</li><li>סוכן שמחפש במסמכי PDF פנימיים דרך data store</li><li>בוט שמבצע CRUD על מסד נתונים של החברה</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>תיאורי כלים חלשים גורמים למודל לבחור את הכלי הלא נכון, השקיעו ב-description</li><li>אסור לסמוך באופן עיוור על arguments שהמודל מחזיר, חובה לאמת ולסניטז קלט</li><li>מודלים קטנים (SLMs) פחות טובים ב-function calling, מודלים גדולים עדיפים למשימות מורכבות</li></ul></div>
+</section>
+<section class="slide" data-idx="60" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 3 מתוך 6</div>
+<div class="entry-head"><h2>שכבת תזמור עם CoT ו-ReAct</h2><span class="en-name">Orchestration with CoT and ReAct</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>שכבת התזמור מנהלת את מחזור החיים של הסוכן: זיכרון, מצב, הנמקה ותכנון. Chain-of-Thought מפרק בעיות מורכבות לצעדי חשיבה רציפים, Tree-of-Thoughts מאפשר לחקור מספר שרשרות הנמקה במקביל, ו-ReAct משלב בין Reasoning ל-Action בלולאה. בוחרים את הדפוס לפי מורכבות המשימה ולפי כמות הכלים שהסוכן צריך להפעיל.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># דפוס ReAct פשוט: Thought -> Action -> Observation
+prompt_template = """
+Goal: {goal}
+
+Thought: I need to figure out what to do next.
+Action: search_web(query="...")
+Observation: {tool_result}
+
+Thought: Based on the result, I should...
+Action: {next_action}
+"""
+
+def react_loop(goal, max_steps=5):
+    history = []
+    for step in range(max_steps):
+        thought = llm.generate(f"Goal: {goal}\nHistory: {history}")
+        action = parse_action(thought)
+        if action.name == "finish":
+            return action.answer
+        observation = action.execute()
+        history.append((thought, action, observation))</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>פתרון בעיות מתמטיות מורכבות עם הצדקת שלבים</li><li>סוכן מחקר שחוקר נושא דרך מספר שאילתות חיפוש</li><li>agent debugging שמתעד החלטות לצרכי audit</li><li>סוכן תכנון שמייצר plan לפני ביצוע פעולות</li><li>סוכן הוכחה מתמטית שבוחן מספר נתיבים עם ToT</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>CoT מאריך תשובות ומגדיל עלות tokens, לא תמיד שווה למשימות פשוטות</li><li>ReAct יכול להיכנס ללולאה אם המודל לא מזהה מתי לסיים, חובה max_steps</li><li>Tree-of-Thoughts יקר חישובית, מתאים רק למשימות שבהן ההצלחה קריטית</li></ul></div>
+</section>
+<section class="slide" data-idx="61" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 4 מתוך 6</div>
+<div class="entry-head"><h2>מערכות multi-agent ופרוטוקולים</h2><span class="en-name">Multi-Agent Systems and Protocols</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>כשמשימה אחת הופכת מורכבת מדי לסוכן בודד מחלקים אותה למספר סוכנים מתואמים. בדפוס Manager סוכן מרכזי מאצול משימות לסוכני משנה דרך tool calls, ובדפוס Decentralized הסוכנים מעבירים זה לזה משימות כעמיתים. פרוטוקולים כמו MCP מאחדים את חיבור הכלים, ו-A2A מאפשר תקשורת בין סוכנים על שרתים שונים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># פסאודו-קוד של דפוס Manager עם סוכני משנה
+class ManagerAgent:
+    def __init__(self, specialists):
+        self.specialists = specialists  # dict של שם: סוכן
+
+    def handle(self, task):
+        # הסוכן המנהל בוחר מומחה דרך LLM
+        decision = llm.route(task, list(self.specialists))
+        specialist = self.specialists[decision.agent]
+        return specialist.run(decision.subtask)
+
+# שימוש: סוכן מחקר + סוכן דוחות
+manager = ManagerAgent({
+    "research": ResearchAgent(),
+    "report":   ReportAgent()
+})
+manager.handle("Compile a Q3 market report")</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>סוכן עוזר ב-Slack שמדבר ל-Reporting Agent דרך A2A</li><li>מערכת תמיכת לקוחות עם סוכן triage וסוכני מומחה</li><li>pipeline של data analysis עם סוכן SQL וסוכן ויזואליזציה</li><li>אינטגרציה עם Asana ו-GitHub דרך MCP בלי קוד מותאם</li><li>מערכת מסחר עם סוכן מחקר, סוכן ניהול סיכונים וסוכן ביצוע</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>תיאום בין סוכנים מוסיף latency משמעותי, לא תמיד טוב יותר מסוכן בודד</li><li>Decentralized pattern יכול לגרום ל-loops של hand-off ללא סיום</li><li>MCP ו-A2A עדיין סטנדרטים חדשים יחסית, ה-ecosystem לא בשל לכל use case</li></ul></div>
+</section>
+<section class="slide" data-idx="62" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 5 מתוך 6</div>
+<div class="entry-head"><h2>RAG מול סוכני AI</h2><span class="en-name">RAG vs AI Agents</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>RAG (Retrieval-Augmented Generation) שולף מידע מ-data store ומזין אותו ל-LLM בקריאה בודדת, וזה מתאים למענה על שאלות מתוך קורפוס ידוע. סוכן לעומת זאת מבצע מספר צעדים, מחליט דינמית באילו כלים להשתמש, ויכול לכלול בתוכו גם RAG ככלי. בוחרים ב-RAG כשהתשובה זמינה במסמכים, ובסוכן כשצריך לתכנן, להחליט ולפעול במספר שלבים.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># RAG פשוט: retrieve -> generate בקריאה אחת
+def rag_answer(question, vector_store, llm):
+    docs = vector_store.similarity_search(question, k=4)
+    context = "\n".join(d.content for d in docs)
+    prompt = f"Context:\n{context}\n\nQuestion: {question}"
+    return llm.generate(prompt)
+
+# סוכן יכול להחזיק RAG ככלי בין שאר הכלים
+tools = [
+    {"name": "search_docs",   "fn": rag_answer},
+    {"name": "send_email",    "fn": send_email},
+    {"name": "create_ticket", "fn": create_ticket}
+]
+agent.run("Find policy on refunds and email the customer", tools)</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>RAG: צ’אטבוט שעונה על שאלות מתוך תיעוד מוצר</li><li>RAG: עוזר משפטי שמחזיר ציטוטים ממסמכי פסיקה</li><li>סוכן: workflow שמחפש מידע ואז מבצע פעולה</li><li>סוכן: ניתוח דוח, חישוב מטריקות ושליחת summary</li><li>היברידי: סוכן שמשתמש ב-RAG ככלי לבדיקת עובדות</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>RAG טוב רק כמו ה-retrieval, embeddings חלשים יחזירו תשובות שגויות</li><li>סוכן עבור משימה פשוטה הוא overkill, ה-latency והעלות יקפצו ללא צורך</li><li>שילוב RAG בסוכן דורש cache, אחרת כל צעד שואל את ה-vector store מחדש</li></ul></div>
+</section>
+<section class="slide" data-idx="63" data-layer="0">
+<div class="layer-context"><span class="layer-name">AI Agents</span> · ערך 6 מתוך 6</div>
+<div class="entry-head"><h2>frameworks לבניית סוכנים</h2><span class="en-name">Agent Building Frameworks</span></div>
+<div class="box brief"><div class="box-title">📝 בקצרה</div><div>ה-frameworks הנפוצים מספקים מבנים מוכנים לבניית סוכנים: LangChain ל-pipelines פשוטים, LangGraph לסוכנים stateful עם גרפים מורכבים, CrewAI לתיאום בין סוכנים, ו-Smolagents/LlamaIndex להתמחויות. בנוסף ישנם one-prompt agents, coding agents (Codex, Devin), ו-workflow agents ויזואליים (n8n, Make, Dify). הבחירה תלויה במורכבות, בכמות הקסטומיזציה הנדרשת וברמת הקוד שאתם מוכנים לכתוב.</div></div>
+<div class="box ml"><div class="box-title">💻 קוד פייתון</div><pre class="code"># דוגמת LangGraph: סוכן עם גרף מצבים
+from langgraph.graph import StateGraph, END
+
+def call_model(state):
+    response = llm.invoke(state["messages"])
+    return {"messages": state["messages"] + [response]}
+
+def should_continue(state):
+    last = state["messages"][-1]
+    return "tools" if last.tool_calls else END
+
+graph = StateGraph(dict)
+graph.add_node("agent", call_model)
+graph.add_node("tools", tool_executor)
+graph.add_conditional_edges("agent", should_continue)
+graph.add_edge("tools", "agent")
+graph.set_entry_point("agent")
+agent = graph.compile()</pre></div>
+<div class="box ana1"><div class="box-title">💡 שימושים מהעולם האמיתי</div><ul><li>LangGraph לסוכן עם state מורכב ומספר branches</li><li>CrewAI לתיאום בין סוכנים מומחים בתפקידים שונים</li><li>LangChain ל-prototyping מהיר של pipelines</li><li>n8n או Make לאוטומציות עסקיות ללא קוד</li><li>Devin/Codex לעוזרי קוד שמייצרים ומריצים פתרונות</li></ul></div>
+<div class="box ex"><div class="box-title">⚠️ מלכודות נפוצות</div><ul><li>frameworks משתנים במהירות, code שכתבתם לפני שנה עלול להישבר ב-v2</li><li>abstraction יתר מקשה debugging, לפעמים עדיף לכתוב את ה-loop ידנית</li><li>בחירת framework רק כי הוא פופולרי, ולא לפי ה-use case, מובילה ל-lock-in מיותר</li></ul></div>
+</section>
+</main>
+<footer class="bottomnav">
+<button aria-label="קודם" class="nav-arrow" id="prevBtn">
+<span>הקודם</span><span>→</span>
+</button>
+<div class="dots"><button class="dot" data-layer="0" data-target="0" title="ML קלאסי - רגרסיה וסיווג בסיסי">1</button><button class="dot" data-layer="1" data-target="6" title="ML קלאסי - עצים והרכבות (Tree-based)">2</button><button class="dot" data-layer="2" data-target="11" title="וריאנטים של עצי החלטה">3</button><button class="dot" data-layer="3" data-target="14" title="למידה לא-מונחית — Clustering">4</button><button class="dot" data-layer="4" data-target="19" title="למידה לא-מונחית — הפחתת ממדים">5</button><button class="dot" data-layer="5" data-target="23" title="למידת חיזוק (Reinforcement Learning)">6</button><button class="dot" data-layer="6" data-target="29" title="Deep Learning קלאסי - ארכיטקטורות יסוד">7</button><button class="dot" data-layer="7" data-target="34" title="Computer Vision - מודלי ראייה ממוחשבת">8</button><button class="dot" data-layer="8" data-target="40" title="מודלי NLP יסוד - Embeddings ו-Encoders">9</button><button class="dot" data-layer="9" data-target="43" title="LLMs קוד פתוח - מודלים שאפשר להוריד ולהריץ">10</button><button class="dot" data-layer="10" data-target="49" title="מודלים פתוחים מתמחים - Fine-tunes ייעודיים">11</button><button class="dot" data-layer="11" data-target="51" title="LLMs מסחריים - המודלים המובילים בשוק">12</button><button class="dot" data-layer="12" data-target="57" title="מודלי חזית - Frontier Preview &amp; Premium">13</button><button class="dot" data-layer="13" data-target="60" title="הערכת מודלים - מטריקות וצליבה">14</button></div>
+<button aria-label="הבא" class="nav-arrow" id="nextBtn">
+<span>←</span><span>הבא</span>
+</button>
+</footer>
+<script>
+(function() {
+  // JS_ENABLED_MARKER_v1
+  document.documentElement.classList.add('js-enabled');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const counterEl = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dots = Array.from(document.querySelectorAll('.dot'));
+  const drawerBtn = document.getElementById('drawerBtn');
+  const drawer = document.getElementById('drawer');
+  const drawerBackdrop = document.getElementById('drawerBackdrop');
+  const drawerLinks = Array.from(document.querySelectorAll('a[data-idx]'));
+  const slidesArea = document.getElementById('slidesArea');
+
+  let currentIdx = 0;
+
+  function showSlide(i) {
+    currentIdx = Math.max(0, Math.min(total - 1, i));
+    // Critical: this MUST succeed or content stays hidden. No try/catch around it.
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === currentIdx));
+    // Defensive: each side-effect wrapped, so a single iOS-WebKit hiccup
+    // (e.g. history.replaceState SecurityError on file://) cannot kill rendering.
+    try { if (counterEl) counterEl.textContent = (currentIdx + 1) + ' / ' + total; } catch(e){}
+    try { if (prevBtn) prevBtn.disabled = currentIdx === 0; } catch(e){}
+    try { if (nextBtn) nextBtn.disabled = currentIdx === total - 1; } catch(e){}
+    try {
+      const curLayer = parseInt(slides[currentIdx].dataset.layer || '0');
+      dots.forEach(d => {
+        const layerIdx = parseInt(d.dataset.layer);
+        d.classList.toggle('current', layerIdx === curLayer);
+        d.classList.toggle('passed', layerIdx < curLayer);
+      });
+    } catch(e){}
+    try { drawerLinks.forEach(a => a.classList.toggle('active', parseInt(a.dataset.idx) === currentIdx)); } catch(e){}
+    try { if (slidesArea) slidesArea.scrollTop = 0; } catch(e){}
+    try {
+      const activeLink = drawerLinks.find(a => parseInt(a.dataset.idx) === currentIdx);
+      if (activeLink) {
+        const d = activeLink.closest('details');
+        if (d && !d.open) d.open = true;
+      }
+    } catch(e){}
+    // history.replaceState throws SecurityError on iOS Quick Look with file:// URLs.
+    try { history.replaceState(null, '', '#s' + currentIdx); } catch(e){}
+  }
+
+  function nextSlide() { showSlide(currentIdx + 1); }
+  function prevSlide() { showSlide(currentIdx - 1); }
+  function goTo(idx) { showSlide(idx); }
+
+  // Drawer (close-only here; opening is handled by the second IIFE below)
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    drawerBtn.classList.remove('active');
+  }
+
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  dots.forEach(d => d.addEventListener('click', () => {
+    const targetIdx = parseInt(d.dataset.target);
+    if (!isNaN(targetIdx)) goTo(targetIdx);
+  }));
+  drawerLinks.forEach(a => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const idx = parseInt(a.dataset.idx);
+    if (!isNaN(idx)) {
+      goTo(idx);
+      closeDrawer();
+    }
+  }));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (drawer.classList.contains('open') && e.key === 'Escape') {
+      closeDrawer(); return;
+    }
+    // In RTL: ArrowLeft = "forward", ArrowRight = "back"
+    if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault(); nextSlide();
+      }
+    } else if (e.key === 'ArrowRight' || e.key === 'PageUp') {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault(); prevSlide();
+      }
+    } else if (e.key === 'Home') {
+      e.preventDefault(); showSlide(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); showSlide(total - 1);
+    }
+  });
+
+  // Expose for search IIFE so it can sync the main slide controller
+  try { window.showSlide = showSlide; } catch(e){}
+
+  // Initial: parse hash (might throw on some restricted file:// contexts)
+  let initIdx = 0;
+  try {
+    if (location && location.hash && location.hash.indexOf('#s') === 0) {
+      const n = parseInt(location.hash.slice(2));
+      if (!isNaN(n)) initIdx = n;
+    }
+  } catch(e){}
+  showSlide(initIdx);
+})();
+
+// === Drawer toggle (hamburger opens AND closes; no X, no backdrop) ===
+(function(){
+  const drawerBtn = document.getElementById('drawerBtn');
+  const drawer = document.getElementById('drawer');
+  if (!drawerBtn || !drawer) return;
+  function toggle() {
+    const isOpen = drawer.classList.toggle('open');
+    document.body.classList.toggle('drawer-open', isOpen);
+    drawerBtn.classList.toggle('active', isOpen);
+  }
+  drawerBtn.addEventListener('click', toggle);
+  // Esc closes
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) toggle();
+  });
+})();
+
+
+// === Search across all slides with highlighting + navigation ===
+(function(){
+  const input  = document.getElementById('searchInput');
+  const cnt    = document.getElementById('searchCount');
+  const btnP   = document.getElementById('searchPrev');
+  const btnN   = document.getElementById('searchNext');
+  const btnC   = document.getElementById('searchClear');
+  if (!input) return;
+
+  let hits = [];   // [{slide:int, node:Text, idx:int, len:int}]
+  let curr = -1;
+  let timer = null;
+
+  function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function clearMarks(){
+    document.querySelectorAll('mark.search-hit').forEach(m => {
+      const p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+  }
+
+  function getSlides(){
+    return Array.from(document.querySelectorAll('section.slide'));
+  }
+
+  function getCurrentIdx(){
+    const slides = getSlides();
+    for (let i=0;i<slides.length;i++){
+      if (slides[i].classList.contains('active')) return i;
+    }
+    return 0;
+  }
+
+  function showSlide(i){
+    if (typeof window.showSlide === 'function') { window.showSlide(i); return; }
+    // Fallback: trigger toggle by hash
+    const slides = getSlides();
+    slides.forEach((s,j) => s.classList.toggle('active', j===i));
+  }
+
+  function walkText(root){
+    const out = [];
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => {
+        const p = n.parentNode;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        const tag = p.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'CODE' || tag === 'PRE') return NodeFilter.FILTER_REJECT;
+        if (p.closest('aside.drawer')) return NodeFilter.FILTER_REJECT;
+        if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    let n;
+    while (n = w.nextNode()) out.push(n);
+    return out;
+  }
+
+  function search(q){
+    clearMarks();
+    hits = []; curr = -1;
+    if (!q || q.length < 2) { update(); return; }
+    const re = new RegExp(escapeRe(q), 'gi');
+    const slides = getSlides();
+    slides.forEach((slide, si) => {
+      const textNodes = walkText(slide);
+      textNodes.forEach(tn => {
+        const txt = tn.nodeValue;
+        let m;
+        const ranges = [];
+        while ((m = re.exec(txt)) !== null) {
+          ranges.push([m.index, m[0].length]);
+          if (m[0].length === 0) re.lastIndex++;
+        }
+        if (!ranges.length) return;
+        // Split and wrap
+        const frag = document.createDocumentFragment();
+        let pos = 0;
+        ranges.forEach(([idx, len]) => {
+          if (idx > pos) frag.appendChild(document.createTextNode(txt.slice(pos, idx)));
+          const mark = document.createElement('mark');
+          mark.className = 'search-hit';
+          mark.textContent = txt.slice(idx, idx+len);
+          frag.appendChild(mark);
+          hits.push({slide: si, mark});
+          pos = idx + len;
+        });
+        if (pos < txt.length) frag.appendChild(document.createTextNode(txt.slice(pos)));
+        tn.parentNode.replaceChild(frag, tn);
+      });
+    });
+    // Jump to first hit on current slide if any, else first overall
+    const cur = getCurrentIdx();
+    const onCur = hits.findIndex(h => h.slide === cur);
+    if (onCur >= 0) gotoHit(onCur);
+    else if (hits.length) gotoHit(0);
+    else update();
+  }
+
+  function gotoHit(i){
+    if (!hits.length) return;
+    if (curr >= 0 && hits[curr]) hits[curr].mark.classList.remove('current');
+    curr = (i + hits.length) % hits.length;
+    const h = hits[curr];
+    h.mark.classList.add('current');
+    const cur = getCurrentIdx();
+    if (h.slide !== cur) {
+      showSlide(h.slide);
+      setTimeout(() => h.mark.scrollIntoView({block:'center', behavior:'smooth'}), 60);
+    } else {
+      h.mark.scrollIntoView({block:'center', behavior:'smooth'});
+    }
+    update();
+  }
+
+  function update(){
+    if (!hits.length) {
+      cnt.textContent = input.value && input.value.length >= 2 ? 'אין' : '';
+    } else {
+      cnt.textContent = (curr+1) + '/' + hits.length;
+    }
+    btnP.disabled = btnN.disabled = !hits.length;
+    btnC.disabled = !input.value;
+  }
+
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => search(input.value.trim()), 180);
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); gotoHit(curr + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') { input.value=''; search(''); input.blur(); }
+  });
+  btnP.addEventListener('click', () => gotoHit(curr - 1));
+  btnN.addEventListener('click', () => gotoHit(curr + 1));
+  btnC.addEventListener('click', () => { input.value=''; search(''); input.focus(); });
+  // Ctrl+F to focus
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault(); input.focus(); input.select();
+    }
+  });
+})();
+
+
+
+// === V2: Chapter dot long-press popup ===
+(function() {
+  const dotsAll = Array.from(document.querySelectorAll('.dot'));
+  if (!dotsAll.length) return;
+  
+  // Helper: given a slide idx, find the matching <details> chapter in the drawer.
+  function getChapterForSlideIdx(slideIdx) {
+    const link = document.querySelector('aside.drawer a[data-idx="' + slideIdx + '"]');
+    if (!link) return null;
+    const details = link.closest('details');
+    if (!details) return null;
+    const summaryEl = details.querySelector('summary');
+    let summaryText = summaryEl ? summaryEl.textContent.trim().replace(/^[\u25b6\u25bc\u25c0\u25c2\u25b8\u25c4\s]+/, '') : '';
+    if (!summaryText) summaryText = 'פרק';
+    const entries = Array.from(details.querySelectorAll('a[data-idx]')).map(a => ({
+      idx: parseInt(a.dataset.idx),
+      title: a.textContent.trim().replace(/\s+/g, ' ')
+    }));
+    return { title: summaryText, entries };
+  }
+  
+  let activePopup = null;
+  let outsideHandler = null;
+  
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  
+  function closePopup() {
+    if (activePopup) { activePopup.remove(); activePopup = null; }
+    if (outsideHandler) {
+      document.removeEventListener('pointerdown', outsideHandler, true);
+      outsideHandler = null;
+    }
+  }
+  
+  function showPopup(dot) {
+    closePopup();
+    const targetIdx = parseInt(dot.dataset.target);
+    const data = getChapterForSlideIdx(targetIdx);
+    if (!data || !data.entries.length) return;
+    
+    const slides = Array.from(document.querySelectorAll('section.slide'));
+    const currentIdx = slides.findIndex(s => s.classList.contains('active'));
+    
+    const popup = document.createElement('div');
+    popup.className = 'chapter-popup';
+    popup.innerHTML = 
+      '<div class="chapter-popup-header">' + escapeHTML(data.title) + 
+      '<span class="count">(' + data.entries.length + ')</span></div>' +
+      '<div class="chapter-popup-list"></div>' +
+      '<div class="chapter-popup-arrow"></div>';
+    
+    const list = popup.querySelector('.chapter-popup-list');
+    data.entries.forEach(entry => {
+      const btn = document.createElement('button');
+      btn.className = 'chapter-popup-entry';
+      if (entry.idx === currentIdx) btn.classList.add('current');
+      btn.textContent = entry.title;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (typeof window.showSlide === 'function') window.showSlide(entry.idx);
+        closePopup();
+      });
+      list.appendChild(btn);
+    });
+    
+    document.body.appendChild(popup);
+    activePopup = popup;
+    
+    const dotRect = dot.getBoundingClientRect();
+    const popupRect = popup.getBoundingClientRect();
+    let left = dotRect.left + dotRect.width/2 - popupRect.width/2;
+    left = Math.max(8, Math.min(window.innerWidth - popupRect.width - 8, left));
+    let top = dotRect.top - popupRect.height - 14;
+    let arrowPos = 'below';
+    if (top < 8) {
+      top = dotRect.bottom + 14;
+      arrowPos = 'above';
+    }
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    
+    const arrow = popup.querySelector('.chapter-popup-arrow');
+    arrow.classList.add(arrowPos);
+    const arrowLeft = (dotRect.left + dotRect.width/2) - left - 9;
+    arrow.style.left = Math.max(10, Math.min(popupRect.width - 28, arrowLeft)) + 'px';
+    
+    outsideHandler = (e) => {
+      if (!popup.contains(e.target)) closePopup();
+    };
+    setTimeout(() => {
+      document.addEventListener('pointerdown', outsideHandler, true);
+    }, 10);
+  }
+  
+  const LONG_PRESS_MS = 500;
+  dotsAll.forEach(dot => {
+    let timer = null;
+    let longPressed = false;
+    let startX = 0, startY = 0;
+    
+    const start = (e) => {
+      longPressed = false;
+      const pt = e.touches ? e.touches[0] : e;
+      startX = pt.clientX; startY = pt.clientY;
+      timer = setTimeout(() => {
+        longPressed = true;
+        showPopup(dot);
+        if (navigator.vibrate) { try { navigator.vibrate(30); } catch(e){} }
+      }, LONG_PRESS_MS);
+    };
+    const cancel = () => { if (timer) { clearTimeout(timer); timer = null; } };
+    const move = (e) => {
+      if (!timer) return;
+      const pt = e.touches ? e.touches[0] : e;
+      if (Math.abs(pt.clientX - startX) > 10 || Math.abs(pt.clientY - startY) > 10) cancel();
+    };
+    
+    dot.addEventListener('pointerdown', start);
+    dot.addEventListener('pointerup', cancel);
+    dot.addEventListener('pointercancel', cancel);
+    dot.addEventListener('pointermove', move);
+    dot.addEventListener('pointerleave', cancel);
+    
+    dot.addEventListener('click', (e) => {
+      if (longPressed) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        longPressed = false;
+      }
+    }, true);
+  });
+  
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && activePopup) closePopup();
+  });
+  
+  if (typeof window.showSlide === 'function') {
+    const orig = window.showSlide;
+    window.showSlide = function(i) {
+      closePopup();
+      return orig.apply(this, arguments);
+    };
+  }
+})();
+
+</script>
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  var q = p.get('q');
+  if (!q) return;
+  function applyQuery(){
+    var input = document.getElementById('searchInput');
+    if (!input) { setTimeout(applyQuery, 80); return; }
+    input.value = q;
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+    setTimeout(function(){ input.focus(); input.select(); }, 280);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyQuery);
+  } else {
+    applyQuery();
+  }
+})();
+</script>
+</body>
+</html>

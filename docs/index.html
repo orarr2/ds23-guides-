@@ -20,6 +20,7 @@
   --math: #DBEAFE; --math-fg: #1E40AF;
   --stats: #FEF3C7; --stats-fg: #92400E;
   --ai: #DCFCE7; --ai-fg: #166534;
+  --tools: #CCFBF1; --tools-fg: #0F766E;
 }
 * { box-sizing: border-box; }
 html, body {
@@ -78,6 +79,7 @@ a.guide-card:active { transform: translateY(0); }
 .card-math .card-emoji { background: var(--math); }
 .card-stats .card-emoji { background: var(--stats); }
 .card-ai .card-emoji { background: var(--ai); }
+.card-tools .card-emoji { background: var(--tools); }
 
 .card-title { margin: 0; font-size: 19px; font-weight: 700; color: var(--accent); }
 .card-en { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 2px; }
@@ -225,6 +227,7 @@ footer a:hover { text-decoration: underline; }
       <a href="math%20guide%20DS23.html" data-base="math%20guide%20DS23.html"><span class="ico">🧮</span><span>חפש במתמטיקה</span></a>
       <a href="stats%20guide%20DS23.html" data-base="stats%20guide%20DS23.html"><span class="ico">📊</span><span>חפש בסטטיסטיקה</span></a>
       <a href="ai%20ml%20guide%20DS23.html" data-base="ai%20ml%20guide%20DS23.html"><span class="ico">🤖</span><span>חפש ב-ML / AI</span></a>
+      <a href="python%20tools%20guide%20DS23.html" data-base="python%20tools%20guide%20DS23.html"><span class="ico">🛠️</span><span>חפש בכלים מעשיים</span></a>
     </div>
     <p class="search-hint">הקש Enter לחיפוש במדריך מתמטיקה, או לחץ על אחד הכפתורים לבחירת מדריך אחר</p>
   </div>
@@ -285,9 +288,29 @@ footer a:hover { text-decoration: underline; }
         רגרסיה, סיווג, רשתות עצביות, Deep Learning ו-NLP.
       </p>
       <div class="card-meta">
-        <span class="tag">71 ערכים</span>
+        <span class="tag">90 ערכים</span>
         <span class="tag">Neural Networks</span>
         <span class="tag">Transformers, CNN, RNN</span>
+      </div>
+    </a>
+
+    <a class="guide-card card-tools" href="python%20tools%20guide%20DS23.html">
+      <span class="card-arrow">←</span>
+      <div class="card-head">
+        <div class="card-emoji">🛠️</div>
+        <div>
+          <h2 class="card-title">מדריך פייתון וכלים מעשיים</h2>
+          <div class="card-en">Python &amp; Practical Tools for Data Science</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        מחזור החיים של פרויקט DS, יסודות פייתון, Pandas, SQL, sklearn,
+        ויזואליזציה, PyTorch, Keras, Hugging Face, AI Agents ו-Storytelling.
+      </p>
+      <div class="card-meta">
+        <span class="tag">64 ערכים</span>
+        <span class="tag">Pandas, SQL, sklearn</span>
+        <span class="tag">PyTorch, Keras, LLMs</span>
       </div>
     </a>
 

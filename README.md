@@ -1,6 +1,6 @@
 # DS23 Guides
 
-A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 262 entries across three domains, with explanations, analogies, visualizations, code samples, and exercises.
+A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 326 entries across four domains, with explanations, analogies, visualizations, code samples, and exercises.
 
 ## Live site
 
@@ -29,6 +29,7 @@ A custom icon and theme color are bundled with the site, so the Home Screen tile
 | Math for ML ([docs/math guide DS23.html](docs/math%20guide%20DS23.html)) | 113 | Linear algebra, calculus, optimization, graph theory, information theory |
 | Statistics glossary ([docs/stats guide DS23.html](docs/stats%20guide%20DS23.html)) | 59 | Distributions, hypothesis testing, regression, Bayesian inference |
 | Machine Learning and AI ([docs/ai ml guide DS23.html](docs/ai%20ml%20guide%20DS23.html)) | 90 | Classical ML, neural networks, Deep Learning, NLP, Transformers, time series, evaluation |
+| Python & Practical Tools ([docs/python tools guide DS23.html](docs/python%20tools%20guide%20DS23.html)) | 64 | DS lifecycle, Python basics, Pandas, SQL, sklearn, Plotly, PyTorch, Keras, Hugging Face, AI Agents, Storytelling |
 
 ## Entry structure
 
@@ -66,7 +67,8 @@ docs/
 ├── apple-touch-icon.png
 ├── math guide DS23.html
 ├── stats guide DS23.html
-└── ai ml guide DS23.html
+├── ai ml guide DS23.html
+└── python tools guide DS23.html
 ```
 
 You can also grab the bundled archive: [docs/ds23-guides.zip](docs/ds23-guides.zip).
