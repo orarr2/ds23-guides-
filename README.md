@@ -1,12 +1,14 @@
 # DS23 Guides
 
-A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 243 entries across three domains, with explanations, analogies, visualizations, code samples, and exercises.
+A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 262 entries across three domains, with explanations, analogies, visualizations, code samples, and exercises.
 
 ## Live site
 
 **[https://orarr2.github.io/ds23-guides-/](https://orarr2.github.io/ds23-guides-/)**
 
 Mobile friendly. Works fully offline once loaded. The interface and all content are in Hebrew (RTL).
+
+> All source files live in the [`docs/`](docs/) folder. GitHub Pages is served from that folder.
 
 ## Install on iPhone / iPad (Home Screen)
 
@@ -24,9 +26,9 @@ A custom icon and theme color are bundled with the site, so the Home Screen tile
 
 | Guide | Entries | Main topics |
 |------|---------|-------------|
-| Math for ML ([math guide DS23.html](math%20guide%20DS23.html)) | 113 | Linear algebra, calculus, optimization, graph theory, information theory |
-| Statistics glossary ([stats guide DS23.html](stats%20guide%20DS23.html)) | 59 | Distributions, hypothesis testing, regression, Bayesian inference |
-| Machine Learning and AI ([ai ml guide DS23.html](ai%20ml%20guide%20DS23.html)) | 71 | Classical ML, neural networks, Deep Learning, NLP, Transformers |
+| Math for ML ([docs/math guide DS23.html](docs/math%20guide%20DS23.html)) | 113 | Linear algebra, calculus, optimization, graph theory, information theory |
+| Statistics glossary ([docs/stats guide DS23.html](docs/stats%20guide%20DS23.html)) | 59 | Distributions, hypothesis testing, regression, Bayesian inference |
+| Machine Learning and AI ([docs/ai ml guide DS23.html](docs/ai%20ml%20guide%20DS23.html)) | 90 | Classical ML, neural networks, Deep Learning, NLP, Transformers, time series, evaluation |
 
 ## Entry structure
 
@@ -53,10 +55,10 @@ Every entry contains:
 
 ## Run locally
 
-Download all of these into a single folder:
+Everything you need is in the [`docs/`](docs/) folder:
 
 ```
-ds23-guides/
+docs/
 ├── index.html
 ├── icon.svg
 ├── favicon.png
@@ -67,9 +69,9 @@ ds23-guides/
 └── ai ml guide DS23.html
 ```
 
-You can also grab the bundled archive: [ds23-guides.zip](ds23-guides.zip). The zip is always kept in sync with the live site in this repository.
+You can also grab the bundled archive: [docs/ds23-guides.zip](docs/ds23-guides.zip).
 
-Open `index.html` in any modern browser. No server needed.
+Open `docs/index.html` in any modern browser. No server needed.
 
 On iOS, if you want to open the local HTML files (not the live site) with full JavaScript, use an app like Documents by Readdle. For day-to-day use, prefer the live URL above.
 
