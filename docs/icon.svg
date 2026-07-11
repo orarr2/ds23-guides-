@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0D4D7A"/>
+      <stop offset="1" stop-color="#1565C0"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="36" ry="36" fill="url(#g)"/>
+  <text x="90" y="78" text-anchor="middle"
+        font-family="Segoe UI, Arial, sans-serif" font-weight="800"
+        font-size="58" fill="#ffffff" letter-spacing="-1">DS</text>
+  <rect x="52" y="92" width="76" height="4" rx="2" fill="#ffffff" opacity="0.85"/>
+  <text x="90" y="138" text-anchor="middle"
+        font-family="Segoe UI, Arial, sans-serif" font-weight="700"
+        font-size="40" fill="#ffffff" letter-spacing="-1">23</text>
+</svg>
