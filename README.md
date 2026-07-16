@@ -1,6 +1,6 @@
 # DS23 Guides
 
-A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 363 entries across six focused domains, with explanations, analogies, visualizations, code samples, and exercises.
+A collection of interactive Hebrew study guides for Data Science, Machine Learning and AI. 374 entries across six focused domains, with explanations, analogies, visualizations, code samples, and exercises.
 
 ## Live site
 
@@ -30,7 +30,7 @@ A custom icon and theme color are bundled with the site, so the Home Screen tile
 | Statistics glossary ([docs/stats guide DS23.html](docs/stats%20guide%20DS23.html)) | 56 | Distributions, hypothesis testing, regression, Bayesian inference |
 | Classical Machine Learning ([docs/classical ml guide DS23.html](docs/classical%20ml%20guide%20DS23.html)) | 56 | Regression, classification, decision trees, ensembles (RF, XGBoost, LightGBM, CatBoost), SVM, clustering (K-Means, DBSCAN, GMM), dimensionality reduction (PCA, t-SNE, UMAP), anomaly detection, time series (ARIMA, SARIMAX), evaluation metrics |
 | Deep Learning ([docs/deep learning guide DS23.html](docs/deep%20learning%20guide%20DS23.html)) | 48 | Perceptron, MLP, activation functions, backpropagation, optimizers, learning-rate schedulers, weight init, BatchNorm, LayerNorm, dropout, gradient clipping, early stopping, CNN mechanics + advanced design (kernel, padding, receptive field, pooling family, 1×1, dilated, GAP, im2col), CNN architectures (AlexNet, VGG, GoogLeNet), CNN in action, RNN, LSTM, GRU |
-| Modern AI Models & LLMs ([docs/ai models guide DS23.html](docs/ai%20models%20guide%20DS23.html)) | 34 | Computer Vision (ResNet with paper analysis, EfficientNet, YOLO v1-v11, ViT, CLIP, SAM, OWL-ViT, BriefCam, Cloud Vision APIs), NLP foundations (Word2Vec, BERT, T5), Transformer, open-source LLMs (Llama, Mistral, Qwen family, DeepSeek, Phi, Gemma), commercial LLMs (GPT, o-series, Gemini, Grok, Cohere), frontier models, Reinforcement Learning (Q-Learning, DQN, PG, PPO, DDPG, A3C), RLHF, GNN |
+| Modern AI Models & LLMs ([docs/ai models guide DS23.html](docs/ai%20models%20guide%20DS23.html)) | 45 | Computer Vision organized in 6 sub-categories: **Classification** (ResNet with paper analysis, EfficientNet, ViT, CLIP), **Object Detection** (YOLO v1-v11, YOLO26 NMS-free 2026, R-CNN Family, IoU, mAP, NMS, OWL-ViT), **Segmentation** (U-Net paper analysis, Mask R-CNN paper analysis, SAM), **Face Recognition & Embeddings** (FaceNet + Triplet Loss + Siamese + ArcFace), **Methodology** (Transfer Learning with Yosinski 2014, Data Augmentation with Mixup, Domain Shift with Mohanty/Ferentinos/Recht studies), **Platforms** (BriefCam, Cloud Vision APIs); NLP foundations (Word2Vec, BERT, T5), Transformer, open-source LLMs (Llama, Mistral, Qwen family, DeepSeek, Phi, Gemma), commercial LLMs (GPT, o-series, Gemini, Grok, Cohere), frontier models, Reinforcement Learning (Q-Learning, DQN, PG, PPO, DDPG, A3C), RLHF, GNN |
 | Python & Practical Tools ([docs/python tools guide DS23.html](docs/python%20tools%20guide%20DS23.html)) | 66 | DS lifecycle, Python basics, Pandas, SQL, sklearn, Plotly, PyTorch, Keras, Hugging Face, AI Agents, Storytelling |
 
 ## Hands-on notebooks
